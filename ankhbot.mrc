@@ -7,8 +7,8 @@ HEY!  LOOK HERE!  This is what you need to change in this script...
 
 Where it says "SET %CurrencyDB" below, change the path to the path of
 YOUR AnkhBot's CurrencyDB.sqlite file.  Leave the quotation marks in!
-It is likely the same path as the example listed, with the exception of
-your Windows username.
+You only need to change this variable if you installed AnkhBot to a
+directory other than it's default install directory.
 
 The %curname variable is the name of your channel currency.
 
@@ -21,7 +21,7 @@ Then, click on "File" and "Load..." and select the slot.mrc file again.
 */
 
 ON *:LOAD: {
-  SET %CurrencyDB "C:\Users\USERNAME\AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite"
+  SET %CurrencyDB "%APPDATA%\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite"
   SET %curname points
   SET %mychan #Your_Twitch_Name
 }
