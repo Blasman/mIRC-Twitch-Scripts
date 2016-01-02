@@ -88,11 +88,12 @@ ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:#: {
       .timer.scram.wait3 1 90 SET -z %SCRAM_CD. $+ $nick %scram_cd
     }
     ELSEIF ($3) && ($3 != $me) {
-      IF ($3 ison $chan) {
-        IF ($checkpoints($3, $2) == false) MSG $chan $twitch_name($nick) $+ , $twitch_name($3) doesn't have enough %curname to play.  FailFish
+      VAR %target $remove($3, @)
+      IF (%target ison $chan) {
+        IF ($checkpoints(%target, $2) == false) MSG $chan $twitch_name($nick) $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
         ELSE {
           SET %scram.p1 $twitch_name($nick)
-          SET %scram.p2 $twitch_name($3)
+          SET %scram.p2 $twitch_name(%target)
           SET %scram.bet $floor($2)
           MSG $chan KAPOW %scram.p1 has issued a scramble challenge for %scram.bet %curname to %scram.p2 $+ !  %scram.p2 now has 90 seconds to accept this challenge by typing "!scram accept"
           .timer.scram.wait1 1 90 MSG $chan Sorry, %scram.p1 $+ , but %scram.p2 didn't want to accept your scramble challenge!  FeelsBadMan
@@ -100,7 +101,7 @@ ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:#: {
           .timer.scram.wait3 1 90 SET -z %SCRAM_CD. $+ $nick %scram_cd
         }
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , $3 is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
+      ELSE MSG $chan $twitch_name($nick) $+ , %target is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
     }
   }
   ELSEIF ((%scram.p1) && ($nick != %scram.p1) && ($2 == accept)) {
@@ -196,6 +197,7 @@ ON *:TEXT:!scramstats*:#: {
   IF ($($+(%,floodSCRAMstats.,$nick),2)) halt
   SET -u3 %floodSCRAMstats. $+ $nick On
   VAR %nick $twitch_name($nick)
+  IF ($2) VAR %target $remove($2, @)
   IF ($ini(scramstats.ini,%nick) == $null) MSG $chan %nick $+ , you have yet to play a game of word scramble here!
   ELSEIF (!$2) {
     VAR %wins $readini(scramstats.ini,%nick,Wins)
@@ -203,10 +205,10 @@ ON *:TEXT:!scramstats*:#: {
     VAR %besttime $readini(scramstats.ini,%nick,Best_Time)
     MSG $chan %nick ▌ Scramble Stats ▌ Wins: %wins ▌ Losses: %losses ▌ Fastest Time: %besttime seconds
   }
-  ELSEIF ($ini(scramstats.ini,$2) == $null) MSG $chan %nick $+ , $2 is not the name of a user who has played scramble here before!
-  ELSEIF ($readini(scramstats.ini,%nick,Wins_VS_ $+ $2) == $null) && ($readini(scramstats.ini,%nick,Losses_VS_ $+ $2) == $null) MSG $chan %nick $+ , you have never played scramble against $2 before!
+  ELSEIF ($ini(scramstats.ini,%target) == $null) MSG $chan %nick $+ , %target is not the name of a user who has played scramble here before!
+  ELSEIF ($readini(scramstats.ini,%nick,Wins_VS_ $+ %target) == $null) && ($readini(scramstats.ini,%nick,Losses_VS_ $+ %target) == $null) MSG $chan %nick $+ , you have never played scramble against %target before!
   ELSE {
-    VAR %vs.nick $twitch_name($2)
+    VAR %vs.nick $twitch_name(%target)
     VAR %vs.wins $readini(scramstats.ini,%nick,Wins_VS_ $+ %vs.nick)
     VAR %vs.losses $readini(scramstats.ini,%nick,Losses_VS_ $+ %vs.nick)
     IF (%vs.wins == $null) VAR %vs.wins = 0
