@@ -11,8 +11,8 @@ amount of points that must be spent in order to use the !slot.  The
 must wait before being able to use !slot again.
 
 You can just leave the %slotc.# variables or you can change them to the
-emotes that you want to use for the slot machine.  The %slotc.emote.1
-emote is the emote that will appear 50% of the time, and the other five
+emotes that you want to use for the slot machine.  The %slotc.1 emote
+is the emote that will appear 50% of the time, and the other five
 appear more rarely the higher that the number is.
 See http://i.imgur.com/ch5vQZ2.png
 
