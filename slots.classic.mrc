@@ -10,8 +10,8 @@ amount of points that must be spent in order to use the !slot.  The
 %slotc.cd variable is the per user cooldown time (in seconds) that a user 
 must wait before being able to use !slot again.
 
-You can just leave the %slotc.emote variables or you can change them to
-the emotes that you want to use for the slot machine.  The %slotc.emote.1
+You can just leave the %slotc.# variables or you can change them to the
+emotes that you want to use for the slot machine.  The %slotc.emote.1
 emote is the emote that will appear 50% of the time, and the other five
 appear more rarely the higher that the number is.
 See http://i.imgur.com/ch5vQZ2.png
@@ -31,12 +31,12 @@ ON *:LOAD: {
   SET %slotc.minbet 50
   SET %slotc.maxbet 500
   SET %slotc.cd 1800
-  SET %slotc.emote.1 bleedPurple
-  SET %slotc.emote.2 duDudu
-  SET %slotc.emote.3 riPepperonis
-  SET %slotc.emote.4 ShibeZ
-  SET %slotc.emote.5 OSrob
-  SET %slotc.emote.6 deIlluminati
+  SET %slotc.1 bleedPurple
+  SET %slotc.2 duDudu
+  SET %slotc.3 riPepperonis
+  SET %slotc.4 ShibeZ
+  SET %slotc.5 OSrob
+  SET %slotc.6 deIlluminati
 }
 
 ON *:UNLOAD: { UNSET %slotc.* }
@@ -107,70 +107,70 @@ ON $*:TEXT:/^!slot(s)?/Si:#: {
       WHILE (%x <= 3) {
         VAR %random $rand(1,100)
 
-        IF (%random isnum 1-50) VAR %slot. $+ %x %slotc.emote.1
-        ELSEIF (%random isnum 51-65) VAR %slot. $+ %x %slotc.emote.2
-        ELSEIF (%random isnum 66-79) VAR %slot. $+ %x %slotc.emote.3
-        ELSEIF (%random isnum 80-88) VAR %slot. $+ %x %slotc.emote.4
-        ELSEIF (%random isnum 89-95) VAR %slot. $+ %x %slotc.emote.5
-        ELSEIF (%random isnum 96-100) VAR %slot. $+ %x %slotc.emote.6
+        IF (%random isnum 1-50) VAR %col. $+ %x %slotc.1
+        ELSEIF (%random isnum 51-65) VAR %col. $+ %x %slotc.2
+        ELSEIF (%random isnum 66-79) VAR %col. $+ %x %slotc.3
+        ELSEIF (%random isnum 80-88) VAR %col. $+ %x %slotc.4
+        ELSEIF (%random isnum 89-95) VAR %col. $+ %x %slotc.5
+        ELSEIF (%random isnum 96-100) VAR %col. $+ %x %slotc.6
         INC %x
       }
 
-      IF ((%slot.1 == %slot.2) && (%slot.2 == %slot.3)) {
-        IF (%slot.1 == %slotc.emote.1) VAR %payout = %slotbet * 5
-        ELSEIF (%slot.1 == %slotc.emote.2) VAR %payout = %slotbet * 10
-        ELSEIF (%slot.1 == %slotc.emote.3) VAR %payout = %slotbet * 15
-        ELSEIF (%slot.1 == %slotc.emote.4) VAR %payout = %slotbet * 25
-        ELSEIF (%slot.1 == %slotc.emote.5) VAR %payout = %slotbet * 50
-        ELSEIF (%slot.1 == %slotc.emote.6) VAR %payout = %slotbet * 100
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
-        .timer.slotc3 1 18 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  You WON %payout %curname $+ , %nick $+ !!!  PogChamp
+      IF ((%col.1 == %col.2) && (%col.2 == %col.3)) {
+        IF (%col.1 == %slotc.1) VAR %payout = %slotbet * 5
+        ELSEIF (%col.1 == %slotc.2) VAR %payout = %slotbet * 10
+        ELSEIF (%col.1 == %slotc.3) VAR %payout = %slotbet * 15
+        ELSEIF (%col.1 == %slotc.4) VAR %payout = %slotbet * 25
+        ELSEIF (%col.1 == %slotc.5) VAR %payout = %slotbet * 50
+        ELSEIF (%col.1 == %slotc.6) VAR %payout = %slotbet * 100
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
+        .timer.slotc3 1 18 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You WON %payout %curname $+ , %nick $+ !!!  PogChamp
         .timer.slotpayout 1 18 ADDPOINTS $nick %payout | .timer.slotstop 1 18 UNSET %ActiveGame
       }
 
-      ELSEIF ((%slot.1 == %slot.2) && (%slot.2 != %slot.3) && (%slot.3 == %slotc.emote.1)) {
+      ELSEIF ((%col.1 == %col.2) && (%col.2 != %col.3) && (%col.3 == %slotc.1)) {
         VAR %payout = %slotbet
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
-        .timer.slotc3 1 18 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  Well, %nick $+ , at least you won %payout %curname $+ !  MingLee
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
+        .timer.slotc3 1 18 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  Well, %nick $+ , at least you won %payout %curname $+ !  MingLee
         .timer.slotpayout 1 18 ADDPOINTS $nick %payout | .timer.slotstop 1 18 UNSET %ActiveGame
       }
 
-      ELSEIF ((%slot.1 == %slot.2) && (%slot.2 != %slot.3) && (%slot.3 != %slotc.emote.1)) {
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
-        .timer.slotc3 1 18 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  You Lose, %nick $+ !  :tf:
+      ELSEIF ((%col.1 == %col.2) && (%col.2 != %col.3) && (%col.3 != %slotc.1)) {
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
+        .timer.slotc3 1 18 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You Lose, %nick $+ !  :tf:
         .timer.slotstop 1 18 UNSET %ActiveGame
       }
 
-      ELSEIF ((%slot.2 == %slotc.emote.1) && (%slot.3 == %slotc.emote.1)) {
+      ELSEIF ((%col.2 == %slotc.1) && (%col.3 == %slotc.1)) {
         VAR %payout = %slotbet * 2
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   Well, %nick $+ , best of luck getting another %slotc.emote.1  ...
-        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  You WON %payout %curname $+ , %nick $+ !!!  PogChamp
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   Well, %nick $+ , best of luck getting another %slotc.1  ...
+        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You WON %payout %curname $+ , %nick $+ !!!  PogChamp
         .timer.slotpayout 1 15 ADDPOINTS $nick %payout | .timer.slotstop 1 15 UNSET %ActiveGame
       }
 
-      ELSEIF (%slot.2 == %slotc.emote.1) && (%slot.3 != %slotc.emote.1) {
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   Well, %nick $+ , best of luck getting another %slotc.emote.1  ...
-        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  You Lose, %nick $+ ! :tf:
+      ELSEIF (%col.2 == %slotc.1) && (%col.3 != %slotc.1) {
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   Well, %nick $+ , best of luck getting another %slotc.1  ...
+        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You Lose, %nick $+ ! :tf:
         .timer.slotstop 1 15 UNSET %ActiveGame
       }
 
-      ELSEIF (%slot.3 == %slotc.emote.1) {
+      ELSEIF (%col.3 == %slotc.1) {
         VAR %payout = %slotbet
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   Well, %nick $+ , best of luck getting at least a %slotc.emote.1  ...
-        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  You WON %payout %curname $+ , %nick $+ !!!  PogChamp
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   Well, %nick $+ , best of luck getting at least a %slotc.1  ...
+        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You WON %payout %curname $+ , %nick $+ !!!  PogChamp
         .timer.slotpayout 1 15 ADDPOINTS $nick %payout | .timer.slotstop 1 15 UNSET %ActiveGame
       }
 
-      ELSEIF ((%slot.1 != %slot.2) && (%slot.3 != %slotc.emote.1)) {
-        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %slot.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌   :::   Well, %nick $+ , best of luck getting at least a %slotc.emote.1  ...
-        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌   :::  You Lose, %nick $+ ! :tf:
+      ELSEIF ((%col.1 != %col.2) && (%col.3 != %slotc.1)) {
+        .timer.slotc1 1 4 DESCRIBE $chan  ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+        .timer.slotc2 1 9 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌   :::   Well, %nick $+ , best of luck getting at least a %slotc.1  ...
+        .timer.slotc3 1 15 DESCRIBE $chan  ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You Lose, %nick $+ ! :tf:
         .timer.slotstop 1 15 UNSET %ActiveGame
       }
     }
