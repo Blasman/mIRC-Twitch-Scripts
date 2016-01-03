@@ -39,9 +39,7 @@ ON *:LOAD: {
   SET %slotc.emote.6 deIlluminati
 }
 
-ON *:UNLOAD: {
-  UNSET %slotc.*
-}
+ON *:UNLOAD: { UNSET %slotc.* }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SLOT MACHINE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
