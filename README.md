@@ -27,4 +27,5 @@ First, edit and save the ankhbot.mrc script in a text editor, and read the info 
 /load -rs msqlite.mrc  
 /load -rs ankhbot.mrc  
 
-
+### Download and Install Desired Scripts
+Just like the above steps, download and install the individual scripts that you wish to use.  See the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki) for more information about each each script.
