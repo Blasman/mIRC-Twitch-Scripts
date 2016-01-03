@@ -15,7 +15,7 @@ To use any of the games scripts in this GitHub, you will need to download the fo
 * [JSONForMirc.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/resources/JSONForMirc.mrc): right click and "save link as..." to your mIRC directory.
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click and "save link as..." to your mIRC directory.
 * [mTwitch.GroupChat.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.GroupChat.mrc): right click and "save link as..." to your mIRC directory.
-* [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract to your mIRC directory.
+* [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory.
 * [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click and "save link as..." to your mIRC directory. **Before loading, be sure to read and edit the variables at the beginning of the script.**
 
 ### Install Required Scripts
