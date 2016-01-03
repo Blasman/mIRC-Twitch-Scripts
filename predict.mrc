@@ -140,7 +140,7 @@ ON *:TEXT:!predict*:#blasman13: {
             ADDPOINTS %winner %ppayout
             INC %countwinners
           }
-          IF (%numwinners == 1) MSG $chan Congrats, $twitch_name(%winner) $+ , for predicting that the hack would end at exactly %finalpercent $+ $chr(37) $+ !  You win %ppayout points!  PogChamp
+          IF (%numwinners == 1) MSG $chan Congrats, %winner $+ , for predicting that the hack would end at exactly %finalpercent $+ $chr(37) $+ !  You win %ppayout points!  PogChamp
           IF (%numwinners > 1) MSG $chan Congrats to the following people for predicting that the hack would end at exactly %finalpercent $+ $chr(37) $+ !  You all split the winnings at %ppayout points each!  Winners:  %exactwinner  BloodTrail
         }
         IF (%finalpercent < 100) {
@@ -150,7 +150,7 @@ ON *:TEXT:!predict*:#blasman13: {
             ADDPOINTS %winner %ppayout
             INC %countwinners
           }
-          IF (%numwinners == 1) MSG $chan Congrats, $twitch_name(%winner) $+ , for predicting that the hack would end at exactly %finalpercent $+ $chr(37) $+ !  You win %ppayout points!  PogChamp
+          IF (%numwinners == 1) MSG $chan Congrats, %winner $+ , for predicting that the hack would end at exactly %finalpercent $+ $chr(37) $+ !  You win %ppayout points!  PogChamp
           IF (%numwinners > 1) MSG $chan Congrats to the following people for predicting that the hack would end at exactly %finalpercent $+ $chr(37) $+ !  You all split the winnings at %ppayout points each!  Winners:  %exactwinner  BloodTrail
         }
       }
@@ -164,7 +164,7 @@ ON *:TEXT:!predict*:#blasman13: {
           ADDPOINTS %winner %ppayout
           INC %countwinners
         }
-        IF (%numwinners == 1) MSG $chan Congrats, $twitch_name(%winner) $+ , for getting the closest prediction to %finalpercent $+ $chr(37) with your prediction of %percent $+ $chr(37) $+ !  You win %ppayout points!  PogChamp
+        IF (%numwinners == 1) MSG $chan Congrats, %winner $+ , for getting the closest prediction to %finalpercent $+ $chr(37) with your prediction of %percent $+ $chr(37) $+ !  You win %ppayout points!  PogChamp
         IF (%numwinners > 1) MSG $chan Congrats to the following people for making the closest predictions to %finalpercent $+ $chr(37) $+ !  You all split the winnings at %ppayout points each!  Winners:  %findwinner  BloodTrail
       }
       endpredict
