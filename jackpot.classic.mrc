@@ -106,8 +106,8 @@ ON $*:TEXT:/^!jackpot$/iS:#: {
   ELSEIF ($checkpoints($nick, %jackc.bet) == false) MSG $chan $twitch_name($nick) $+ , you do not have %jackc.bet %curname to play !jackpot  FailFish
   ELSE {
     VAR %nick $twitch_name($nick)
-    SET %ActiveGame On
     .timer.JACKC. $+ %nick 1 %jackc.cd MSG $nick %nick $+ , your !jackpot cooldown has expired.  Feel free to play again.  BloodTrail
+    SET %ActiveGame On
     REMOVEPOINTS $nick %jackc.bet
     INC %jackc_pot %jackc.bet
     MSG $nick %nick $+ , you just spent %jackc.bet %curname on !jackpot.
