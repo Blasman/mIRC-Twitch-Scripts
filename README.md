@@ -28,4 +28,4 @@ First, edit and save the ankhbot.mrc script in a text editor, and read the info 
 /load -rs ankhbot.mrc  
 
 ### Download and Install Desired Scripts
-Just like the above steps, download and install the individual scripts that you wish to use.  See the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki) for more information about each each script.
+For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use */load -rs script.mrc* just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.
