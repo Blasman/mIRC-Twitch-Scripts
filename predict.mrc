@@ -1,4 +1,4 @@
-ON *:TEXT:!predict*:#blasman13: {
+ON *:TEXT:!predict*:#: {
 
   IF ($2 == help) || ($2 == $null) {
     IF (%floodPREDICTHELP) halt
