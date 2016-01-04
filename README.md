@@ -12,11 +12,11 @@ Various scripts and games to use with a mIRC Twitch bot.  The game scripts are d
 ## Once You Do Have a mIRC Twitch Bot
 ### Download Required Scripts
 To use any of the games scripts in this GitHub, you will need to download the following scripts to your mIRC directory.  If you did not change the default install directory of mIRC, you can find the directory by typing %APPDATA%/mIRC into your Windows Folder Titlebar.
-* [JSONForMirc.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/resources/JSONForMirc.mrc): right click and "save link as..." to your mIRC directory.
-* [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click and "save link as..." to your mIRC directory.
-* [mTwitch.GroupChat.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.GroupChat.mrc): right click and "save link as..." to your mIRC directory.
+* [JSONForMirc.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/resources/JSONForMirc.mrc): right click this link and "save link as..." to your mIRC directory.
+* [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
+* [mTwitch.GroupChat.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.GroupChat.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory.
-* [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click and "save link as..." to your mIRC directory. **Before loading, be sure to read and edit the variables at the beginning of the script.**
+* [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click this link and "save link as..." to your mIRC directory. **Before loading, be sure to read and edit the variables at the beginning of the script.**
 
 ### Install Required Scripts
 First, edit and save the ankhbot.mrc script in a text editor, and read the info at the beginning of the script, and change the needed variables.  Then, in mIRC, type in the following commands anywhere:  
