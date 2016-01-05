@@ -14,6 +14,11 @@ The %curname variable is the name of your channel currency.
 
 The %mychan variable is your Twitch username, KEEP the # symbol there.
 
+The %TwitchID variable is used by some scripts to get your Twitch user ID.
+You can find yours by visiting
+http://api.twitch.tv/kraken/channels/YOUR_CHANNEL_NAME and it is the
+number after "_id".
+
 You will need to UNLOAD and RE-LOAD this script for any changes to the
 variables below to take effect.  This can be done by pressing ALT-R in
 mIRC > Select "View" > Select "ankhbot.mrc" > Click on "File" > "Unload."
@@ -24,12 +29,14 @@ ON *:LOAD: {
   SET %CurrencyDB "%APPDATA%\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite"
   SET %curname points
   SET %mychan #Your_Twitch_Name
+  SET %TwitchID 00000000
 }
 
 ON *:UNLOAD: {
   UNSET %CurrencyDB
   UNSET %curname
   UNSET %mychan
+  UNSET %TwitchID 00000000
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
