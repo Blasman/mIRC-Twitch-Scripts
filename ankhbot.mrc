@@ -43,6 +43,16 @@ ON *:UNLOAD: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ALIASES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+alias cached_name {
+
+  VAR %nick $wildtok(%display.names, $1, 1, 32)
+  IF (%nick != $null) return %nick
+  ELSE {
+    SET %display.names $addtok(%display.names, $twitch_name($1), 32)
+    return $wildtok(%display.names, $1, 1, 32)
+  }
+}
+
 alias twitch_name {
 
   if (%tn == 1000) %tn = 0
