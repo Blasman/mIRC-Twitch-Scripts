@@ -3,22 +3,18 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
-To use this command, you need to change the ######## on line 17 of
-the script to YOUR Twitch User ID, which can be found at
-https://api.twitch.tv/kraken/channels/USERNAME
-(replace USERNAME with your Twitch username) and look for
-"_id":########, that is your Twitch User ID.  This script also
-requires the JSONForMirc.mrc script, as well as ankhbot.mrc (for the
-twitch_name alias).
+To use this command, you will need ankhbot.mrc for the %TwitchID variable
+and various aliases.  Otherwise, you will have to edit the script
+accordingly.  This script also requires the JSONforMirc.mrc script.
 */
 
 ON *:TEXT:!hosts:#: {
   IF ($nick isop $chan) {
-    JSONOpen -ud gethosts http://tmi.twitch.tv/hosts?include_logins=1&target=########
+    JSONOpen -ud gethosts http://tmi.twitch.tv/hosts?include_logins=1&target= $+ %TwitchID
     VAR %x = 0
     WHILE ($json(gethosts, hosts, %x, host_login) != $null) {
       VAR %gethdn $json(gethosts, hosts, %x, host_login)
-      VAR %gethdn $twitch_name(%gethdn) $+ $chr(44)
+      VAR %gethdn $cached_name(%gethdn) $+ $chr(44)
       VAR %gethosts %gethosts %gethdn
       INC %x
     }
