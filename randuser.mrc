@@ -16,6 +16,11 @@ You can change the active time required from 1800 seconds by typing
 considered active.
 
 There is an example !hug command below that you can use to test out the alias.
+
+The other command is a !payactive command that is similar to AnkhBot's
+"!points add +viewers #" command, except that it will only give points to the users
+who have been active in the last 30 minutes (or what you set the time to) and have
+spoken in the last 100 lines of chat.  Simply "!payactive #"
 */
 
 
@@ -32,6 +37,39 @@ ON $*:TEXT:/^!set\sactivetime\s\d+/iS:%mychan: {
   IF ($nick isop $chan) {
     SET %activetime $3
     MSG $chan The time since last user activity to be considered an active user has been set to $3 seconds.
+  }
+}
+
+
+ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
+
+  IF ($nick isop $chan) && ($2 isnum) {
+    VAR %payout = $floor($2)
+    VAR %x = 1
+    WHILE ($read(randuser.txt, %x) != $null) {
+      VAR %avnick $wildtok($read(randuser.txt, %x), *, 1, 32)
+      VAR %avtime $wildtok($read(randuser.txt, %x), *, 2, 32)
+	  VAR %streamer $remove(%mychan, $chr(35))
+      IF ($calc($ctime - %avtime) <= %activetime) && (%avnick ison %mychan) && (%avnick != %streamer) VAR %avusers $addtok(%avusers,$cached_name(%avnick),32)
+      INC %x
+    }
+    IF (%avusers == $null) { MSG %mychan There are no active users to give points to!  BibleThump | halt }
+    VAR %x = 1
+    WHILE ($gettok(%avusers, %x, 32) != $null) {
+      VAR %avnick $gettok(%avusers, %x, 32)
+      ADDPOINTS %avnick %payout
+      INC %x
+    }
+    VAR %avusers $sorttok(%avusers, 32, a)
+    VAR %x = 1
+    WHILE ($gettok(%avusers, %x, 32) != $null) {
+      VAR %avnick $gettok(%avusers, %x, 32)
+      VAR %avusers2 $addtok(%avusers2,%avnick $+ $chr(44),32)
+      INC %x
+    }
+    VAR %numausers $numtok(%avusers2, 32)
+    VAR %avusers2 $left(%avusers2, -1)
+    MSG %mychan Successfully payed out %payout points to all of the following %numausers active users:  %avusers2
   }
 }
 
