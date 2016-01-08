@@ -13,7 +13,7 @@ must wait before being able to use !scram again.
 You will need to UNLOAD and RE-LOAD this script for any changes to the
 variables below to take effect.  This can be done by pressing ALT-R in
 mIRC > Select "View" > Select "scramble.mrc" > Click on "File" > "Unload."
-Then, click on "File" and "Load..." and select the slot.mrc file again.
+Then, click on "File" and "Load..." and select the scramble.mrc file again.
 
 Have fun!!!
 */
