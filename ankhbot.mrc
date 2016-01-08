@@ -39,7 +39,7 @@ alias ankhbot_setup {
     SET %TwitchID $twitch_id($!)
   }
   :path
-  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the path of your CurrencyDB.splite file.,eo,Required Input,$chr(37) $+ APPDATA $+ $chr(37) $+ \AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite)
+  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the path and filename of your CurrencyDB.splite file.,eo,Required Input,$chr(37) $+ APPDATA $+ $chr(37) $+ \AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite)
   IF !$! { ECHO You must enter a valid path! | GOTO path }
   ELSE SET %CurrencyDB $qt($!)
   :curname
