@@ -49,7 +49,7 @@ ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
     WHILE ($read(randuser.txt, %x) != $null) {
       VAR %avnick $wildtok($read(randuser.txt, %x), *, 1, 32)
       VAR %avtime $wildtok($read(randuser.txt, %x), *, 2, 32)
-	  VAR %streamer $remove(%mychan, $chr(35))
+      VAR %streamer $remove(%mychan, $chr(35))
       IF ($calc($ctime - %avtime) <= %activetime) && (%avnick ison %mychan) && (%avnick != %streamer) VAR %avusers $addtok(%avusers,$cached_name(%avnick),32)
       INC %x
     }
