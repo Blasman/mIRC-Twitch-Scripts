@@ -1,47 +1,52 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; VARIABLES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;; CORE TWITCH BOT / ANKHBOT SCRIPT ;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
-HEY!  LOOK HERE!  This is what you need to change in this script...
+This is the main script that sets commonly used variables and contains
+commonly used aliases for many of the other scripts found on my GitHub
+at https://github.com/Blasman/mIRC-Twitch-Scripts
 
-Where it says "SET %CurrencyDB" below, change the path to the path of
-YOUR AnkhBot's CurrencyDB.sqlite file.  Leave the quotation marks in!
-You only need to change this variable if you installed AnkhBot to a
-directory other than it's default install directory.
-
-The %curname variable is the name of your channel currency.
-
-The %mychan variable is your Twitch username, KEEP the # symbol there.
-
-The %TwitchID variable is used by some scripts to get your Twitch user ID.
-You can find yours by visiting
-http://api.twitch.tv/kraken/channels/YOUR_CHANNEL_NAME and it is the
-number after "_id".
-
-You will need to UNLOAD and RE-LOAD this script for any changes to the
-variables below to take effect.  This can be done by pressing ALT-R in
-mIRC > Select "View" > Select "ankhbot.mrc" > Click on "File" > "Unload."
-Then, click on "File" and "Load..." and select the slot.mrc file again.
+When first loading this script, you will have to enter some info in input
+boxes that will appear.  If you change any of this info or enter it
+incorrectly, you will need to re-run the setup.  You can re-run the setup
+by re-loading the script, or by typing /ankhbot_setup in mIRC.
 */
 
-ON *:LOAD: {
-  SET %CurrencyDB "%APPDATA%\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite"
-  SET %curname points
-  SET %mychan #Your_Twitch_Name
-  SET %TwitchID 00000000
-}
+ON *:LOAD: { ankhbot_setup }
 
 ON *:UNLOAD: {
   UNSET %CurrencyDB
+  UNSET %streamer
   UNSET %curname
   UNSET %mychan
-  UNSET %TwitchID 00000000
+  UNSET %TwitchID
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ALIASES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+alias ankhbot_setup {
+
+  :name
+  $input(Please enter YOUR Twitch user name (NOT your bots):,eo,Required Input)
+  IF !$! { ECHO You must enter your Twitch user name! | GOTO name }
+  ELSE {
+    SET %streamer $twitch_name($!)
+    SET %mychan $chr(35) $+ $lower($!)
+    SET %TwitchID $twitch_id($!)
+  }
+  :path
+  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the path of your CurrencyDB.splite file.,eo,Required Input,$chr(37) $+ APPDATA $+ $chr(37) $+ \AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite)
+  IF !$! { ECHO You must enter a valid path! | GOTO path }
+  ELSE SET %CurrencyDB $qt($!)
+  :curname
+  $input(Please enter the name of your channel's currency:,eo,Required Input,points)
+  IF !$! { ECHO You must enter a valid name! | GOTO curname }
+  ELSE SET %curname $!
+}
 
 alias cached_name {
 
@@ -60,6 +65,13 @@ alias twitch_name {
   JSONOpen -ud twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
   return $json(twitch_name $+ %tn $+ , display_name)
   JSONClose twitch_name $+ %tn
+}
+
+alias twitch_id {
+
+  JSONOpen -ud twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
+  return $json(twitch_id, _id)
+  JSONClose twitch_id
 }
 
 alias addpoints {
