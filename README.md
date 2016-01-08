@@ -18,10 +18,10 @@ To use any of the games scripts in this GitHub, you will need to download the fo
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.GroupChat.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.GroupChat.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory.
-* [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click this link and "save link as..." to your mIRC directory. **Before loading, be sure to read and edit the variables at the beginning of the script.**
+* [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click this link and "save link as..." to your mIRC directory.
 
 ### Install Required Scripts
-First, edit and save the ankhbot.mrc script in a text editor, and read the info at the beginning of the script, and change the needed variables.  Then, in mIRC, type in the following commands anywhere:  
+In mIRC, type in the following commands anywhere.  When loading the last script (ankhbot.mrc), you will have to enter some information into input boxes that will pop up:  
 
 /load -rs JSONForMirc.mrc  
 /load -rs mTwitch.Core.mrc  
@@ -30,4 +30,7 @@ First, edit and save the ankhbot.mrc script in a text editor, and read the info 
 /load -rs ankhbot.mrc  
 
 ### Download and Install Desired Scripts
-For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use */load -rs script.mrc* just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.
+For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use */load -rs script.mrc* just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.  
+
+#### Contact Info / Help  
+If you need help with anything here, please don't hesitate to send me a Twitch message or visit my Twitch channel at http://www.twitch.tv/blasman13/profile  
