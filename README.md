@@ -1,5 +1,5 @@
 # mIRC-Twitch-Scripts
-The main focus of the scripts on this GitHub are for use with a Twitch mIRC bot that works in conjunction with AnkhBot and AnkhBot's point system.  [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/) is a free and versatile Twitch bot, yet like most things, there is always room for improvement.  These scripts are designed to compliment and enchance a Twitch channel that is currently running AnkhBot, however, many of the scripts can also be easily modified to use without AnkhBot.  See the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki) for more information regarding each script.
+The main focus of the scripts on this GitHub are for use with a Twitch [mIRC](http://www.mirc.com/) bot that works in conjunction with AnkhBot and AnkhBot's point system.  [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/) is a free and versatile Twitch bot, yet like most things, there is always room for improvement.  These scripts are designed to compliment and enchance a Twitch channel that is currently running AnkhBot, however, many of the scripts can also be easily modified to use without AnkhBot.  See the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki) for more information regarding each script.
 
 # Installation
 
