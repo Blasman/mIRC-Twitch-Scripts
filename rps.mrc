@@ -112,8 +112,8 @@ ON $*:TEXT:/^!rps(\s|$)/iS:#: {
 
 alias rps_start {
   SET %rps.on On
-  MSG %rps.p1 %rps.p1 $+ , please enter your choice of rock, paper, or scissors. (you only need to enter the first letter of your choice) View the result in %streamer $+ 's main chat.
-  MSG %rps.p2 %rps.p2 $+ , please enter your choice of rock, paper, or scissors. (you only need to enter the first letter of your choice) View the result in %streamer $+ 's main chat.
+  MSG %rps.p1 %rps.p1 $+ , please enter your choice of [r]ock, [p]aper, or [s]cissors. (you only need to enter the first letter of your choice) View the result in %streamer $+ 's main chat.
+  MSG %rps.p2 %rps.p2 $+ , please enter your choice of [r]ock, [p]aper, or [s]cissors. (you only need to enter the first letter of your choice) View the result in %streamer $+ 's main chat.
   .timer.rps.tooslow 1 60 rps_tooslow
 }
 
