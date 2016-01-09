@@ -312,17 +312,14 @@ alias stand {
 
 alias blackjacktimer {
   .timer.blackjack.1 1 15 MSG %mychan %bj.name $+ , HURRY UP!  Finish your game of BlackJack or you will automatically lose!  RageFace
-  .timer.blackjack.2 1 25 tooslowatbj
+  .timer.blackjack.2 1 25 MSG %mychan %bj.name $+ , you took too long to play BlackJack!  So you GET NOTHING!  YOU LOSE!  Good Day, Sir!  SwiftRage
+  .timer.blackjack.3 1 25 resetblackjack
 }
 
-alias tooslowatbj {
-  MSG %mychan %bj.name $+ , you took too long to play BlackJack!  So you GET NOTHING!  YOU LOSE!  Good Day, Sir!  SwiftRage
-  resetblackjack
-}
 
 alias resetblackjack {
   SET -ze %BJ_CD. $+ $nick %bj_cd
-  IF ($timer(.blackjack.2)) .timer.blackjack.* off
+  IF ($timer(.blackjack.3)) .timer.blackjack.* off
   UNSET %bj.*
   UNSET %ActiveGame
   halt
