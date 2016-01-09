@@ -7,9 +7,11 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 ### If You Do Not Have a mIRC Twitch Bot, Set One Up
 
-1. Download and install mIRC. UNCHECK EVERYTHING except "Scripts" and "Help Files" on the "Choose Components" section of the install, as you don't need most of it. http://www.mirc.com/get.html
+1. Download and install mIRC. UNCHECK EVERYTHING except "Scripts" and "Help Files" on the "Choose Components" section of the install, as you don't need most of it. http://www.mirc.com/get.html  
 
-2. Get **YOUR BOT'S** Twitch account (**NOT** the Twitch name that you stream with) up and running with mIRC, and set up your main Twitch account's channel as an auto-join channel as well. See http://help.twitch.tv/customer/portal/articles/1302780-twitch-irc#mIRC%20guide or https://www.youtube.com/watch?v=k7ULgVCZ3Ns
+2. Get **YOUR BOT'S** Twitch account (**NOT** the Twitch name that you stream with) up and running with mIRC, and set up your main Twitch account's channel as an auto-join channel as well. See http://help.twitch.tv/customer/portal/articles/1302780-twitch-irc#mIRC%20guide (you may ignore the section titled "Join/Parts - mIRC," as one of the required scripts below will perform the same function automatically).  
+
+3. [Optional] I have created a YouTube video for setting up mIRC and making it as unobtrusive as possible.  It is created with the purpose of lurking in channels in mind, however, you may find some of the information useful.  https://www.youtube.com/watch?v=k7ULgVCZ3Ns
 
 ## Once You Do Have a mIRC Twitch Bot
 ### Download Required Scripts
@@ -33,4 +35,5 @@ In mIRC, type in the following commands anywhere.  When loading the last script 
 For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use */load -rs script.mrc* just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.  
 
 #### Contact Info / Help  
-If you need help with anything here, please don't hesitate to send me a Twitch message or visit my Twitch channel at http://www.twitch.tv/blasman13/profile  
+
+By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you may Twitch message me regarding any help that you require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link.
