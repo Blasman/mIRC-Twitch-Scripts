@@ -12,8 +12,8 @@ must wait before being able to use !blackjack again.
 
 You will need to UNLOAD and RE-LOAD this script for any changes to the
 variables below to take effect.  This can be done by pressing ALT-R in
-mIRC > Select "View" > Select "slot.mrc" > Click on "File" > "Unload."
-Then, click on "File" and "Load..." and select the slot.mrc file again.
+mIRC > Select "View" > Select "blackjack.mrc" > Click on "File" > "Unload."
+Then, click on "File" and "Load..." and select the blackjack.mrc file again.
 
 Have fun!!!
 */
