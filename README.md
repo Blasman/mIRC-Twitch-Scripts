@@ -9,7 +9,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 1. Download and install mIRC. UNCHECK EVERYTHING except "Scripts" and "Help Files" on the "Choose Components" section of the install, as you don't need most of it. http://www.mirc.com/get.html
 
-2. Get your bot's Twitch account up and running with mIRC, and set up your Twitch channel as an auto-join channel as well. See http://help.twitch.tv/customer/portal/articles/1302780-twitch-irc#mIRC%20guide or https://www.youtube.com/watch?v=k7ULgVCZ3Ns
+2. Get **YOUR BOT'S** Twitch account (**NOT** the Twitch name that you stream with) up and running with mIRC, and set up your main Twitch account's channel as an auto-join channel as well. See http://help.twitch.tv/customer/portal/articles/1302780-twitch-irc#mIRC%20guide or https://www.youtube.com/watch?v=k7ULgVCZ3Ns
 
 ## Once You Do Have a mIRC Twitch Bot
 ### Download Required Scripts
