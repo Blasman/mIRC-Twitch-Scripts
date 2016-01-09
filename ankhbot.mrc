@@ -21,6 +21,7 @@ ON *:UNLOAD: {
   UNSET %curname
   UNSET %mychan
   UNSET %TwitchID
+  UNSET %botname
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -30,6 +31,7 @@ ON *:UNLOAD: {
 
 alias ankhbot_setup {
 
+  SET %botname $twitch_name($me)
   :name
   $input(Please enter YOUR Twitch user name (NOT your bots):,eo,Required Input)
   IF !$! { ECHO You must enter your Twitch user name! | GOTO name }
