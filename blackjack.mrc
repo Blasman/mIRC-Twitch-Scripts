@@ -55,7 +55,7 @@ ON $*:TEXT:/^!blackjack\s(on|off)/iS:#: {
 
 ON $*:TEXT:/^!blackjack(\s|$)/iS:#: {
 
-  IF (($($+(%,floodBJ.,$nick),2)) || (%bj.name) || (%ActiveGame)) halt
+  IF (($($+(%,floodBJ.,$nick),2)) || (%bj.name) || (%ActiveGame) || ($isfile(roulbets.txt))) halt
   SET -u3 %floodBJ. $+ $nick On
   IF (!%GAMES_BJ_ACTIVE) {
     IF ((%floodBJ_ACTIVE) || ($($+(%,floodBJ_ACTIVE.,$nick),2))) halt
