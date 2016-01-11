@@ -52,7 +52,7 @@ ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
       IF ($calc($ctime - %avtime) <= %activetime) && (%avnick ison %mychan) && (%avnick != %streamer) VAR %avusers $addtok(%avusers,$cached_name(%avnick),32)
       INC %x
     }
-    IF (%avusers == $null) { MSG %mychan There are no active users to give points to!  BibleThump | halt }
+    IF (%avusers == $null) { MSG %mychan There are no active users to give %curname to!  BibleThump | halt }
     VAR %x = 1
     WHILE ($gettok(%avusers, %x, 32) != $null) {
       VAR %avnick $gettok(%avusers, %x, 32)
@@ -68,7 +68,7 @@ ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
     }
     VAR %numausers $numtok(%avusers2, 32)
     VAR %avusers2 $left(%avusers2, -1)
-    MSG %mychan Successfully payed out %payout points to all of the following %numausers active users:  %avusers2
+    MSG %mychan Successfully payed out %payout %curname to all of the following %numausers active users:  %avusers2
   }
 }
 
