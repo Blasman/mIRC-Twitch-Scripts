@@ -105,7 +105,7 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:#: {
       .timerRouletteBegin1 1 120 MSG $chan All bets for the Roulette game are now closed!  The ball is dropped into the wheel, and the wheel begins spinning!
       .timerRouletteBegin2 1 120 SET %roul.closed On
       .timerRouletteBegin3 1 132 roulspin
-      MSG $chan %nick has started a game of Roulette!  Everyone has two minutes to get in their bets!  Bet any amount of %curname from %roul_minbet to %roul_maxbet $+ ! ▌ Use:  !rbet BET AMOUNT ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
+      MSG $chan %nick has started a game of Roulette!  Everyone has two minutes to get in their bets!  Bet any amount of %curname from %roul_minbet to %roul_maxbet $+ ! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
     }
     IF (!%roul.bet. [ $+ [ $nick ] ]) SET %roul.bet. [ $+ [ $nick ] ] $calc(%roul_maxbet - %wager)
     ELSE SET %roul.bet. [ $+ [ $nick ] ] $calc(%roul.bet. [ $+ [ $nick ] ] - %wager)
