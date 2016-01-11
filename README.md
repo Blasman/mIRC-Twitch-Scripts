@@ -23,7 +23,7 @@ To use any of the games scripts in this GitHub, you will need to download the fo
 * [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click this link and "save link as..." to your mIRC directory.
 
 ### Install Required Scripts
-In mIRC, type in the following commands anywhere.  When loading the last script (ankhbot.mrc), you will have to enter some information into input boxes that will pop up:  
+In mIRC, type in the following commands anywhere.  Accept and run any initialization command prompts.  When loading the last script (ankhbot.mrc), you will have to enter some information into input boxes that will pop up:  
 
 /load -rs JSONForMirc.mrc  
 /load -rs mTwitch.Core.mrc  
