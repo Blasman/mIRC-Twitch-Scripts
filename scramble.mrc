@@ -25,6 +25,7 @@ ON *:LOAD: {
 }
 
 ON *:UNLOAD: { UNSET %scram_* }
+ON *:START: { UNSET %scram.* }
 
 alias scramble {
 
