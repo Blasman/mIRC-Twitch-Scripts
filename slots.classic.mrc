@@ -84,7 +84,7 @@ ON $*:TEXT:/^!slot(s)?/Si:#: {
     MSG $nick Be patient, $twitch_name($nick) $+ !  You still have $duration($timer(.SLOT. $+ $nick).secs) left in your !slot cooldown.
   }
   ELSEIF ($2 isnum) {
-    IF (%ActiveGame) halt
+    IF ((%ActiveGame) || ($isfile(roulbets.txt))) halt
     ELSEIF ($2 !isnum %slotc.minbet - %slotc.maxbet) {
       IF ($($+(%,floodSLOTSPAM1.,$nick),2)) halt
       SET -u6 %floodSLOTSPAM1. $+ $nick On
