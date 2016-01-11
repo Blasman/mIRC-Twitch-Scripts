@@ -36,6 +36,10 @@ ON *:LOAD: {
 }
 
 ON *:UNLOAD: { UNSET %roul_* }
+ON *:START: {
+  UNSET %roul.*
+  IF $exists(roulbets.txt) REMOVE roulbets.txt
+}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; ROULETTE GAME ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
