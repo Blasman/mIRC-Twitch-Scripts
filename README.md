@@ -25,14 +25,14 @@ To use any of the games scripts in this GitHub, you will need to download the fo
 ### Install Required Scripts
 In mIRC, type in the following commands anywhere.  Accept and run any initialization command prompts.  When loading the last script (ankhbot.mrc), you will have to enter some information into input boxes that will pop up:  
 
-/load -rs JSONForMirc.mrc  
-/load -rs mTwitch.Core.mrc  
-/load -rs mTwitch.GroupChat.mrc  
-/load -rs msqlite.mrc  
-/load -rs ankhbot.mrc  
+`/load -rs JSONForMirc.mrc`  
+`/load -rs mTwitch.Core.mrc`  
+`/load -rs mTwitch.GroupChat.mrc`  
+`/load -rs msqlite.mrc`  
+`/load -rs ankhbot.mrc`  
 
 ### Download and Install Desired Scripts
-For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use */load -rs script.mrc* just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.  
+For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use `/load -rs scriptname.mrc` just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.  
 
 You may install as many of the games scripts as desired, as to prevent spam, most of the games are designed so that if one of them is currently being played by a user in the channel, then another game cannot be started by a user until that current game is completed.  
 
