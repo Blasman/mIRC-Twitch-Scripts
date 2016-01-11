@@ -24,7 +24,7 @@ ON *:UNLOAD: {
   UNSET %botname
 }
 
-ON *:START: { UNSET %ActiveGame }
+ON *:CONNECT: { IF ($server == tmi.twitch.tv) UNSET %ActiveGame }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ALIASES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
