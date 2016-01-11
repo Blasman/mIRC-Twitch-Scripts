@@ -80,6 +80,19 @@ alias twitch_id {
   JSONClose twitch_id
 }
 
+alias wdelay {
+
+  IF (!%wdelay) {
+    SET -z %wdelay 2
+    return $1
+  }
+  ELSE {
+    VAR %wmsg .timer.whisper $+ $ticks 1 %wdelay $1
+    INC %wdelay 2
+    return %wmsg
+  }
+}
+
 alias addpoints {
 
   set %ankhbot_currency $sqlite_open(%CurrencyDB)
