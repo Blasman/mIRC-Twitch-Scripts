@@ -109,69 +109,24 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:#: {
     }
     IF (!%roul.bet. [ $+ [ $nick ] ]) SET %roul.bet. [ $+ [ $nick ] ] $calc(%roul_maxbet - %wager)
     ELSE SET %roul.bet. [ $+ [ $nick ] ] $calc(%roul.bet. [ $+ [ $nick ] ] - %wager)
-    IF (!%roul.wdelay) {
-      IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) MSG $nick %nick $+ , you have bet %wager %curname on $2 $+ .  You can spend %roul.bet. [ $+ [ $nick ] ] more %curname at this table.  Good luck!  BloodTrail
-      ELSE MSG $nick %nick $+ , you have bet %wager %curname on $2 $+ .  You have bet all that you can for this table!  Good luck!  BloodTrail
-      SET -z %roul.wdelay 2
-    }
-    ELSE {
-      INC %roul.wnum
-      IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) .timer.roulwhisper $+ %roul.wnum 1 %roul.wdelay MSG $nick %nick $+ , you have bet %wager %curname on $2 $+ .  You can spend %roul.bet. [ $+ [ $nick ] ] more %curname at this table.  Good luck!  BloodTrail
-      ELSE .timer.roulwhisper $+ %roul.wnum 1 %roul.wdelay MSG $nick %nick $+ , you have bet %wager %curname on $2 $+ .  You have bet all that you can for this table!  Good luck!  BloodTrail
-      INC %roul.wdelay 2
-    }
+    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) $wdelay(MSG $nick %nick $+ $chr(44) you have bet %wager %curname on $2 $+ .  You can spend %roul.bet. [ $+ [ $nick ] ] more %curname at this table.  Good luck!  BloodTrail)
+    ELSE $wdelay(MSG $nick %nick $+ $chr(44) you have bet %wager %curname on $2 $+ .  You have bet all that you can for this table!  Good luck!  BloodTrail)
   }
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum) && ($3 !isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - %roul_minbet) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     IF ($($+(%,floodROULwager.,$nick),2)) halt
     SET -u15 %floodROULwager. $+ $nick On
-    IF (!%roul.wdelay) {
-      MSG $nick $twitch_name($nick) $+ , please make a valid wager between %roul_minbet and %roul_maxbet %curname $+ .
-      SET -z %roul.wdelay 2
-    }
-    ELSE {
-      INC %roul.wnum
-      .timer.roulwhisper $+ %roul.wnum 1 %roul.wdelay MSG $nick $twitch_name($nick) $+ , please make a valid wager between %roul_minbet and %roul_maxbet %curname $+ .
-      INC %roul.wdelay 2
-    }
+    $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) please make a valid wager between %roul_minbet and %roul_maxbet %curname $+ .)
   }
   ELSEIF (($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     IF ($($+(%,floodROULoption.,$nick),2)) halt
     SET -u15 %floodROULoption. $+ $nick On
-    IF (!%roul.wdelay) {
-      MSG $nick $twitch_name($nick) $+ , please bet on a valid betting option.  See http://i.imgur.com/j7Fwytt.jpg for options.
-      SET -z %roul.wdelay 2
-    }
-    ELSE {
-      INC %roul.wnum
-      .timer.roulwhisper $+ %roul.wnum 1 %roul.wdelay MSG $nick $twitch_name($nick) $+ , please bet on a valid betting option.  See http://i.imgur.com/j7Fwytt.jpg for options.
-      INC %roul.wdelay 2
-    }
+    $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) please bet on a valid betting option.  See http://i.imgur.com/j7Fwytt.jpg for options.)
   }
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && ($calc(%roul.bet. [ $+ [ $nick ] ] - $3) < 0)) {
     IF ($($+(%,floodROULmaxwager.,$nick),2)) halt
     SET -u15 %floodROULmaxwager. $+ $nick On
-    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) {
-      IF (!%roul.wdelay) {
-        MSG $nick $twitch_name($nick) $+ , you can only bet up to %roul.bet. [ $+ [ $nick ] ] more %curname at this table.
-        SET -z %roul.wdelay 2
-      }
-      ELSE {
-        INC %roul.wnum
-        .timer.roulwhisper $+ %roul.wnum 1 %roul.wdelay MSG $nick $twitch_name($nick) $+ , you can only bet up to %roul.bet. [ $+ [ $nick ] ] more %curname at this table.
-        INC %roul.wdelay 2
-      }
-    }
-    ELSE {
-      IF (!%roul.wdelay) {
-        MSG $nick $twitch_name($nick) $+ , the minimum bet is %roul_minbet %curname on any bet at Roulette, the max bet for the entire table is %roul_maxbet %curname $+ .  You cannot bet any more at this table.
-        SET -z %roul.wdelay 2
-      }
-      ELSE {
-        INC %roul.wnum
-        .timer.roulwhisper $+ %roul.wnum 1 %roul.wdelay MSG $nick $twitch_name($nick) $+ , the minimum bet is %roul_minbet %curname on any bet at Roulette, the max bet for the entire table is %roul_maxbet %curname $+ .  You cannot bet any more at this table.
-        INC %roul.wdelay 2
-      }
-    }
+    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) you can only bet up to %roul.bet. [ $+ [ $nick ] ] more %curname at this table.)
+    ELSE $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) the minimum bet is %roul_minbet %curname on any bet at Roulette $+ $chr(44) the max bet for the entire table is %roul_maxbet %curname $+ .  You cannot bet any more at this table.)
   }
   ELSEIF ((%roul.bet. [ $+ [ $nick ] ]) || (%roul.bet. [ $+ [ $nick ] ] == 0)) halt
   ELSE {
