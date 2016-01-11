@@ -36,9 +36,12 @@ ON *:LOAD: {
 }
 
 ON *:UNLOAD: { UNSET %roul_* }
-ON *:START: {
-  UNSET %roul.*
-  IF ($isfile(roulbets.txt)) REMOVE roulbets.txt
+
+ON *:CONNECT: {
+  IF ($server == tmi.twitch.tv) {
+    UNSET %roul.*
+    IF ($isfile(roulbets.txt)) REMOVE roulbets.txt
+  }
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -209,10 +212,10 @@ alias roulspin {
 
 alias roulreopen {
   IF (!%ActiveGame) MSG %mychan The Roulette game is open again!  You may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
-  ELSE .timer.roul.reopen2 1 1 roulreopen
+  ELSE .timer.roulreopen2 1 1 roulreopen
 }
 
 alias roulrepeat {
   IF (!%ActiveGame) MSG %mychan The Roulette game is open!  Place your bets!  You may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
-  ELSE .timer.roul.repeat 1 1 roulrepeat
+  ELSE .timer.roulrepeat 1 1 roulrepeat
 }
