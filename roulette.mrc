@@ -38,7 +38,7 @@ ON *:LOAD: {
 ON *:UNLOAD: { UNSET %roul_* }
 ON *:START: {
   UNSET %roul.*
-  IF $exists(roulbets.txt) REMOVE roulbets.txt
+  IF ($isfile(roulbets.txt)) REMOVE roulbets.txt
 }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -81,7 +81,7 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:#: {
     SET -u60 %floodROULreopen. $+ $nick On
     MSG $chan Relax, $twitch_name($nick) $+ !  I will announce the next Roulette game in $duration($timer(.roul.reopen).secs) $+ !  SwiftRage
   }
-  ELSEIF (%roul.closed) halt
+  ELSEIF ((%roul.closed) || (%ActiveGame)) halt
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     VAR %nick $twitch_name($nick)
     VAR %wager $floor($3)
@@ -105,7 +105,6 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:#: {
     ELSE {
       IF ($timer(.roul.repeat)) timer.roul.repeat off
       WRITE roulbets.txt %nick $2 %wager
-      SET %ActiveGame On
       .timerRouletteBegin1 1 120 MSG $chan All bets for the Roulette game are now closed!  The ball is dropped into the wheel, and the wheel begins spinning!
       .timerRouletteBegin2 1 120 SET %roul.closed On
       .timerRouletteBegin3 1 132 roulspin
@@ -202,7 +201,6 @@ alias roulspin {
     .timer.endroul 1 3 MSG %mychan CONGRATULATIONS TO THE WINNERS OF THE ROULETTE GAME:  %winnersList
   }
   ELSE .timer.endroul 1 3 MSG %mychan Nobody won at Roulette!  Better luck next time!  :tf:
-  .timer.roul.unset1 1 3 UNSET %ActiveGame
   .timer.roul.unset2 1 3 UNSET %roul.*
   .timer.roul.unset3 1 3 REMOVE roulbets.txt
   IF (%roul_cd > 0) .timer.roul.reopen 1 $calc(%roul_cd + 3) MSG %mychan The Roulette game is open again!  You may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
