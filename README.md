@@ -34,6 +34,8 @@ In mIRC, type in the following commands anywhere.  Accept and run any initializa
 ### Download and Install Desired Scripts
 For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use */load -rs script.mrc* just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.  
 
-#### Contact Info / Help  
+You may install as many of the games scripts as desired, as to prevent spam, most of the games are designed so that if one of them is currently being played by a user in the channel, then another game cannot be started by a user until that current game is completed.  
+
+### Contact Info / Help  
 
 By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you may Twitch message me regarding any help that you require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link.
