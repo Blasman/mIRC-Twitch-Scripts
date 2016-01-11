@@ -25,7 +25,7 @@ ON *:LOAD: {
 }
 
 ON *:UNLOAD: { UNSET %bj_* }
-ON *:START: { UNSET %bj.* }
+ON *:CONNECT: { IF ($server == tmi.twitch.tv) UNSET %bj.* }
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLACKJACK GAME ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
