@@ -82,14 +82,15 @@ alias twitch_id {
 
 alias wdelay {
 
-  IF (!%wdelay) {
-    SET -z %wdelay 2
-    return $1
+  VAR %wcheck $calc(%wdelay - $ticks + 1100)
+  IF (%wcheck > 0) {
+    VAR %wmsg .timer.whisper $+ $ticks -m 1 %wcheck $1
+    SET %wdelay $calc(%wdelay + 1100)
+    return %wmsg
   }
   ELSE {
-    VAR %wmsg .timer.whisper $+ $ticks 1 %wdelay $1
-    INC %wdelay 2
-    return %wmsg
+    SET %wdelay $ticks
+    return $1
   }
 }
 
