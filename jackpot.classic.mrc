@@ -102,7 +102,7 @@ ON $*:TEXT:/^!jackpot$/iS:#: {
     SET -u180 %floodJACKPOT2. $+ $nick On
     MSG $nick Be patient, $twitch_name($nick) $+ !  You still have $duration($timer(.JACKC. $+ $nick).secs) left in your !jackpot cooldown.
   }
-  ELSEIF ((%ActiveGame) || ($isfile(roulbets.txt))) halt
+  ELSEIF ((%ActiveGame) || ($isfile(roulbets.txt)) || ($rr.p1)) halt
   ELSEIF ($checkpoints($nick, %jackc.bet) == false) MSG $chan $twitch_name($nick) $+ , you do not have %jackc.bet %curname to play !jackpot  FailFish
   ELSE {
     VAR %nick $twitch_name($nick)
