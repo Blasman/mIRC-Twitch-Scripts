@@ -25,7 +25,12 @@ ON *:LOAD: {
 }
 
 ON *:UNLOAD: { UNSET %rps_* }
-ON *:CONNECT: { IF ($server == tmi.twitch.tv) UNSET %rps.* }
+ON *:CONNECT: {
+  IF ($server == tmi.twitch.tv) {
+    UNSET %rps.*
+    UNSET %RPS_CD.*
+  }
+}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;; ROCK/PAPER/SCISSORS GAME ;;;;;;;;;;;;;;;;;;;;;;;;
