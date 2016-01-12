@@ -125,7 +125,7 @@ ON $*:TEXT:/^!rrbet\s/iS:#: {
     IF ($checkpoints($nick, $floor($3)) == false) {
       IF ($($+(%,floodRR_TOOPOOR.,$nick),2)) halt
       SET -u10 %floodRR_TOOPOOR. $+ $nick On
-      MSG $chan $twitch_name($nick) $+ , you don't have enough points to make that bet!  FailFish
+      MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to make that bet!  FailFish
     }
     ELSE {
       VAR %nick $twitch_name($nick)
@@ -147,7 +147,7 @@ alias rrstart {
   MSG %mychan It has begun!  %rr.p1 loads one bullet, puts the cylinder inside the revolver, spins it around, and places the cold barrel of the gun to their temple and gets ready to take the shot... WutFace
   VAR %chamber $rand(1,6)
   IF (%chamber == 1) {
-    .timer.rr.msg01 1 11 MSG %mychan REKT! Well, that didn't last long at all!  %rr.p1 lays lifeless on the ground, and %rr.p2 takes %rr.bet points from %rr.p1 $+ !  BrokeBack
+    .timer.rr.msg01 1 11 MSG %mychan REKT! Well, that didn't last long at all!  %rr.p1 lays lifeless on the ground, and %rr.p2 takes %rr.bet %curname from %rr.p1 $+ !  BrokeBack
     SET %rr.winner %rr.p2
     SET %rr.loser %rr.p1
     .timer.rr.payout 1 13 rrpayout
@@ -156,7 +156,7 @@ alias rrstart {
     .timer.rr.msg02 1 11 MSG %mychan *CLICK!*  %rr.p1 survives the first round!  %rr.p1 happily passes the gun to %rr.p2 $+ ... FeelsGoodMan
     DEC %chamber
     IF (( %chamber == 1 )) {
-      .timer.rr.msg03 1 22 MSG %mychan REKT! Well, that didn't last very long... %rr.p2 lays lifeless on the ground, and %rr.p1 removes %rr.bet points from %rr.p2 $+ !  BrokeBack
+      .timer.rr.msg03 1 22 MSG %mychan REKT! Well, that didn't last very long... %rr.p2 lays lifeless on the ground, and %rr.p1 removes %rr.bet %curname from %rr.p2 $+ !  BrokeBack
       SET %rr.winner %rr.p1
       SET %rr.loser %rr.p2
       .timer.rr.payout 1 24 rrpayout
@@ -165,7 +165,7 @@ alias rrstart {
       .timer.rr.msg04 1 22 MSG %mychan *CLICK!*  %rr.p2 survives round two!  %rr.p2 gladly hands the gun back to %rr.p1 $+ ... FeelsGoodMan
       DEC %chamber
       IF (( %chamber == 1 )) {
-        .timer.rr.msg05 1 33 MSG %mychan REKT! Game Over! %rr.p1 blew their brains out, and %rr.p2 takes %rr.bet points from the wasted body of %rr.p1 $+ !  BrokeBack
+        .timer.rr.msg05 1 33 MSG %mychan REKT! Game Over! %rr.p1 blew their brains out, and %rr.p2 takes %rr.bet %curname from the wasted body of %rr.p1 $+ !  BrokeBack
         SET %rr.winner %rr.p2
         SET %rr.loser %rr.p1
         .timer.rr.payout 1 35 rrpayout
@@ -174,7 +174,7 @@ alias rrstart {
         .timer.rr.msg06 1 33 MSG %mychan *CLICK!*  %rr.p1 lives through round three!  %rr.p1 willingly passes the gun back to %rr.p2 $+ !  PogChamp
         DEC %chamber
         IF (( %chamber == 1 )) {
-          .timer.rr.msg07 1 44 MSG %mychan %rr.p2 got REKT!  %rr.p1 removes %rr.bet points from the dead body of %rr.p2 $+ !  BrokeBack
+          .timer.rr.msg07 1 44 MSG %mychan %rr.p2 got REKT!  %rr.p1 removes %rr.bet %curname from the dead body of %rr.p2 $+ !  BrokeBack
           SET %rr.winner %rr.p1
           SET %rr.loser %rr.p2
           .timer.rr.payout 1 46 rrpayout
@@ -183,7 +183,7 @@ alias rrstart {
           .timer.rr.msg08 1 44 MSG %mychan *CLICK!*  Wow!  %rr.p2 has survived the fourth round!  %rr.p2 breathes a sigh of relief and passes the gun back to %rr.p1 $+ ... PogChamp
           DEC %chamber
           IF (( %chamber == 1 )) {
-            .timer.rr.msg09 1 55 MSG %mychan REKT! %rr.p1 could not survive round five... %rr.p2 takes %rr.bet points from the lifeless body of %rr.p1 $+ ... BrokeBack
+            .timer.rr.msg09 1 55 MSG %mychan REKT! %rr.p1 could not survive round five... %rr.p2 takes %rr.bet %curname from the lifeless body of %rr.p1 $+ ... BrokeBack
             SET %rr.winner %rr.p2
             SET %rr.loser %rr.p1
             .timer.rr.payout 1 57 rrpayout
@@ -192,7 +192,7 @@ alias rrstart {
             .timer.rr.msg10 1 55 MSG %mychan *CLICK!*  OMG!  %rr.p1 lives through round five!  With a maniacal smile, %rr.p1 laughs and hands the gun back to %rr.p2 $+ ... :tf:
             DEC %chamber
             IF (( %chamber == 1 )) {
-              .timer.rr.msg11 1 66 MSG %mychan REKT!  There was no surviving the final round for %rr.p2 $+ ... %rr.p1 removes %rr.bet points from the corpse of %rr.p2 $+ .
+              .timer.rr.msg11 1 66 MSG %mychan REKT!  There was no surviving the final round for %rr.p2 $+ ... %rr.p1 removes %rr.bet %curname from the corpse of %rr.p2 $+ .
               SET %rr.winner %rr.p1
               SET %rr.loser %rr.p2
               .timer.rr.payout 1 68 rrpayout
