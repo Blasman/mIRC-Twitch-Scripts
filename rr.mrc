@@ -28,7 +28,7 @@ ON *:UNLOAD: { UNSET %rr_* }
 ON *:CONNECT: {
   IF ($server == tmi.twitch.tv) {
     UNSET %rr.*
-	UNSET %RR_CD.*
+    UNSET %RR_CD.*
     IF ($isfile(rrbets.txt)) REMOVE rrbets.txt
   }
 }
