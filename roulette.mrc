@@ -84,7 +84,7 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:#: {
     SET -u60 %floodROULreopen. $+ $nick On
     MSG $chan Relax, $twitch_name($nick) $+ !  I will announce the next Roulette game in $duration($timer(.roul.reopen).secs) $+ !  SwiftRage
   }
-  ELSEIF ((%roul.closed) || (%ActiveGame) || ($timer(.roul.reopen2))) halt
+  ELSEIF ((%roul.closed) || (%ActiveGame) || ($timer(.roul.reopen2)) || (%rr.p1)) halt
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     VAR %nick $twitch_name($nick)
     VAR %wager $floor($3)
