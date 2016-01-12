@@ -25,7 +25,12 @@ ON *:LOAD: {
 }
 
 ON *:UNLOAD: { UNSET %scram_* }
-ON *:CONNECT: { IF ($server == tmi.twitch.tv) UNSET %scram.* }
+ON *:CONNECT: { 
+  IF ($server == tmi.twitch.tv) {
+    UNSET %scram.*
+    UNSET %SCRAM_CD.*
+  }
+}
 
 alias scramble {
 
