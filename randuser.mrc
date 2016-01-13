@@ -31,7 +31,7 @@ ON *:LOAD: {
   IF (!$hget(activeusers)) HMAKE activeusers
 }
 
-ON *:CONNECT: { IF (($server == tmi.twitch.tv) && (!$hget(activeusers)) HMAKE activeusers }
+ON *:CONNECT: { IF (($server == tmi.twitch.tv) && (!$hget(activeusers))) HMAKE activeusers }
 
 
 alias activeuser IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
