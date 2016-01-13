@@ -24,7 +24,12 @@ ON *:UNLOAD: {
   UNSET %botname
 }
 
-ON *:CONNECT: { IF ($server == tmi.twitch.tv) UNSET %ActiveGame }
+ON *:CONNECT: { 
+  IF ($server == tmi.twitch.tv) {
+    UNSET %ActiveGame
+    UNSET %wdelay
+  }
+}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ALIASES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
