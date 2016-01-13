@@ -34,9 +34,6 @@ ON *:LOAD: {
 ON *:CONNECT: { IF (($server == tmi.twitch.tv) && (!$hget(activeusers))) HMAKE activeusers }
 
 
-alias activeuser IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
-
-
 ON $*:TEXT:/^!set\sactivetime\s\d+/iS:%mychan: {
 
   IF ($nick isop $chan) {
@@ -99,5 +96,5 @@ alias randuser {
 }
 
 
-ON *:TEXT:*:%mychan:activeuser
-ON *:ACTION:*:%mychan:activeuser
+ON *:TEXT:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
+ON *:ACTION:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
