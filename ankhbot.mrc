@@ -42,12 +42,8 @@ alias ankhbot_setup {
     SET %mychan $chr(35) $+ $lower($!)
     SET %TwitchID $twitch_id($!)
   }
-  :windowsname
-  $input(Please enter your Windows user name that you are running AnkhBot and mIRC on:,eo,Required Input)
-  IF !$! { ECHO You must enter your Windows user name! | GOTO windowsname }
-  ELSE VAR %windowsname $!
   :path
-  $input(Press "OK" if you did NOT change the default install directory of AnkhBot $+ $chr(44) and AnkhBot is stored on your main C: drive.  Otherwise $+ $chr(44) change this to the path and filename of your AnkhBot's CurrencyDB.splite file.,eo,Required Input,C:\Users\ $+ %windowsname $+ \AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite)
+  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the path and filename of your AnkhBot's CurrencyDB.splite file.,eo,Required Input,$sysdir(profile) $+ AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite)
   IF !$! { ECHO You must enter a valid path! | GOTO path }
   ELSE SET %CurrencyDB $qt($!)
   :curname
