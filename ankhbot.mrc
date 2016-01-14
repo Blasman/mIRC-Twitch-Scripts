@@ -88,11 +88,11 @@ alias wdelay {
   VAR %wcheck $calc(%wdelay - $ticks + 1100)
   IF (%wcheck > 0) {
     VAR %wmsg .timer.whisper $+ $ticks -m 1 %wcheck $1
-    SET %wdelay $calc(%wdelay + 1100)
+    SET -e %wdelay $calc(%wdelay + 1100)
     return %wmsg
   }
   ELSE {
-    SET %wdelay $ticks
+    SET -e %wdelay $ticks
     return $1
   }
 }
