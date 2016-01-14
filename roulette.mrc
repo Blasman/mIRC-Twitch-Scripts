@@ -35,7 +35,7 @@ ON *:LOAD: {
   SET %roul_options red black odd even less more doz1 doz2 doz3 row1 row2 row3 line1 line2 line3 line4 line5 line6 line7 line8 line9 line10 line11 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36
 }
 
-ON *:UNLOAD: { UNSET %roul_* }
+ON *:UNLOAD: { UNSET %roul_* | .timer.roul.* off }
 
 ON *:CONNECT: {
   IF ($server == tmi.twitch.tv) {
@@ -62,6 +62,7 @@ ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:#: {
     ELSEIF ($2 == off) {
       IF (%GAMES_ROUL_ACTIVE) {
         UNSET %GAMES_ROUL_ACTIVE
+		.timer.roul.* off
         MSG $chan $twitch_name($nick) $+ , the Roulette game is now disabled.
       }
       ELSE MSG $chan $twitch_name($nick) $+ , Roulette is already disabled.  FailFish
@@ -212,10 +213,10 @@ alias roulspin {
 
 alias roulreopen {
   IF (!%ActiveGame) MSG %mychan The Roulette game is open again!  You may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
-  ELSE .timer.roulreopen2 1 1 roulreopen
+  ELSE .timer.roul.reopen2 1 1 roulreopen
 }
 
 alias roulrepeat {
   IF (!%ActiveGame) MSG %mychan The Roulette game is open!  Place your bets!  You may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
-  ELSE .timer.roulrepeat 1 1 roulrepeat
+  ELSE .timer.roul.repeat 1 1 roulrepeat
 }
