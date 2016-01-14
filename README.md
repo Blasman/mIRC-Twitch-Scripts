@@ -19,6 +19,7 @@ To use any of the games scripts in this GitHub, you will need to download the fo
 * [JSONForMirc.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/resources/JSONForMirc.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.GroupChat.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.GroupChat.mrc): right click this link and "save link as..." to your mIRC directory.
+* [mTwitch.DisplayName.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.DisplayName.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory.
 * [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click this link and "save link as..." to your mIRC directory.
 
@@ -28,6 +29,7 @@ In mIRC, type in the following commands anywhere.  Accept and run any initializa
 `/load -rs JSONForMirc.mrc`  
 `/load -rs mTwitch.Core.mrc`  
 `/load -rs mTwitch.GroupChat.mrc`  
+`/load -rs mTwitch.DisplayName.mrc`  
 `/load -rs msqlite.mrc`  
 `/load -rs ankhbot.mrc`  
 
