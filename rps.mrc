@@ -37,7 +37,7 @@ ON *:CONNECT: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-ON $*:TEXT:/^!rps\s(on|off)/iS:#: {
+ON $*:TEXT:/^!rps\s(on|off)/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -58,7 +58,7 @@ ON $*:TEXT:/^!rps\s(on|off)/iS:#: {
 }
 
 
-ON $*:TEXT:/^!rps(\s|$)/iS:#: {
+ON $*:TEXT:/^!rps(\s|$)/iS:%mychan: {
 
   IF ($($+(%,floodRPS.,$nick),2)) halt
   SET -u3 %floodRPS. $+ $nick On
