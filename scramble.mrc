@@ -51,7 +51,7 @@ alias scramble {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; SCRAMBLE GAME ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ON $*:TEXT:/^!scram(ble)?\s(on|off)/iS:#: {
+ON $*:TEXT:/^!scram(ble)?\s(on|off)/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -71,7 +71,7 @@ ON $*:TEXT:/^!scram(ble)?\s(on|off)/iS:#: {
   }
 }
 
-ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:#: {
+ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:%mychan: {
 
   IF ($($+(%,floodSCRAM.,$nick),2)) halt
   SET -u3 %floodSCRAM. $+ $nick On
@@ -198,7 +198,7 @@ ON *:TEXT:*:?: {
   }
 }
 
-ON *:TEXT:!scramstats*:#: {
+ON *:TEXT:!scramstats*:%mychan: {
 
   IF ($($+(%,floodSCRAMstats.,$nick),2)) halt
   SET -u3 %floodSCRAMstats. $+ $nick On
@@ -223,7 +223,7 @@ ON *:TEXT:!scramstats*:#: {
   }
 }
 
-ON *:TEXT:!scramtop:#: {
+ON *:TEXT:!scramtop:%mychan: {
 
   IF (%floodSCRAMtop) halt
   SET -u10 %floodSCRAMtop On
