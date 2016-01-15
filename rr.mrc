@@ -38,7 +38,7 @@ ON *:CONNECT: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-ON $*:TEXT:/^!rr\s(on|off)$/iS:#: {
+ON $*:TEXT:/^!rr\s(on|off)$/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -59,7 +59,7 @@ ON $*:TEXT:/^!rr\s(on|off)$/iS:#: {
 }
 
 
-ON $*:TEXT:/^!rr(\s|$)/iS:#: {
+ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
 
   IF (($($+(%,floodRR.,$nick),2)) || ((%rr.p1) && (%rr.p2)) || (%ActiveGame) || ($isfile(roulbets.txt))) halt
   SET -u3 %floodRR. $+ $nick On
@@ -119,7 +119,7 @@ ON $*:TEXT:/^!rr(\s|$)/iS:#: {
 }
 
 
-ON $*:TEXT:/^!rrbet\s/iS:#: {
+ON $*:TEXT:/^!rrbet\s/iS:%mychan: {
 
   IF ((%rr.openbets) && ($nick != %rr.p1) && ($nick != %rr.p2) && (!%rr.bet. [ $+ [ $nick ] ]) && (($2 == %rr.p1) || ($2 == %rr.p2)) && ($3 isnum %rr_minbet - %rr_maxbet)) {
     IF ($checkpoints($nick, $floor($3)) == false) {
