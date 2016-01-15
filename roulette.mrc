@@ -49,7 +49,7 @@ ON *:CONNECT: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:#: {
+ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -71,7 +71,7 @@ ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:#: {
 }
 
 
-ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:#: {
+ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:%mychan: {
 
   IF (!%GAMES_ROUL_ACTIVE) {
     IF ((%floodROUL_ACTIVE) || ($($+(%,floodROUL_ACTIVE.,$nick),2))) halt
