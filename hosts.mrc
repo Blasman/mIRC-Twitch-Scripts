@@ -8,7 +8,7 @@ and various aliases.  Otherwise, you will have to edit the script
 accordingly.  This script also requires the JSONforMirc.mrc script.
 */
 
-ON *:TEXT:!hosts:#: {
+ON *:TEXT:!hosts:%mychan: {
   IF ($nick isop $chan) {
     JSONOpen -ud gethosts http://tmi.twitch.tv/hosts?include_logins=1&target= $+ %TwitchID
     VAR %x = 0
