@@ -37,7 +37,7 @@ ON *:CONNECT: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-ON $*:TEXT:/^!blackjack\s(on|off)/iS:#: {
+ON $*:TEXT:/^!blackjack\s(on|off)/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -58,7 +58,7 @@ ON $*:TEXT:/^!blackjack\s(on|off)/iS:#: {
 }
 
 
-ON $*:TEXT:/^!blackjack(\s|$)/iS:#: {
+ON $*:TEXT:/^!blackjack(\s|$)/iS:%mychan: {
 
   IF (($($+(%,floodBJ.,$nick),2)) || (%bj.name) || (%ActiveGame) || ($isfile(roulbets.txt)) || (%rr.p1)) halt
   SET -u3 %floodBJ. $+ $nick On
@@ -119,7 +119,7 @@ alias start_blackjack {
 }
 
 
-ON *:TEXT:!double:#: {
+ON *:TEXT:!double:%mychan: {
 
   IF (%bj.double) && ($nick == %bj.name) {
     REMOVEPOINTS %bj.name %bj.bet
@@ -140,7 +140,7 @@ ON *:TEXT:!double:#: {
 }
 
 
-ON *:TEXT:!hit*:#:{
+ON *:TEXT:!hit*:%mychan:{
 
   IF ($nick == %bj.name) {
     blackjacktimer
@@ -188,7 +188,7 @@ ON *:TEXT:!hit*:#:{
 }
 
 
-ON *:TEXT:!stand:#: { IF ($nick == %bj.name) stand }
+ON *:TEXT:!stand:%mychan: { IF ($nick == %bj.name) stand }
 
 
 alias bjdeal {
