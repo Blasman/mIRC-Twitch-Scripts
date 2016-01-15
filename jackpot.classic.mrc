@@ -53,7 +53,7 @@ ON *:UNLOAD: { UNSET %jackc.* }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT CLASSIC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ON $*:TEXT:/^!jackpot\s(on|off|set|reset)/iS:#: {
+ON $*:TEXT:/^!jackpot\s(on|off|set|reset)/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -81,7 +81,7 @@ ON $*:TEXT:/^!jackpot\s(on|off|set|reset)/iS:#: {
   }
 }
 
-ON $*:TEXT:/^!jackpot(\s)?stats$/iS:#: {
+ON $*:TEXT:/^!jackpot(\s)?stats$/iS:%mychan: {
 
   IF (%floodJACKC_STATS) halt
   SET -u10 %floodJACKC_STATS On
@@ -89,7 +89,7 @@ ON $*:TEXT:/^!jackpot(\s)?stats$/iS:#: {
   ELSE MSG $chan Current !jackpot:  %jackc_pot %curname $+ .  ▌  Last Winner was %jackc_last.winner who won %jackc_last.winnings %curname $+ .  ▌  Number of Winners: %jackc_winners  ▌  Total Payouts: %jackc_winnings %curname $+ .
 }
 
-ON $*:TEXT:/^!jackpot$/iS:#: {
+ON $*:TEXT:/^!jackpot$/iS:%mychan: {
 
   IF (!%GAMES_JACKPOTC_ACTIVE) {
     IF ((%floodJACKC_ACTIVE) || ($($+(%,floodJACKC_ACTIVE.,$nick),2))) halt
