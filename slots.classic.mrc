@@ -45,7 +45,7 @@ ON *:UNLOAD: { UNSET %slotc.* }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;; SLOT MACHINE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ON $*:TEXT:/^!slot(s)?\s(on|off)/Si:#: {
+ON $*:TEXT:/^!slot(s)?\s(on|off)/Si:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
@@ -65,7 +65,7 @@ ON $*:TEXT:/^!slot(s)?\s(on|off)/Si:#: {
   }
 }
 
-ON $*:TEXT:/^!slot(s)?/Si:#: {
+ON $*:TEXT:/^!slot(s)?/Si:%mychan: {
 
   IF (!$2) || ($2 == help) {
     IF ($($+(%,floodSLOTSPAM1.,$nick),2)) halt
