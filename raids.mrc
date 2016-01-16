@@ -137,7 +137,7 @@ ON *:TEXT:!raidsetup:%mychan: {
   }
 }
 
-ON *:TEXT:!raidmatchtest *:%mychan: $IIF(%raid_matchmsg isin $2-,MSG $chan Success!,MSG $chan Fail!)
+ON *:TEXT:!raidmatchtest *:%mychan: IF ($nick isop $chan) $IIF(%raid_matchmsg isin $2-,MSG $chan Success!,MSG $chan Fail!)
 
 ON *:TEXT:!raidhelp:%mychan: {
   IF ($nick isop $chan) {
