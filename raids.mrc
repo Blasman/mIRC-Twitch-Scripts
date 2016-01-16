@@ -2,8 +2,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; RAIDER SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ON *:LOAD: { raid_setup }
-ON *:UNLOAD { UNSET %raid* }
+ON *:LOAD: raid_setup
+ON *:UNLOAD: UNSET %raid*
 
 alias raid_setup {
   :raidmsg
@@ -62,6 +62,7 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
         .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the EXACT message will automatically receieve %raid.payout %curname after two minutes!
         .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE *EXACT* FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
         .timer.raid.joinchannel 1 20 JOIN %raid.chan
+        .timer.raid.timeout 1 1800 raidcancel
       }
       ELSE MSG $chan %streamer $+ , uhhh... check the spelling of that name.  FailFish
     }
@@ -74,6 +75,7 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
 }
 
 alias -l raidpayout {
+  IF ($timer(.raid.timeout)) .timer.raid.timeout off
   PART %raid.chan
   IF (%raid.list == $null) MSG %mychan Really?  NO ONE wanted to raid!?  BibleThump
   ELSE {
@@ -96,11 +98,12 @@ alias -l raidpayout {
   }
 }
 
-ON *:TEXT:!raidcancel:%mychan: {
-  IF (($nick == %streamer) && (%raid.name)) {
-    MSG $chan We are no longer going to raid %raid.name $+ .
-    UNSET %raid.*
-  }
+ON $*:TEXT:/^!raidcancel(\s|$)/iS:%mychan: IF (($nick == %streamer) && (%raid.name)) raidcancel
+
+alias -l raidcancel {
+  IF ($timer(.raid.timeout)) { MSG %mychan We are no longer going to raid %raid.name $+ . | .timer.raid.* off }
+  IF ($me ison %raid.chan) PART %raid.chan
+  UNSET %raid.*
 }
 
 ON $*:TEXT:/^!raidmsg(\s|$)/iS:%mychan: {
@@ -134,12 +137,7 @@ ON *:TEXT:!raidsetup:%mychan: {
   }
 }
 
-ON *:TEXT:!raidmatchtest *:%mychan {
-  IF ($nick isop $chan) {
-    IF (%raid_matchmsg isin $2-) MSG $chan Success!
-    ELSE MSG $chan Fail!
-  }
-}
+ON *:TEXT:!raidmatchtest *:%mychan: $IIF(%raid_matchmsg isin $2-,MSG $chan Success!,MSG $chan Fail!)
 
 ON *:TEXT:!raidhelp:%mychan: {
   IF ($nick isop $chan) {
