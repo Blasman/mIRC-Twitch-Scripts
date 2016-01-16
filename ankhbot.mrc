@@ -49,7 +49,7 @@ ON $*:TEXT:/^!games(\s)(on|off)$/iS:%mychan: {
         IF ($script(rr.mrc)) SET %GAMES_RR_ACTIVE On
         IF ($script(scramble.mrc)) SET %GAMES_SCRAM_ACTIVE On
         IF ($script(slots.classic.mrc)) SET %GAMES_SLOT_ACTIVE On
-        IF (%games) MSG $chan The following channel games are now active:  $left(%games, -1)
+        MSG $chan The following channel games are now active:  $left(%games, -1)
       }
       ELSEIF ($2 == off) {
         UNSET %GAMES_*_ACTIVE
