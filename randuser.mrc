@@ -16,8 +16,8 @@ with the $randuser command in it.
 
 The other command is a !payactive command that is similar to AnkhBot's
 "!points add +viewers #" command, except that it will only give points to the users
-who have been active in the last X seconds (or what you set the time to).
-Simply type "!payactive [number of points to give]"
+who have been active in the last X seconds (or what you set the time to) AND are
+still in your viewerlist.  Simply type "!payactive [number of points to give]"
 
 The default time for a user to be considered active is 1800 seconds (30 minutes).
 You can change the active time required from 1800 seconds by typing
@@ -25,14 +25,12 @@ You can change the active time required from 1800 seconds by typing
 considered active.
 */
 
-
 ON *:LOAD: {
   IF (!%activetime) SET %activetime 1800
   IF (!$hget(activeusers)) HMAKE activeusers
 }
 
 ON *:CONNECT: { IF (($server == tmi.twitch.tv) && (!$hget(activeusers))) HMAKE activeusers }
-
 
 ON $*:TEXT:/^!set\sactivetime\s\d+/iS:%mychan: {
 
@@ -42,7 +40,6 @@ ON $*:TEXT:/^!set\sactivetime\s\d+/iS:%mychan: {
   }
 }
 
-
 ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
 
   IF ($nick isop $chan) && ($2 isnum) {
@@ -50,31 +47,26 @@ ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
     VAR %x = 1
     WHILE ($hget(activeusers, %x).item != $null) {
       VAR %nick $hget(activeusers, %x).item
-      IF ((%nick != %streamer) && (%nick ison %mychan)) VAR %paylist $addtok(%paylist, $cached_name(%nick), 32)
+      IF ((%nick != %streamer) && (%nick ison %mychan)) VAR %paylist $cached_name(%nick)
       INC %x
     }
     IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
     ELSE {
       VAR %x = 1
       WHILE ($gettok(%paylist, %x, 32) != $null) {
-        VAR %nick $gettok(%paylist, %x, 32)
-        ADDPOINTS %nick %payout
+        ADDPOINTS $gettok(%paylist, %x, 32) %payout
         INC %x
       }
       VAR %paylist $sorttok(%paylist, 32, a)
       VAR %x = 1
       WHILE ($gettok(%paylist, %x, 32) != $null) {
-        VAR %nick $gettok(%paylist, %x, 32)
-        VAR %sortlist $addtok(%sortlist, %nick $+ $chr(44), 32)
+        VAR %sortlist %sortlist $gettok(%paylist, %x, 32) $+ $chr(44)
         INC %x
       }
-      VAR %numusers $numtok(%sortlist, 32)
-      VAR %sortlist $left(%sortlist, -1)
-      MSG %mychan Successfully payed out %payout %curname to all of the following %numusers active users:  %sortlist
+      MSG %mychan Successfully payed out %payout %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
     }
   }
 }
-
 
 alias randuser {
 
@@ -94,7 +86,6 @@ alias randuser {
   IF (%randuser != $null) RETURN $twitch_name(%randuser)
   ELSE RETURN $twitch_name($nick)
 }
-
 
 ON *:TEXT:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
 ON *:ACTION:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
