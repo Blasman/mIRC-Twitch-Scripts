@@ -31,7 +31,7 @@ ON *:CONNECT: {
   }
 }
 
-ON $*:TEXT:/^!games(\s)(on|off)$/iS:%mychan: {
+ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
   IF ($nick isop $chan) {
     IF ($script(blackjack.mrc)) VAR %games !blackjack -
     IF ($script(jackpot.classic.mrc)) VAR %games %games !jackpot -
