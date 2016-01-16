@@ -62,7 +62,7 @@ ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:%mychan: {
     ELSEIF ($2 == off) {
       IF (%GAMES_ROUL_ACTIVE) {
         UNSET %GAMES_ROUL_ACTIVE
-		.timer.roul.* off
+        .timer.roul.* off
         MSG $chan $twitch_name($nick) $+ , the Roulette game is now disabled.
       }
       ELSE MSG $chan $twitch_name($nick) $+ , Roulette is already disabled.  FailFish
