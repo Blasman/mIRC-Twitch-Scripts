@@ -114,7 +114,7 @@ ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
   ELSEIF (!%rr.p1) {
     IF (%floodrrinfo) halt
     SET -u10 %floodrrinfo On
-    MSG $chan Play Russian Roulette with a friend to try and win each others %curname $+ !  Just type "!rr $chr(91) $+ %rr_minbet $+ - $+ %rr_maxbet $+ $chr(93) $+ " to play against ANYONE, -or- type "!rr $chr(91) $+ %rr_minbet $+ - $+ %rr_maxbet $+ $chr(93) username" to play against a specific person! ▌ Example:  !rps %rr_maxbet
+    MSG $chan Play Russian Roulette with a friend to try and win each others %curname $+ !  Just type "!rr $chr(91) $+ %rr_minbet $+ - $+ %rr_maxbet $+ $chr(93) $+ " to play against ANYONE, -or- type "!rr $chr(91) $+ %rr_minbet $+ - $+ %rr_maxbet $+ $chr(93) username" to play against a specific person! ▌ Example:  !rr %rr_maxbet
   }
 }
 
