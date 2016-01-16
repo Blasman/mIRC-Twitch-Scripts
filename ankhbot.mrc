@@ -31,6 +31,34 @@ ON *:CONNECT: {
   }
 }
 
+ON $*:TEXT:/^!games(\s)(on|off)$/iS:%mychan: {
+  IF ($nick isop $chan) {
+    IF (($script(blackjack.mrc)) || ($script(jackpot.classic.mrc)) || ($script(roulette.mrc)) || ($script(rps.mrc)) || ($script(rr.mrc)) || ($script(scramble.mrc)) || ($script(slots.classic.mrc))) {
+      IF ($script(blackjack.mrc)) VAR %games !blackjack -
+      IF ($script(jackpot.classic.mrc)) VAR %games %games !jackpot -
+      IF ($script(roulette.mrc)) VAR %games %games !roulette -
+      IF ($script(rps.mrc)) VAR %games %games !rps -
+      IF ($script(rr.mrc)) VAR %games %games !rr -
+      IF ($script(scramble.mrc)) VAR %games %games !scramble -
+      IF ($script(slots.classic.mrc)) VAR %games %games !slots -
+      IF ($2 == on) {
+        IF ($script(blackjack.mrc)) SET %GAMES_BJ_ACTIVE On
+        IF ($script(jackpot.classic.mrc)) SET %GAMES_JACKPOTC_ACTIVE On
+        IF ($script(roulette.mrc)) SET %GAMES_ROUL_ACTIVE On
+        IF ($script(rps.mrc)) SET %GAMES_RPS_ACTIVE On
+        IF ($script(rr.mrc)) SET %GAMES_RR_ACTIVE On
+        IF ($script(scramble.mrc)) SET %GAMES_SCRAM_ACTIVE On
+        IF ($script(slots.classic.mrc)) SET %GAMES_SLOT_ACTIVE On
+        IF (%games) MSG $chan The following channel games are now active:  $left(%games, -1)
+      }
+      ELSEIF ($2 == off) {
+        UNSET %GAMES_*_ACTIVE
+        MSG $chan The following channel games are now disabled:  $left(%games, -1)
+      }
+    }
+  }
+}
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ALIASES ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
