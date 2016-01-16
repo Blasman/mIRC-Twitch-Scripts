@@ -58,9 +58,9 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
         SET %raid.name %raid.temp
         SET %raid.chan $chr(35) $+ $lower($2)
         SET %raid.url twitch.tv/ $+ %raid.name
-        DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url $+ !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the EXACT following message into their chat:  %raid_msg
-        .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the EXACT message will automatically receieve %raid.payout %curname after two minutes!
-        .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE *EXACT* FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
+        DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url $+ !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:  %raid_msg
+        .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the raid message will automatically receieve %raid.payout %curname after 90 seconds!
+        .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
         .timer.raid.joinchannel 1 20 JOIN %raid.chan
         .timer.raid.timeout 1 1800 raidcancel
       }
@@ -69,7 +69,7 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
     ELSE MSG $chan $nick $+ , there is a raid set up already for %raid.name $+ .  Type !raidcancel if you want to cancel this raid.
   }
   ELSEIF ($nick isop $chan) {
-    IF (%raid.name) DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE *EXACT* FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
+    IF (%raid.name) DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
     ELSE DESCRIBE $chan COPY THE FOLLOWING MESSAGE: %raid_msg  Paste it back in Chat and prepare for the RAID!!
   }
 }
