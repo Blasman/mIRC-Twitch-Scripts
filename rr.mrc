@@ -61,7 +61,7 @@ ON $*:TEXT:/^!rr\s(on|off)$/iS:%mychan: {
 
 ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
 
-  IF (($($+(%,floodRR.,$nick),2)) || ((%rr.p1) && (%rr.p2)) || (%ActiveGame) || ($isfile(roulbets.txt))) halt
+  IF (($($+(%,floodRR.,$nick),2)) || (%rr.safeguard) || (%ActiveGame) || ($isfile(roulbets.txt))) halt
   SET -u3 %floodRR. $+ $nick On
   IF (!%GAMES_RR_ACTIVE) {
     IF ((%floodRR_ACTIVE) || ($($+(%,floodRR_ACTIVE.,$nick),2))) halt
@@ -103,7 +103,7 @@ ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
       IF ($checkpoints($nick, %rr.bet) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
       ELSE SET %rr.p2 $twitch_name($nick)
     }
-    IF ((%rr.p2 == $nick) && (!%rr.safeguard)) {
+    IF (%rr.p2 == $nick) {
       .timer.rr.wait* off
       MSG $chan %rr.p2 has accepted the Russian Roulette challenge of %rr.p1 $+ !  Betting is now open for the next 90 seconds on who will be the survivor!  To place bets, type !rrbet [user] $chr(91) $+ %rr_minbet $+ - $+ %rr_maxbet $+ $chr(93) ▌ Example: !rrbet %rr.p1 %rr_maxbet
       SET %rr.safeguard On
