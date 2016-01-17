@@ -41,7 +41,7 @@ ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
     VAR %x = 1
     WHILE ($hget(activeusers, %x).item != $null) {
       VAR %nick $hget(activeusers, %x).item
-      IF ((%nick != %streamer) && (%nick ison %mychan)) VAR %paylist $cached_name(%nick)
+      IF ((%nick != %streamer) && (%nick ison %mychan)) VAR %paylist %paylist $cached_name(%nick)
       INC %x
     }
     IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
