@@ -48,28 +48,26 @@ ON *:CONNECT: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; ROULETTE GAME ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
       IF (!%GAMES_ROUL_ACTIVE) {
         SET %GAMES_ROUL_ACTIVE On
-        MSG $chan $twitch_name($nick) $+ , the Roulette game is now enabled!  Type !rbet for more info!  Have fun!  PogChamp
+        MSG $chan $nick $+ , the Roulette game is now enabled!  Type !rbet for more info!  Have fun!  PogChamp
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !rbet is already enabled.  FailFish
+      ELSE MSG $chan $nick $+ , !rbet is already enabled.  FailFish
     }
     ELSEIF ($2 == off) {
       IF (%GAMES_ROUL_ACTIVE) {
         UNSET %GAMES_ROUL_ACTIVE
         .timer.roul.* off
-        MSG $chan $twitch_name($nick) $+ , the Roulette game is now disabled.
+        MSG $chan $nick $+ , the Roulette game is now disabled.
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , Roulette is already disabled.  FailFish
+      ELSE MSG $chan $nick $+ , Roulette is already disabled.  FailFish
     }
   }
 }
-
 
 ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:%mychan: {
 
@@ -77,73 +75,71 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:%mychan: {
     IF ((%floodROUL_ACTIVE) || ($($+(%,floodROUL_ACTIVE.,$nick),2))) halt
     SET -u15 %floodROUL_ACTIVE On
     SET -u120 %floodROUL_ACTIVE. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , the Roulette game is currently disabled.
+    MSG $chan $nick $+ , the Roulette game is currently disabled.
   }
   ELSEIF ($timer(.roul.reopen)) {
     IF ((%floodROULreopen) || ($($+(%,floodROULreopen.,$nick),2))) halt
     SET -u15 %floodROULreopen On
     SET -u60 %floodROULreopen. $+ $nick On
-    MSG $chan Relax, $twitch_name($nick) $+ !  I will announce the next Roulette game in $duration($timer(.roul.reopen).secs) $+ !  SwiftRage
+    MSG $chan Relax, $nick $+ !  I will announce the next Roulette game in $duration($timer(.roul.reopen).secs) $+ !  SwiftRage
   }
   ELSEIF ((%roul.closed) || (%ActiveGame) || ($timer(.roul.reopen2)) || (%rr.p1)) halt
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
-    VAR %nick $twitch_name($nick)
     VAR %wager $floor($3)
-    IF ($CHECKPOINTS($nick, %wager) == false) { MSG $chan %nick $+ , you don't have %wager %curname to wager.  FailFish | halt }
+    IF ($CHECKPOINTS($nick, %wager) == false) { MSG $chan $nick $+ , you don't have %wager %curname to wager.  FailFish | halt }
     REMOVEPOINTS $nick %wager
     IF ($isfile(roulbets.txt)) {
       VAR %x = 1
       WHILE ($read(roulbets.txt, %x) != $null) {
-        VAR %rnick $wildtok($read(roulbets.txt, %x), *, 1, 32)
-        VAR %bet $wildtok($read(roulbets.txt, %x), *, 2, 32)
-        VAR %amount $wildtok($read(roulbets.txt, %x), *, 3, 32)
-        IF ((%nick == %rnick) && ($2 == %bet)) {
-          WRITE -l $+ %x roulbets.txt %nick $2 $calc(%amount + %wager)
+        VAR %rnick $gettok($read(roulbets.txt, %x), 1, 32)
+        VAR %bet $gettok($read(roulbets.txt, %x), 2, 32)
+        VAR %amount $gettok($read(roulbets.txt, %x), 3, 32)
+        IF (($nick == %rnick) && ($2 == %bet)) {
+          WRITE -l $+ %x roulbets.txt $nick $2 $calc(%amount + %wager)
           VAR %roul.rebet $true
         }
         IF (%roul.rebet) break
         INC %x
       }
-      IF (!%roul.rebet) WRITE roulbets.txt %nick $2 %wager
+      IF (!%roul.rebet) WRITE roulbets.txt $nick $2 %wager
     }
     ELSE {
       IF ($timer(.roul.repeat)) timer.roul.repeat off
-      WRITE roulbets.txt %nick $2 %wager
+      WRITE roulbets.txt $nick $2 %wager
       .timerRouletteBegin1 1 120 MSG $chan All bets for the Roulette game are now closed!  The ball is dropped into the wheel, and the wheel begins spinning!
       .timerRouletteBegin2 1 120 SET %roul.closed On
       .timerRouletteBegin3 1 132 roulspin
-      MSG $chan %nick has started a game of Roulette!  Everyone has two minutes to get in their bets!  Bet any amount of %curname from %roul_minbet to %roul_maxbet $+ ! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
+      MSG $chan $nick has started a game of Roulette!  Everyone has two minutes to get in their bets!  Bet any amount of %curname from %roul_minbet to %roul_maxbet $+ ! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
     }
     IF (!%roul.bet. [ $+ [ $nick ] ]) SET %roul.bet. [ $+ [ $nick ] ] $calc(%roul_maxbet - %wager)
     ELSE SET %roul.bet. [ $+ [ $nick ] ] $calc(%roul.bet. [ $+ [ $nick ] ] - %wager)
-    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) $wdelay(MSG $nick %nick $+ $chr(44) you have bet %wager %curname on $2 $+ .  You can spend %roul.bet. [ $+ [ $nick ] ] more %curname at this table.  Good luck!  BloodTrail)
-    ELSE $wdelay(MSG $nick %nick $+ $chr(44) you have bet %wager %curname on $2 $+ .  You have bet all that you can for this table!  Good luck!  BloodTrail)
+    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) $wdelay(MSG $nick $nick $+ $chr(44) you have bet %wager %curname on $2 $+ .  You can spend %roul.bet. [ $+ [ $nick ] ] more %curname at this table.  Good luck!  BloodTrail)
+    ELSE $wdelay(MSG $nick $nick $+ $chr(44) you have bet %wager %curname on $2 $+ .  You have bet all that you can for this table!  Good luck!  BloodTrail)
   }
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum) && ($3 !isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - %roul_minbet) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     IF ($($+(%,floodROULwager.,$nick),2)) halt
     SET -u15 %floodROULwager. $+ $nick On
-    $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) please make a valid wager between %roul_minbet and %roul_maxbet %curname $+ .)
+    $wdelay(MSG $nick $nick $+ $chr(44) please make a valid wager between %roul_minbet and %roul_maxbet %curname $+ .)
   }
   ELSEIF (($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     IF ($($+(%,floodROULoption.,$nick),2)) halt
     SET -u15 %floodROULoption. $+ $nick On
-    $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) please bet on a valid betting option.  See http://i.imgur.com/j7Fwytt.jpg for options.)
+    $wdelay(MSG $nick $nick $+ $chr(44) please bet on a valid betting option.  See http://i.imgur.com/j7Fwytt.jpg for options.)
   }
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && ($calc(%roul.bet. [ $+ [ $nick ] ] - $3) < 0)) {
     IF ($($+(%,floodROULmaxwager.,$nick),2)) halt
     SET -u15 %floodROULmaxwager. $+ $nick On
-    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) you can only bet up to %roul.bet. [ $+ [ $nick ] ] more %curname at this table.)
-    ELSE $wdelay(MSG $nick $twitch_name($nick) $+ $chr(44) the minimum bet is %roul_minbet %curname on any bet at Roulette $+ $chr(44) the max bet for the entire table is %roul_maxbet %curname $+ .  You cannot bet any more at this table.)
+    IF (%roul.bet. [ $+ [ $nick ] ] >= %roul_minbet) $wdelay(MSG $nick $nick $+ $chr(44) you can only bet up to %roul.bet. [ $+ [ $nick ] ] more %curname at this table.)
+    ELSE $wdelay(MSG $nick $nick $+ $chr(44) the minimum bet is %roul_minbet %curname on any bet at Roulette $+ $chr(44) the max bet for the entire table is %roul_maxbet %curname $+ .  You cannot bet any more at this table.)
   }
   ELSEIF ((%roul.bet. [ $+ [ $nick ] ]) || (%roul.bet. [ $+ [ $nick ] ] == 0)) halt
   ELSE {
     IF ((%floodROULinfo) || ($($+(%,floodROULinfo.,$nick),2))) halt
     SET -u15 %floodROULinfo On
     SET -u60 %floodROULinfo. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , you may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
+    MSG $chan $nick $+ , you may bet any amount of %curname from %roul_minbet to %roul_maxbet on Roulette! ▌ Use:  !rbet [option] [amount] ▌  Example:  !rbet red %roul_minbet ▌ For all betting options, see http://i.imgur.com/j7Fwytt.jpg
   }
 }
-
 
 alias roulspin {
   VAR %num = $rand(0,36)
@@ -187,9 +183,9 @@ alias roulspin {
   ELSEIF (%num == 36) VAR %winnum 36 red even row3 doz3 line11 more
   VAR %x = 1
   WHILE ($read(roulbets.txt, %x) != $null) {
-    VAR %nick $wildtok($read(roulbets.txt, %x), *, 1, 32)
-    VAR %bet $wildtok($read(roulbets.txt, %x), *, 2, 32)
-    VAR %amount $wildtok($read(roulbets.txt, %x), *, 3, 32)
+    VAR %nick $gettok($read(roulbets.txt, %x), 1, 32)
+    VAR %bet $gettok($read(roulbets.txt, %x), 2, 32)
+    VAR %amount $gettok($read(roulbets.txt, %x), 3, 32)
     IF ($istok(%winnum,%bet,32)) {
       IF ((%bet == red) || (%bet == black) || (%bet == odd) || (%bet == even) || (%bet == more) || (%bet == less)) VAR %winnings = %amount * 2
       ELSEIF (($left(%bet,3) == row) || ($left(%bet,3) == doz)) VAR %winnings = %amount * 3
@@ -200,10 +196,7 @@ alias roulspin {
     }
     INC %x
   }
-  IF (%winnersList) {
-    VAR %winnersList $left(%winnersList, -1) BloodTrail
-    .timer.endroul 1 3 MSG %mychan CONGRATULATIONS TO THE WINNERS OF THE ROULETTE GAME:  %winnersList
-  }
+  IF (%winnersList) .timer.endroul 1 3 MSG %mychan CONGRATULATIONS TO THE WINNERS OF THE ROULETTE GAME: $left(%winnersList, -1) BloodTrail
   ELSE .timer.endroul 1 3 MSG %mychan Nobody won at Roulette!  Better luck next time!  :tf:
   .timer.roul.unset2 1 3 UNSET %roul.*
   .timer.roul.unset3 1 3 REMOVE roulbets.txt
