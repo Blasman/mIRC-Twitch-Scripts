@@ -13,7 +13,7 @@ $randuser(othernotme) to pick a random active user that is not you (the streamer
 and is also not the person who initiated the command.  If the command cannot find
 an active user, then it will use the name of the person who initiated the command
 with the $randuser command in it.  Use $randuser(list) to simply return a list
-of active users (all lowercase letters), useful for some commands.
+of active users, useful for some commands.
 
 The other command is a !payactive command that is similar to AnkhBot's
 "!points add +viewers #" command, except that it will only give points to the users
@@ -33,31 +33,29 @@ ON *:LOAD: {
 
 ON *:CONNECT: IF (($server == tmi.twitch.tv) && (!$hget(activeusers))) HMAKE activeusers
 
-ON $*:TEXT:/^!set\sactivetime\s\d+/iS:%mychan: IF ($nick isop $chan) { SET %activetime $3 | MSG $chan The time since last user activity to be considered an active user has been set to $3 seconds. }
+ON $*:TEXT:/^!set\sactivetime\s\d+$/iS:%mychan: IF ($nick isop $chan) { SET %activetime $3 | MSG $chan The time since last user activity to be considered an active user has been set to $3 seconds. }
 
-ON $*:TEXT:/^!payactive\s\d+/iS:%mychan: {
-  IF ($nick isop $chan) && ($2 isnum) {
-    VAR %payout = $floor($2)
+ON $*:TEXT:/^!payactive\s\d+$/iS:%mychan: {
+  IF ($editorcheck($nick) == true) {
     VAR %x = 1
     WHILE ($hget(activeusers, %x).item != $null) {
-      VAR %nick $hget(activeusers, %x).item
-      IF ((%nick != %streamer) && (%nick ison %mychan)) VAR %paylist %paylist $cached_name(%nick)
+      IF (($v1 != %streamer) && ($v1 ison %mychan)) VAR %paylist %paylist $v1
       INC %x
     }
     IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
     ELSE {
       VAR %x = 1
       WHILE ($gettok(%paylist, %x, 32) != $null) {
-        ADDPOINTS $gettok(%paylist, %x, 32) %payout
+        ADDPOINTS $v1 $2
         INC %x
       }
       VAR %paylist $sorttok(%paylist, 32, a)
       VAR %x = 1
       WHILE ($gettok(%paylist, %x, 32) != $null) {
-        VAR %sortlist %sortlist $gettok(%paylist, %x, 32) $+ $chr(44)
+        VAR %sortlist %sortlist $v1 $+ $chr(44)
         INC %x
       }
-      MSG %mychan Successfully payed out %payout %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
+      MSG %mychan Successfully payed out $2 %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
     }
   }
 }
@@ -77,8 +75,8 @@ alias randuser {
   IF ($1 == list) RETURN %activelist
   ELSE {
     VAR %randuser $gettok(%activelist, $rand(1, $numtok(%activelist, 32)), 32)
-    IF (%randuser != $null) RETURN $twitch_name(%randuser)
-    ELSE RETURN $twitch_name($nick)
+    IF (%randuser != $null) RETURN %randuser
+    ELSE RETURN $nick
   }
 }
 
