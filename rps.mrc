@@ -24,7 +24,7 @@ ON *:LOAD: {
   SET %rps_cd 120
 }
 
-ON *:UNLOAD: { UNSET %rps_* }
+ON *:UNLOAD: UNSET %rps_*
 ON *:CONNECT: {
   IF ($server == tmi.twitch.tv) {
     UNSET %rps.*
@@ -130,11 +130,13 @@ ON *:TEXT:*:?:{
       IF ($left($1,1) == r) SET %rps.p1c Rock
       ELSEIF ($left($1,1) == p) SET %rps.p1c Paper
       ELSEIF ($left($1,1) == s) SET %rps.p1c Scissors
+      CLOSE -m %rps.p1
     }
     ELSEIF ($nick == %rps.p2) && (!%rps.p2c) {
       IF ($left($1,1) == r) SET %rps.p2c Rock
       ELSEIF ($left($1,1) == p) SET %rps.p2c Paper
       ELSEIF ($left($1,1) == s) SET %rps.p2c Scissors
+      CLOSE -m %rps.p2
     }
     IF (%rps.p1c) && (%rps.p2c) {
       .timer.rps.tooslow off
