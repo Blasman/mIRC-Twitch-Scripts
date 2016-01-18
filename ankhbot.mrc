@@ -13,10 +13,11 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /ankhbot_setup in mIRC.
 */
 
-ON *:LOAD: { ankhbot_setup }
+ON *:LOAD: ankhbot_setup
 
 ON *:UNLOAD: {
   UNSET %CurrencyDB
+  UNSET %EditorsDB
   UNSET %streamer
   UNSET %curname
   UNSET %mychan
@@ -26,8 +27,8 @@ ON *:UNLOAD: {
 
 ON *:CONNECT: {
   IF ($server == tmi.twitch.tv) {
+    IF (!$hget(bot)) HMAKE bot
     UNSET %ActiveGame
-    UNSET %wdelay
   }
 }
 
@@ -36,6 +37,7 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
     IF ($script(blackjack.mrc)) VAR %games !blackjack -
     IF ($script(jackpot.classic.mrc)) VAR %games %games !jackpot -
     IF ($script(roulette.mrc)) VAR %games %games !roulette -
+    IF ($script(dice.mrc)) VAR %games %games !dice -
     IF ($script(rps.mrc)) VAR %games %games !rps -
     IF ($script(rr.mrc)) VAR %games %games !rr -
     IF ($script(scramble.mrc)) VAR %games %games !scramble -
@@ -45,6 +47,7 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
         IF ($script(blackjack.mrc)) SET %GAMES_BJ_ACTIVE On
         IF ($script(jackpot.classic.mrc)) SET %GAMES_JACKPOTC_ACTIVE On
         IF ($script(roulette.mrc)) SET %GAMES_ROUL_ACTIVE On
+        IF ($script(dice.mrc)) SET %GAMES_DICE_ACTIVE On
         IF ($script(rps.mrc)) SET %GAMES_RPS_ACTIVE On
         IF ($script(rr.mrc)) SET %GAMES_RR_ACTIVE On
         IF ($script(scramble.mrc)) SET %GAMES_SCRAM_ACTIVE On
@@ -65,7 +68,6 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
 
 
 alias ankhbot_setup {
-
   SET %botname $twitch_name($me)
   :twitchname
   $input(Please enter YOUR Twitch user name (NOT your bots):,eo,Required Input)
@@ -76,17 +78,22 @@ alias ankhbot_setup {
     SET %TwitchID $twitch_id($!)
   }
   :path
-  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the path and filename of your AnkhBot's CurrencyDB.sqlite file.,eo,Required Input,$sysdir(profile) $+ AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\CurrencyDB.sqlite)
+  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the PATH ONLY of your AnkhBot's .sqlite files.,eo,Required Input,$sysdir(profile) $+ AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\)
   IF !$! { ECHO You must enter a valid path! | GOTO path }
-  ELSE SET %CurrencyDB $qt($!)
+  ELSE {
+    IF ($right($!,1) != $chr(92)) VAR %path $! $+ $chr(92)
+    ELSE VAR %path $!
+    SET %CurrencyDB $qt(%path $+ CurrencyDB.sqlite)
+    SET %EditorsDB $qt(%path $+ EditorsDB.sqlite)
+  }
   :curname
   $input(Please enter the name of your channel's currency:,eo,Required Input,points)
   IF !$! { ECHO You must enter a valid name! | GOTO curname }
   ELSE SET %curname $!
+  IF (!$hget(bot)) HMAKE bot
 }
 
 alias cached_name {
-
   VAR %nick $wildtok(%display.names, $1, 1, 32)
   IF (%nick != $null) return %nick
   ELSE {
@@ -96,7 +103,6 @@ alias cached_name {
 }
 
 alias twitch_name {
-
   if (%tn == 1000) %tn = 0
   inc %tn
   JSONOpen -ud twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
@@ -105,28 +111,24 @@ alias twitch_name {
 }
 
 alias twitch_id {
-
   JSONOpen -ud twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
   return $json(twitch_id, _id)
   JSONClose twitch_id
 }
 
 alias wdelay {
-
-  VAR %wcheck $calc(%wdelay - $ticks + 1100)
-  IF (%wcheck > 0) {
-    VAR %wmsg .timer.whisper $+ $ticks -m 1 %wcheck $1
-    SET -e %wdelay $calc(%wdelay + 1100)
+  IF ($calc($hget(bot,wdelay) - $ticks + 1100) > 0) {
+    VAR %wmsg .timer.whisper $+ $ticks -m 1 $v1 $1
+    HADD bot wdelay $calc($hget(bot,wdelay) + 1100)
     return %wmsg
   }
   ELSE {
-    SET -e %wdelay $ticks
+    HADD bot wdelay $ticks
     return $1
   }
 }
 
 alias addpoints {
-
   set %ankhbot_currency $sqlite_open(%CurrencyDB)
   if (!%ankhbot_currency) {
     echo 4 -a Error: %sqlite_errstr
@@ -148,7 +150,6 @@ alias addpoints {
 }
 
 alias removepoints {
-
   set %ankhbot_currency $sqlite_open(%CurrencyDB)
   if (!%ankhbot_currency) {
     echo 4 -a Error: %sqlite_errstr
@@ -170,7 +171,6 @@ alias removepoints {
 }
 
 alias checkpoints {
-
   set %ankhbot_currency $sqlite_open(%CurrencyDB)
   if (!%ankhbot_currency) {
     echo 4 -a Error: %sqlite_errstr
@@ -190,4 +190,22 @@ alias checkpoints {
     elseif (%ankhbot_points >= $2) { return true }
     sqlite_free %request_points
   }
+}
+
+alias editorcheck {
+  IF (($1 == %streamer) || ($1 == %botname)) return true
+  SET %ankhbot_editors $sqlite_open(%EditorsDB)
+  IF (!%ankhbot_editors) {
+    echo 4 -a Error: %sqlite_errstr
+    halt
+  }
+  VAR %sql = SELECT * FROM Editor WHERE user = ' $+ $1 $+ ' COLLATE NOCASE
+  VAR %request = $sqlite_query(%ankhbot_editors, %sql)
+  IF (!%request) {
+    echo 4 -a Error: %sqlite_errstr
+    halt
+  }
+  IF ($sqlite_num_rows(%request) == 0) return false
+  ELSE return true
+  sqlite_free %request
 }
