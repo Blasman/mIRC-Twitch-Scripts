@@ -143,10 +143,8 @@ alias addpoints {
   $sqlite_fetch_row(%request_points, row)
   var %ankhbot_points = $hget(row, Points)
 
-  SET %newpoints = $calc(%ankhbot_points + $2)
-  sqlite_exec %ankhbot_currency UPDATE CurrencyUser SET Points %newpoints WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
+  sqlite_exec %ankhbot_currency UPDATE CurrencyUser SET Points = Points + $floor($2) WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
   sqlite_free %request_points
-  UNSET %newpoints
 }
 
 alias removepoints {
@@ -164,10 +162,8 @@ alias removepoints {
   $sqlite_fetch_row(%request_points, row)
   var %ankhbot_points = $hget(row, Points)
 
-  SET %newpoints = $calc(%ankhbot_points - $2)
-  sqlite_exec %ankhbot_currency UPDATE CurrencyUser SET Points %newpoints WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
+  sqlite_exec %ankhbot_currency UPDATE CurrencyUser SET Points = Points - $floor($2) WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
   sqlite_free %request_points
-  UNSET %newpoints
 }
 
 alias checkpoints {
