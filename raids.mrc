@@ -21,29 +21,27 @@ alias raid_setup {
 }
 
 ON *:TEXT:*:%raid.chan: {
-  IF (%raid_matchmsg isin $1-) {
+  IF ((%raid_matchmsg isin $1-) && (!$($+(%,raid.name.,$nick),2))) {
     IF (($nick == %streamer) && (!$timer(.raid.active))) {
       .timer.raid.active 1 92 raidpayout
-      .timer.raid.msg 1 2 MSG %mychan The Raid on %raid.url has begun!  All Raiders will be given %raid_payout %curname in 90 seconds!
+      .timer.raid.msg 1 2 MSG %mychan The Raid on %raid.url is happening right NOW!  All Raiders will be given %raid.payout %curname in 90 seconds!
     }
     ELSEIF (($nick != %streamer) && ($timer(.raid.active))) {
-      IF ($($+(%,raid.name.,$nick),2)) halt
       SET %raid.name. $+ $nick On
-      SET %raid.list %raid.list $twitch_name($nick)
+      SET %raid.list %raid.list $nick
     }
   }
 }
 
 ON *:ACTION:*:%raid.chan: {
-  IF (%raid_matchmsg isin $1-) {
+  IF ((%raid_matchmsg isin $1-) && (!$($+(%,raid.name.,$nick),2))) {
     IF (($nick == %streamer) && (!$timer(.raid.active))) {
       .timer.raid.active 1 92 raidpayout
-      .timer.raid.msg 1 2 MSG %mychan The Raid on %raid.url has begun!  All Raiders will be given %raid_payout %curname in 90 seconds!
+      .timer.raid.msg 1 2 MSG %mychan The Raid on %raid.url is happening right NOW!  All Raiders will be given %raid.payout %curname in 90 seconds!
     }
     ELSEIF (($nick != %streamer) && ($timer(.raid.active))) {
-      IF ($($+(%,raid.name.,$nick),2)) halt
       SET %raid.name. $+ $nick On
-      SET %raid.list %raid.list $twitch_name($nick)
+      SET %raid.list %raid.list $nick
     }
   }
 }
@@ -58,7 +56,7 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
         SET %raid.name %raid.temp
         SET %raid.chan $chr(35) $+ $lower($2)
         SET %raid.url twitch.tv/ $+ %raid.name
-        DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url $+ !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:  %raid_msg
+        DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:  %raid_msg
         .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the raid message will automatically receieve %raid.payout %curname after 90 seconds!
         .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
         .timer.raid.joinchannel 1 20 JOIN %raid.chan
@@ -81,21 +79,21 @@ alias -l raidpayout {
   ELSE {
     VAR %x = 1
     WHILE ($gettok(%raid.list, %x, 32) != $null) {
-      ADDPOINTS $gettok(%raid.list, %x, 32) %raid.payout
+      ADDPOINTS $v1 %raid.payout
       INC %x
     }
     VAR %raid.list $sorttok(%raid.list, 32, a)
     VAR %x = 1
     WHILE ($gettok(%raid.list, %x, 32) != $null) {
-      VAR %sortlist %sortlist $gettok(%raid.list, %x, 32) $+ $chr(44)
+      VAR %sortlist %sortlist $v1 $+ $chr(44)
       INC %x
     }
     VAR %sortlist $left(%sortlist, -1)
     VAR %num $numtok(%sortlist, 32)
     WRITE raid_history.txt $asctime(mmm d h:nn TT) - %raid.name - %num Raiders: %sortlist
     MSG %mychan Thank you, Raiders!  Successfully payed out %raid.payout %curname to all of the following %num raiders:  %sortlist
-    UNSET %raid.*
   }
+  UNSET %raid.*
 }
 
 ON $*:TEXT:/^!raidcancel(\s|$)/iS:%mychan: IF (($nick == %streamer) && (%raid.name)) raidcancel
