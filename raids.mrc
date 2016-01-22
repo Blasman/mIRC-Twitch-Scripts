@@ -16,7 +16,7 @@ alias raid_setup {
   ELSE SET %raid_default_payout $floor($!)
   :matchmsg
   $input(Please enter the text that you want to match in the channels that you raid.  If a user types a message that matches this text in the channel that you are raiding $chr(44) $+ then they will be treated as a successful raider.  Just press "OK" if you want to match your raid message EXACTLY.  It is probably a good idea to just use an emote.,eo,Required Input,%raid_msg)
-  IF !$! { ECHO You must enter a valid name! | GOTO matchmsg }
+  IF !$! { ECHO You must enter a valid message! | GOTO matchmsg }
   ELSE SET %raid_matchmsg $!
 }
 
