@@ -39,7 +39,7 @@ ON $*:TEXT:/^!payactive\s\d+$/iS:%mychan: {
   IF ($editorcheck($nick) == true) {
     VAR %x = 1
     WHILE ($hget(activeusers, %x).item != $null) {
-      IF (($v1 != %streamer) && ($v1 ison %mychan)) VAR %paylist %paylist $v1
+      IF (($v1 != %streamer) && (($v1 ison %mychan) || ($calc($hget(activeusers, $v1) + 60) >= %activetime))) VAR %paylist %paylist $v1
       INC %x
     }
     IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
@@ -63,12 +63,12 @@ ON $*:TEXT:/^!payactive\s\d+$/iS:%mychan: {
 alias randuser {
   VAR %x = 1
   WHILE ($hget(activeusers, %x).item != $null) {
-    VAR %nick $hget(activeusers, %x).item
-    IF (!$1) { IF (%nick ison %mychan) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == other) { IF ((%nick ison %mychan) && (%nick != $nick)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == notme) { IF ((%nick ison %mychan) && (%nick != %streamer)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == othernotme) { IF ((%nick ison %mychan) && (%nick != %streamer) && (%nick != $nick)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == list) { IF (%nick ison %mychan) VAR %activelist %activelist %nick }
+    VAR %nick $v1
+    IF (!$1) { IF ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == other) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) && (%nick != $nick)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == notme) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) && (%nick != %streamer)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == othernotme) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) && (%nick != %streamer) && (%nick != $nick)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == list) { IF ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) VAR %activelist %activelist %nick }
     ELSE BREAK
     INC %x
   }
