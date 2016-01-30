@@ -35,28 +35,36 @@ ON *:CONNECT: IF (($server == tmi.twitch.tv) && (!$hget(activeusers))) HMAKE act
 
 ON $*:TEXT:/^!set\sactivetime\s\d+$/iS:%mychan: IF ($nick isop $chan) { SET %activetime $3 | MSG $chan The time since last user activity to be considered an active user has been set to $3 seconds. }
 
-ON $*:TEXT:/^!payactive\s\d+$/iS:%mychan: {
+ON $*:TEXT:/^!payactive\s\d+(\s\d+)?$/iS:%mychan: {
   IF ($editorcheck($nick) == true) {
+    IF (!$3) payactive $2
+    ELSE {
+      MSG $chan KAPOW Attention all lurkers!  In $3 seconds, everyone who has been chatting in the last $calc(%activetime / 60) minutes will receive $2 %curname $+ !
+      .timer.payactive 1 $3 payactive $2
+    }
+  }
+}
+
+alias payactive {
+  VAR %x = 1
+  WHILE ($hget(activeusers, %x).item != $null) {
+    IF (($v1 != %streamer) && (($v1 ison %mychan) || ($calc($hget(activeusers, $v1) + 60) >= %activetime))) VAR %paylist %paylist $hget(activeusers, %x).item
+    INC %x
+  }
+  IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
+  ELSE {
     VAR %x = 1
-    WHILE ($hget(activeusers, %x).item != $null) {
-      IF (($v1 != %streamer) && (($v1 ison %mychan) || ($calc($hget(activeusers, $v1) + 60) >= %activetime))) VAR %paylist %paylist $v1
+    WHILE ($gettok(%paylist, %x, 32) != $null) {
+      ADDPOINTS $v1 $1
       INC %x
     }
-    IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
-    ELSE {
-      VAR %x = 1
-      WHILE ($gettok(%paylist, %x, 32) != $null) {
-        ADDPOINTS $v1 $2
-        INC %x
-      }
-      VAR %paylist $sorttok(%paylist, 32, a)
-      VAR %x = 1
-      WHILE ($gettok(%paylist, %x, 32) != $null) {
-        VAR %sortlist %sortlist $v1 $+ $chr(44)
-        INC %x
-      }
-      MSG %mychan Successfully payed out $2 %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
+    VAR %paylist $sorttok(%paylist, 32, a)
+    VAR %x = 1
+    WHILE ($gettok(%paylist, %x, 32) != $null) {
+      VAR %sortlist %sortlist $v1 $+ $chr(44)
+      INC %x
     }
+    MSG %mychan Successfully payed out $1 %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
   }
 }
 
