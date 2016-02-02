@@ -38,8 +38,8 @@ ON $*:TEXT:/^!set\sactivetime\s\d+$/iS:%mychan: IF ($nick isop $chan) { SET %act
 ON $*:TEXT:/^!payactive\s\d+(\s\d+)?$/iS:%mychan: {
   IF ($editorcheck($nick) == true) {
     IF (!$3) payactive $2
-    ELSE {
-      MSG $chan KAPOW Attention all lurkers!  In $3 seconds, everyone who has been chatting in the last $calc(%activetime / 60) minutes will receive $2 %curname $+ !
+    ELSEIF ($3) {
+      MSG $chan KAPOW Attention all lurkers!  In $IIF($regex($calc($3 / 30),^\d+$),$calc($3 / 60) minutes,$3 seconds) $+ , everyone who has been chatting in the previous $calc(%activetime / 60) minutes from that point will receive $2 %curname $+ !
       .timer.payactive 1 $3 payactive $2
     }
   }
