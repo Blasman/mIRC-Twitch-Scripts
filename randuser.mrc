@@ -48,7 +48,8 @@ ON $*:TEXT:/^!payactive\s\d+(\s\d+)?$/iS:%mychan: {
 alias payactive {
   VAR %x = 1
   WHILE ($hget(activeusers, %x).item != $null) {
-    IF (($v1 != %streamer) && (($v1 ison %mychan) || ($calc($hget(activeusers, $v1) + 60) >= %activetime))) VAR %paylist %paylist $hget(activeusers, %x).item
+    VAR %nick $v1
+    IF ((%nick != %streamer) && ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime))) VAR %paylist %paylist %nick
     INC %x
   }
   IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
@@ -72,11 +73,11 @@ alias randuser {
   VAR %x = 1
   WHILE ($hget(activeusers, %x).item != $null) {
     VAR %nick $v1
-    IF (!$1) { IF ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == other) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) && (%nick != $nick)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == notme) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) && (%nick != %streamer)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == othernotme) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) && (%nick != %streamer) && (%nick != $nick)) VAR %activelist %activelist %nick }
-    ELSEIF ($1 == list) { IF ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 60) >= %activetime)) VAR %activelist %activelist %nick }
+    IF (!$1) { IF ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == other) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime)) && (%nick != $nick)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == notme) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime)) && (%nick != %streamer)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == othernotme) { IF (((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime)) && (%nick != %streamer) && (%nick != $nick)) VAR %activelist %activelist %nick }
+    ELSEIF ($1 == list) { IF ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime)) VAR %activelist %activelist %nick }
     ELSE BREAK
     INC %x
   }
