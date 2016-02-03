@@ -51,16 +51,19 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
     IF (!%raid.name) {
       VAR %raid.temp $twitch_name($2)
       IF (%raid.temp != $null) {
-        IF ($3 isnum) SET %raid.payout $floor($3)
-        ELSE SET %raid.payout %raid_default_payout
-        SET %raid.name %raid.temp
-        SET %raid.chan $chr(35) $+ $lower($2)
-        SET %raid.url twitch.tv/ $+ %raid.name
-        DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:  %raid_msg
-        .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the raid message will automatically receieve %raid.payout %curname after 90 seconds!
-        .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
-        .timer.raid.joinchannel 1 20 JOIN %raid.chan
-        .timer.raid.timeout 1 1800 raidcancel
+        IF ($livecheck(%raid.temp) == $true) {
+          IF ($3 isnum) SET %raid.payout $floor($3)
+          ELSE SET %raid.payout %raid_default_payout
+          SET %raid.name %raid.temp
+          SET %raid.chan $chr(35) $+ $lower($2)
+          SET %raid.url twitch.tv/ $+ %raid.name
+          DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:  %raid_msg
+          .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the raid message will automatically receieve %raid.payout %curname after 90 seconds!
+          .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
+          .timer.raid.joinchannel 1 20 JOIN %raid.chan
+          .timer.raid.timeout 1 1800 raidcancel
+        }
+        ELSE MSG $chan %streamer $+ , uhhh... %raid.temp doesn't appear to be live at the moment.  FailFish
       }
       ELSE MSG $chan %streamer $+ , uhhh... check the spelling of that name.  FailFish
     }
@@ -142,4 +145,10 @@ ON *:TEXT:!raidhelp:%mychan: {
     MSG $chan STREAMER ONLY Commands ▌ !raid [user] - setup a raid with default payout ▌ !raid [user] [amount] - setup a raid with a specific payout ▌ !raidcancel - cancel a raid ▌ !raidmsg [message] - change raid message ▌ !raidpayout [amount] - change the default payout for raids ▌ !raidmatchmsg [message] - change match text ▌ !raidsetup - run the raid setup in mIRC
     .timer.raid.help 1 2 MSG $chan MOD ONLY Commands ▌ !raid - posts the raid message (and target if there is one) ▌ !raidmsg - posts the raid message ▌ !raidpayout - posts the default payout for raiders ▌ !raidmatchmsg - posts the match text ▌ !raidmatchtest [message] - test to see if your message will match the match text
   }
+}
+
+alias -l livecheck {
+  JSONOpen -ud livecheck https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
+  RETURN $IIF($json(livecheck,stream),$true,$false)
+  JSONClose livecheck
 }
