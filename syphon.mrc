@@ -2,23 +2,20 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; POINTS RAFFLE ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ON $*:TEXT:/^!syphon\s(\d+|end)$/iS:%mychan: {
+ON $*:TEXT:/^!syphon\s(end|\d+(\s\d+\s\d+)?)$/iS:%mychan: {
   IF ($editorcheck($nick) == true) {
     IF (($2 isnum) && (!%syphon.active)) {
       SET %syphon.active On
       SET %syphon.cost $2
-      MSG $chan A $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon has been started in the channel! The entry fee is %syphon.cost %curname $+ ! The winner will receive all the %curname that are entered into the raffle! To enter, simply type !syphon in chat.
+      IF (($3) && ($4)) {
+        VAR %syphon.msg The syphon will automatically close after %syphon.max.entries entries or $IIF($regex($calc($4 / 30),^\d+$),$calc($4 / 60) minutes,$4 seconds) $+ $chr(44) whichever comes first.
+        SET %syphon.max.entries $3
+        SET %syphon.timer $4
+      }
+      MSG $chan KAPOW A $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon has been started in the channel! The entry fee is %syphon.cost %curname $+ ! The winner will receive all the %curname that are entered into the raffle! To enter, simply type !syphon in chat. %syphon.msg
+      IF ($4) .timer.syphon.end 1 %syphon.timer endsyphon
     }
-    ELSEIF (($2 == end) && (%syphon.active)) {
-      UNSET %syphon.active
-      MSG $chan The $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon is now closed! Good luck to everyone who entered: $entries
-      VAR %syphon.total $calc(%syphon.cost * $numtok(%syphon.entries,32))
-      VAR %syphon.winner $gettok(%syphon.entries, $rand(1, $numtok(%syphon.entries, 32)), 32)
-      .timer.syphon.1 1 6 MSG $chan I am now choosing a winner at random!
-      .timer.syphon.2 1 12 MSG $chan Congratulations to %syphon.winner who just won %syphon.total %curname in the $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon!
-      .timer.syphon.3 1 12 ADDPOINTS %syphon.winner %syphon.total
-      .timer.syphon.4 1 12 UNSET %syphon.*
-    }
+    ELSEIF (($2 == end) && (%syphon.active)) endsyphon
   }
 }
 
@@ -34,6 +31,7 @@ ON $*:TEXT:/^!syphon$/iS:%mychan: {
       SET %syphon.entries %syphon.entries $nick
       REMOVEPOINTS $nick %syphon.cost
       $wdelay(MSG $nick You have entered %syphon.cost %curname into the %curname syphon!  Good luck!)
+      IF ((%syphon.max.entries) && ($numtok(%syphon.entries,32) >= %syphon.max.entries)) endsyphon
     }
   }
 }
@@ -45,4 +43,16 @@ alias -l entries {
     INC %x
   }
   RETURN $left($sorttok(%names,32,a),-1)
+}
+
+alias -l endsyphon {
+  IF ($timer(.syphon.end)) .timer.syphon.end off
+  UNSET %syphon.active
+  MSG %mychan The $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon is now closed! Good luck to everyone who entered: $entries
+  VAR %syphon.total $calc(%syphon.cost * $numtok(%syphon.entries,32))
+  VAR %syphon.winner $gettok(%syphon.entries, $rand(1, $numtok(%syphon.entries, 32)), 32)
+  .timer.syphon.1 1 6 MSG %mychan I am now choosing a winner at random!
+  .timer.syphon.2 1 12 MSG %mychan Congratulations to %syphon.winner who just won %syphon.total %curname in the $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon!
+  .timer.syphon.3 1 12 ADDPOINTS %syphon.winner %syphon.total
+  .timer.syphon.4 1 12 UNSET %syphon.*
 }
