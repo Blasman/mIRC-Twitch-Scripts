@@ -140,10 +140,12 @@ ON *:TEXT:!raidsetup:%mychan: {
 
 ON *:TEXT:!raidmatchtest *:%mychan: IF ($nick isop $chan) $IIF(%raid_matchmsg isin $2-,MSG $chan Success!,MSG $chan Fail!)
 
+ON *:TEXT:!raidlast:%mychan: IF ($nick isop $chan) MSG $chan $read(raid_history.txt,$lines(raid_history.txt))
+
 ON *:TEXT:!raidhelp:%mychan: {
   IF ($nick isop $chan) {
     MSG $chan STREAMER ONLY Commands ▌ !raid [user] - setup a raid with default payout ▌ !raid [user] [amount] - setup a raid with a specific payout ▌ !raidcancel - cancel a raid ▌ !raidmsg [message] - change raid message ▌ !raidpayout [amount] - change the default payout for raids ▌ !raidmatchmsg [message] - change match text ▌ !raidsetup - run the raid setup in mIRC
-    .timer.raid.help 1 2 MSG $chan MOD ONLY Commands ▌ !raid - posts the raid message (and target if there is one) ▌ !raidmsg - posts the raid message ▌ !raidpayout - posts the default payout for raiders ▌ !raidmatchmsg - posts the match text ▌ !raidmatchtest [message] - test to see if your message will match the match text
+    .timer.raid.help 1 2 MSG $chan MOD ONLY Commands ▌ !raid - posts the raid message (and target if there is one) ▌ !raidmsg - posts the raid message ▌ !raidpayout - posts the default payout for raiders ▌ !raidmatchmsg - posts the match text ▌ !raidmatchtest [message] - test to see if your message will match the match text ▌ !raidlast - info on the last raid
   }
 }
 
