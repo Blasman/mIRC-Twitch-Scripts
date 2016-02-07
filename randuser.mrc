@@ -52,7 +52,7 @@ alias payactive {
     IF ((%nick != %streamer) && ((%nick ison %mychan) || ($calc($hget(activeusers, %nick) + 90) >= %activetime))) VAR %paylist %paylist %nick
     INC %x
   }
-  IF (%paylist == $null) MSG %mychan There are no active users to give %curname to!  BibleThump
+  IF (%paylist == $null) MSG %mychan There are no active users to give $1 %curname to!  BibleThump
   ELSE {
     VAR %x = 1
     WHILE ($gettok(%paylist, %x, 32) != $null) {
