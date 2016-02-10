@@ -48,8 +48,8 @@ alias -l entries {
 alias -l endsyphon {
   IF ($timer(.syphon.end)) .timer.syphon.end off
   UNSET %syphon.active
-  IF ($numtok(%syphon.entries,32) == 0) { MSG $chan Wow! Nobody entered the %curname syphon! Nobody wins! FeelsBadMan | UNSET %syphon.* }
-  ELSEIF ($numtok(%syphon.entries,32) == 1) { MSG $chan Wow! Only %syphon.entries entered the %curname syphon! %syphon.entries just got their %syphon.cost %curname back! | ADDPOINTS %syphon.entries %syphon.cost | UNSET %syphon.* }
+  IF ($numtok(%syphon.entries,32) == 0) { MSG %mychan Wow! Nobody entered the %curname syphon! Nobody wins! FeelsBadMan | UNSET %syphon.* }
+  ELSEIF ($numtok(%syphon.entries,32) == 1) { MSG %mychan Wow! Only %syphon.entries entered the %curname syphon! %syphon.entries just got their %syphon.cost %curname back! | ADDPOINTS %syphon.entries %syphon.cost | UNSET %syphon.* }
   ELSE {
     MSG %mychan The $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon is now closed! Good luck to everyone who entered: $entries
     VAR %syphon.total $calc(%syphon.cost * $numtok(%syphon.entries,32))
