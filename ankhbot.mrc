@@ -89,7 +89,10 @@ alias ankhbot_setup {
   :curname
   $input(Please enter the name of your channel's currency:,eo,Required Input,points)
   IF !$! { ECHO You must enter a valid name! | GOTO curname }
-  ELSE SET %curname $!
+  ELSE {
+    SET %curname $!
+    ECHO IGNORE THE ERROR MESSAGES ABOVE! All info has been successfully entered!
+  }
   IF (!$hget(bot)) HMAKE bot
 }
 
