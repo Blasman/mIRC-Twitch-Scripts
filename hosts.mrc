@@ -12,6 +12,6 @@ ON *:TEXT:!hosts:%mychan: {
       INC %x
     }
     IF (%hosts != $null) MSG $chan bleedPurple Thank You to all these $numtok(%hosts, 32) awesome people who are currently hosting this stream:  $left($sorttok(%hosts , 32, a), -1)  bleedPurple
-    ELSE MSG $chan $twitch_name($nick) $+ , no one is hosting the channel at the moment.  FeelsBadMan
+    ELSE MSG $chan $nick $+ , no one is hosting the channel at the moment.  FeelsBadMan
   }
 }
