@@ -120,9 +120,9 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
 
     IF (%col.1 == %col.2) && (%col.2 == %col.3) {
       SET %jackcwinner %nick
-      .timer.jackc1 1 4 DESCRIBE $chan ▌ %col.0 ▌  :::  Good Luck, %nick $+ .  BloodTrail
-      .timer.jackc2 1 10 DESCRIBE $chan ▌ %col.0 ▌ %col.1 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
-      .timer.jackc3 1 23 DESCRIBE $chan ▌ %col.0 ▌ %col.1 ▌ %col.2 ▌   :::  You WON $+ , %nick $+ !!!  PogChamp
+      .timer.jackc1 1 4 DESCRIBE $chan ▌ %col.1 ▌  :::  Good Luck, %nick $+ .  BloodTrail
+      .timer.jackc2 1 10 DESCRIBE $chan ▌ %col.1 ▌ %col.2 ▌   :::   OMG, %nick $+ , you might win this!  FeelsGoodMan
+      .timer.jackc3 1 23 DESCRIBE $chan ▌ %col.1 ▌ %col.2 ▌ %col.3 ▌   :::  You WON $+ , %nick $+ !!!  PogChamp
       .timer.jackcwinner1 1 24 MSG $chan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! %nick just won $readini(jackc.ini,@Stats,Jackpot) %curname $+ !!!  KAPOW KAPOW KAPOW
       .timer.jackcwinner2 1 25 MSG $chan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! %nick just won $readini(jackc.ini,@Stats,Jackpot) %curname $+ !!!  KAPOW KAPOW KAPOW
       .timer.jackcwinner3 1 26 MSG $chan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! %nick just won $readini(jackc.ini,@Stats,Jackpot) %curname $+ !!!  KAPOW KAPOW KAPOW
