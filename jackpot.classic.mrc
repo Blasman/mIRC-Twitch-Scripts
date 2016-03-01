@@ -53,31 +53,62 @@ ON *:UNLOAD: { UNSET %jackc.* }
 ;;;;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT CLASSIC ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-ON $*:TEXT:/^!jackpot\s(on|off|set|reset)/iS:%mychan: {
+ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|reset)/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($2 == on) {
       IF (!%GAMES_JACKPOTC_ACTIVE) {
         SET %GAMES_JACKPOTC_ACTIVE On
-        MSG $chan $twitch_name($nick) $+ , !jackpot is now enabled!  Have fun!  PogChamp
+        MSG $chan $nick $+ , !jackpot is now enabled!  Have fun!  PogChamp
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !jackpot is already enabled.  FailFish
+      ELSE MSG $chan $nick $+ , !jackpot is already enabled.  FailFish
     }
     ELSEIF ($2 == off) {
       IF (%GAMES_JACKPOTC_ACTIVE) {
         UNSET %GAMES_JACKPOTC_ACTIVE
-        MSG $chan $twitch_name($nick) $+ , !jackpot is now disabled.
+        MSG $chan $nick $+ , !jackpot is now disabled.
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !jackpot is already disabled.  FailFish
+      ELSE MSG $chan $nick $+ , !jackpot is already disabled.  FailFish
     }
     ELSEIF ($2 == set) && ($3 isnum) {
       SET %jackc_pot $floor($3)
       MSG $chan The !jackpot has been manually set to %jackc_pot %curname $+ !
     }
+    ELSEIF ($2 == bet) && ($3 isnum) {
+      SET %jackc.bet $floor($3)
+      MSG $chan The amount of %curname to play !jackpot has been changed to %jackc.bet $+ !
+    }
+    ELSEIF ($2 == cd) && ($3 isnum) {
+      SET %jackc.cd $floor($3)
+      MSG $chan The cooldown time for !jackpot has been changed to %jackc.cd $+ !
+    }
+    ELSEIF ($2 == newpot) && ($3 isnum) {
+      SET %jackc.newpot $floor($3)
+      MSG $chan The starting !jackpot amount has been set to %jackc.newpot $+ !
+    }
     ELSEIF ($2 == reset) && (!$3) {
       UNSET %jackc_*
-      MSG $chan All !jackpot stats have been deleted by $twitch_name($nick) $+ !
+      MSG $chan All !jackpot stats have been deleted by $nick $+ !
     }
+  }
+}
+
+ON $*:TEXT:/^!jackpot(\s)?emotes/iS:%mychan: {
+
+  IF ($nick isop $chan) {
+    IF ($0 == 11) {
+      SET %jackc.1 $3
+      SET %jackc.2 $4
+      SET %jackc.3 $5
+      SET %jackc.4 $6
+      SET %jackc.5 $7
+      SET %jackc.6 $8
+      SET %jackc.7 $9
+      SET %jackc.8 $10
+      SET %jackc.9 $11
+      MSG $chan $nick $+ , the !jackpot emotes have now been changed to: %jackc.1 %jackc.2 %jackc.3 %jackc.4 %jackc.5 %jackc.6 %jackc.7 %jackc.8 %jackc.9
+    }
+    ELSE MSG $chan $nick $+ , you need to specify nine emotes for the !jackpot.
   }
 }
 
@@ -86,7 +117,7 @@ ON $*:TEXT:/^!jackpot(\s)?stats$/iS:%mychan: {
   IF (%floodJACKC_STATS) halt
   SET -u10 %floodJACKC_STATS On
   IF (!%jackc_last.winner) MSG $chan Current !jackpot:  %jackc_pot %curname $+ .  Nobody has won a !jackpot yet!
-  ELSE MSG $chan Current !jackpot:  %jackc_pot %curname $+ .  ▌  Last Winner was %jackc_last.winner who won %jackc_last.winnings %curname $+ .  ▌  Number of Winners: %jackc_winners  ▌  Total Payouts: %jackc_winnings %curname $+ .
+  ELSE MSG $chan Current !jackpot:  %jackc_pot %curname $+ .  ▌  Last Winner was %jackc_last.winner who won %jackc_last.winnings %curname on %jackc_last.winner.time $+ .  ▌  Number of Winners: %jackc_winners  ▌  Total Payouts: $bytes(%jackc_winnings,b) %curname $+ .
 }
 
 ON $*:TEXT:/^!jackpot$/iS:%mychan: {
@@ -95,7 +126,7 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     IF ((%floodJACKC_ACTIVE) || ($($+(%,floodJACKC_ACTIVE.,$nick),2))) halt
     SET -u15 %floodJACKC_ACTIVE On
     SET -u120 %floodJACKC_ACTIVE. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , the !jackpot game is currently disabled.
+    MSG $chan $nick $+ , the !jackpot game is currently disabled.
   }
   ELSEIF ($timer(.JACKC. $+ $nick)) {
     IF ($($+(%,floodJACKPOT2.,$nick),2)) halt
@@ -103,9 +134,9 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     MSG $nick Be patient, $twitch_name($nick) $+ !  You still have $duration($timer(.JACKC. $+ $nick).secs) left in your !jackpot cooldown.
   }
   ELSEIF ((%ActiveGame) || ($isfile(roulbets.txt)) || ($rr.p1)) halt
-  ELSEIF ($checkpoints($nick, %jackc.bet) == false) MSG $chan $twitch_name($nick) $+ , you do not have %jackc.bet %curname to play !jackpot  FailFish
+  ELSEIF ($checkpoints($nick, %jackc.bet) == false) MSG $chan $nick $+ , you do not have %jackc.bet %curname to play !jackpot  FailFish
   ELSE {
-    VAR %nick $twitch_name($nick)
+    VAR %nick $nick
     .timer.JACKC. $+ %nick 1 %jackc.cd MSG $nick %nick $+ , your !jackpot cooldown has expired.  Feel free to play again.  BloodTrail
     SET %ActiveGame On
     REMOVEPOINTS $nick %jackc.bet
@@ -167,6 +198,7 @@ alias jackcwinner {
   INC %jackc_winners
   INC %jackc_winnings %jackc_pot
   SET %jackc_last.winner %jackcwinner
+  SET %jackc_last.winner.time $asctime(mmm d h:nn TT) EST
   SET %jackc_last.winnings %jackc_pot
   ADDPOINTS %jackcwinner %jackc_pot
   SET %jackc_pot %jackc.newpot
