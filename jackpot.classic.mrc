@@ -40,9 +40,9 @@ ON *:LOAD: {
   SET %jackc.3 deIlluminati
   SET %jackc.4 duDudu
   SET %jackc.5 KAPOW
-  SET %jackc.6 OSrob
+  SET %jackc.6 HumbleLife
   SET %jackc.7 riPepperonis
-  SET %jackc.8 shazamicon
+  SET %jackc.8 ItsBoshyTime
   SET %jackc.9 ShibeZ
   IF (!%jackc_pot) SET %jackc_pot %jackc.newpot
 }
