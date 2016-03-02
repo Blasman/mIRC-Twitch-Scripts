@@ -55,14 +55,12 @@ ON *:EXIT: {
 ; ** This also sets the %current.host variable needed for the rest of the script.
 
 RAW *:*: {
-  IF ($nick == tmi.twitch.tv) {
-    IF (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) {
-      tokenize 32 $rawmsg
-      IF ($chr(45) !isin $4) {
-        SET %current.host $twitch_name($remove($4, :))
-        IF (%current.host != $null) && ($5 isnum 2-) MSG %mychan We are now hosting %current.host for $5 active viewers!  Go visit them at twitch.tv/ $+ %current.host and say hello!
-        ELSEIF (%current.host != $null) && ($5 isnum 0-1) MSG %mychan We are now hosting %current.host $+ !  Go visit them at twitch.tv/ $+ %current.host and say hello!
-      }
+  IF ($nick == tmi.twitch.tv) && (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) {
+    tokenize 32 $rawmsg
+    IF ($chr(45) !isin $4) {
+      SET %current.host $twitch_name($remove($4, :))
+      IF (%current.host != $null) && ($5 isnum 2-) MSG %mychan We are now hosting %current.host for $5 active viewers!  Go visit them at twitch.tv/ $+ %current.host and say hello!
+      ELSEIF (%current.host != $null) && ($5 isnum 0-1) MSG %mychan We are now hosting %current.host $+ !  Go visit them at twitch.tv/ $+ %current.host and say hello!
     }
   }
 }
@@ -72,13 +70,9 @@ RAW *:*: {
 ; ** isn't already searching for another host).
 
 RAW *:*: {
-  IF (%AutoHost == On) {
-    IF (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) && ($chr(45) isin $rawmsg) && ($nick == tmi.twitch.tv) {
-      IF (!%ah.run) {
-        timer.[AUTOHOST] 0 300 autohost
-        autohost
-      }
-    }
+  IF (%AutoHost == On) && (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) && ($chr(45) isin $rawmsg) && ($nick == tmi.twitch.tv) && (!%ah.run) {
+    timer.[AUTOHOST] 0 300 autohost
+    autohost
   }
 }
 
