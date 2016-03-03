@@ -47,6 +47,6 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you ma
 #### Channels Currently Running These Scripts  
 
 A few of the channels currently using some of the scripts on this GitHub:  
-[Blasman13](http://twitch.tv/Blasman13/profile/) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx/profile/) | [AeroGarfield29](http://twitch.tv/AeroGarfield29/profile/) | [queen_bad](http://twitch.tv/queen_bad/profile/) | [wgrates](http://twitch.tv/wgrates/profile/) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision/profile/)  
+[Blasman13](http://twitch.tv/Blasman13/profile/) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx/profile/) | [AeroGarfield29](http://twitch.tv/AeroGarfield29/profile/) | [queen_bad](http://twitch.tv/queen_bad/profile/) | [wgrates](http://twitch.tv/wgrates/profile/) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision/profile/) | [Tygastripe](http://twitch.tv/Tygastripe/profile/)  
 
 
