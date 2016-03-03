@@ -33,6 +33,8 @@ In mIRC, type in the following commands anywhere.  Accept and run any initializa
 `/load -rs msqlite.mrc`  
 `/load -rs ankhbot.mrc`  
 
+You will have to reconnect to the Twitch server after installing these scripts.  
+
 ### Download and Install Desired Scripts
 For information on each script, see the [wiki](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki).  You can also right click the links on the wiki and select "save link as..." and then use `/load -rs scriptname.mrc` just like the previous install instructions.  Do Not "save link as..." using the links on the main page, as they are links to the GitHub html pages.  
 
@@ -40,4 +42,11 @@ You may install as many of the games scripts as desired, as to prevent spam, mos
 
 ### Contact Info / Help  
 
-By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you may Twitch message me regarding any help that you may require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link.  Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts.
+By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you may Twitch message me regarding any help that you may require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link.  Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts.  
+
+#### Channels Currently Running These Scripts  
+
+A few of the channels currently using some of the scripts on this GitHub:  
+[Blasman13](http://twitch.tv/Blasman13/profile/) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx/profile/) | [AeroGarfield29](http://twitch.tv/AeroGarfield29/profile/) | [queen_bad](http://twitch.tv/queen_bad/profile/) | [wgrates](http://twitch.tv/wgrates/profile/) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision/profile/)  
+
+
