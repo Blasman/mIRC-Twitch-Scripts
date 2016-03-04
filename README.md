@@ -49,4 +49,8 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you ma
 A few of the channels currently using some of the scripts on this GitHub:  
 [Blasman13](http://twitch.tv/Blasman13/profile/) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx/profile/) | [AeroGarfield29](http://twitch.tv/AeroGarfield29/profile/) | [queen_bad](http://twitch.tv/queen_bad/profile/) | [wgrates](http://twitch.tv/wgrates/profile/) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision/profile/) | [Tygastripe](http://twitch.tv/Tygastripe/profile/)  
 
+#### Credits  
 
+[AnkhHeart](http://marcinswierzowski.com/Code/AnkhBotR2/): For AnkhBot, the bot that my scripts are designed to work with.  
+[SReject](https://github.com/SReject/mTwitch): For the JSON and mTwitch scripts.  
+[Ramirez](http://hawkee.com/profile/12444/): For the mIRC SQLite script.  
