@@ -3,6 +3,12 @@ The main focus of the scripts on this GitHub are for use with a Twitch [mIRC](ht
 
 Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day trial period, after which you will be required to purchase a license for the program. The standard cost is $20 US, however, there is a permanent [50% off coupon which drops the price to $10 found here](http://www.mirc.com/register.php?coupon=MIRC-SWV0-MNKL).  
 
+# Credits  
+
+AnkhHeart: For [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/), the bot that my scripts are designed to work with.  
+SReject: For the [JSON Parser](http://hawkee.com/snippet/10194/) and [mTwitch scripts](https://github.com/SReject/mTwitch).  
+Ramirez: For the [mIRC SQLite](http://hawkee.com/profile/12444/) script.  
+
 # Installation
 
 ### If You Do Not Have a mIRC Twitch Bot, Set One Up
@@ -49,8 +55,3 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you ma
 A few of the channels currently using some of the scripts on this GitHub:  
 [Blasman13](http://twitch.tv/Blasman13/profile/) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx/profile/) | [AeroGarfield29](http://twitch.tv/AeroGarfield29/profile/) | [queen_bad](http://twitch.tv/queen_bad/profile/) | [wgrates](http://twitch.tv/wgrates/profile/) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision/profile/) | [Tygastripe](http://twitch.tv/Tygastripe/profile/)  
 
-#### Credits  
-
-[AnkhHeart](http://marcinswierzowski.com/Code/AnkhBotR2/): For AnkhBot, the bot that my scripts are designed to work with.  
-[SReject](https://github.com/SReject/mTwitch): For the JSON and mTwitch scripts.  
-[Ramirez](http://hawkee.com/profile/12444/): For the mIRC SQLite script.  
