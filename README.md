@@ -48,7 +48,7 @@ You may install as many of the games scripts as desired, as to prevent spam, mos
 
 ### Contact Info / Help  
 
-By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you may Twitch message me regarding any help that you may require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link.  Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts.  
+By visiting my Twitch channel at http://www.twitch.tv/blasman13/profile , you may Twitch message me regarding any help that you may require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link. Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts. For general mIRC help, consider joining the [mirchelp](http://www.twitch.tv/mirchelp) chat on Twitch.  
 
 #### Channels Currently Running These Scripts  
 
