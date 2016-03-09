@@ -51,7 +51,7 @@ alias -l endsyphon {
   IF ($numtok(%syphon.entries,32) == 0) { MSG %mychan Wow! Nobody entered the %curname syphon! Nobody wins! FeelsBadMan | UNSET %syphon.* }
   ELSEIF ($numtok(%syphon.entries,32) == 1) { MSG %mychan Wow! Only %syphon.entries entered the %curname syphon! %syphon.entries just got their %syphon.cost %curname back! | ADDPOINTS %syphon.entries %syphon.cost | UNSET %syphon.* }
   ELSE {
-    MSG %mychan The $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon is now closed! Good luck to everyone who entered: $entries
+    MSG %mychan The $upper($mid(%curname,1,1)) $+ $mid(%curname,2-) Syphon is now closed! Good luck to all $numtok(%syphon.entries,32) people who entered: $entries
     VAR %syphon.total $calc(%syphon.cost * $numtok(%syphon.entries,32))
     VAR %syphon.winner $gettok(%syphon.entries, $rand(1, $numtok(%syphon.entries, 32)), 32)
     .timer.syphon.1 1 6 MSG %mychan I am now choosing a winner at random!
