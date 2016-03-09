@@ -89,11 +89,9 @@ alias ankhbot_setup {
   :curname
   $input(Please enter the name of your channel's currency:,eo,Required Input,points)
   IF !$! { ECHO You must enter a valid name! | GOTO curname }
-  ELSE {
-    SET %curname $!
-    ECHO IGNORE THE ERROR MESSAGES ABOVE! All info has been successfully entered!
-  }
+  ELSE SET %curname $!
   IF (!$hget(bot)) HMAKE bot
+  ECHO IGNORE THE ERROR MESSAGES ABOVE! All info has been successfully entered!
 }
 
 alias cached_name {
@@ -117,6 +115,12 @@ alias twitch_id {
   JSONOpen -ud twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
   return $json(twitch_id, _id)
   JSONClose twitch_id
+}
+
+alias followcheck {
+  JSONOpen -ud followcheck https://api.twitch.tv/kraken/users/ $+ $1 $+ /follows/channels/ $+ %streamer
+  return $json(followcheck, created_at)
+  JSONClose followcheck
 }
 
 alias wdelay {
