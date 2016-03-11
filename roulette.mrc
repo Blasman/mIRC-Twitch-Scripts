@@ -54,6 +54,7 @@ ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:%mychan: {
     IF ($2 == on) {
       IF (!%GAMES_ROUL_ACTIVE) {
         SET %GAMES_ROUL_ACTIVE On
+        IF (%roul_repeat > 0) .timer.roul.repeat 0 %roul_repeat roulrepeat
         MSG $chan $nick $+ , the Roulette game is now enabled!  Type !rbet for more info!  Have fun!  PogChamp
       }
       ELSE MSG $chan $nick $+ , !rbet is already enabled.  FailFish
