@@ -5,7 +5,7 @@
 ; If you want to customize this script, you can easily figure out how to by
 ; editing the bot responses after the three "DESCRIBE $chan" parts of the script.
 
-ON $*:TEXT:/^!(follow|caster|so|shoutout|streamer|ally)\s/iS:#: {
+ON $*:TEXT:/^!(follow|caster|so|shoutout|streamer|ally)\s/iS:%mychan: {
   IF (($nick isop $chan) && ($2) && (!%follow.cd)) {
     IF (!$3) {
       VAR %follow.name $twitch_name($remove($2, @))
