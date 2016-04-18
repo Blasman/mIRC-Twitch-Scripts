@@ -43,16 +43,16 @@ ON $*:TEXT:/^!blackjack\s(on|off)/iS:%mychan: {
     IF ($2 == on) {
       IF (!%GAMES_BJ_ACTIVE) {
         SET %GAMES_BJ_ACTIVE On
-        MSG $chan $twitch_name($nick) $+ , the BlackJack game is now enabled!  Type !blackjack for more info!  Have fun!  PogChamp
+        MSG $chan $nick $+ , the BlackJack game is now enabled!  Type !blackjack for more info!  Have fun!  PogChamp
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !blackjack is already enabled.  FailFish
+      ELSE MSG $chan $nick $+ , !blackjack is already enabled.  FailFish
     }
     ELSEIF ($2 == off) {
       IF (%GAMES_BJ_ACTIVE) {
         UNSET %GAMES_BJ_ACTIVE
-        MSG $chan $twitch_name($nick) $+ , the BlackJack game is now disabled.
+        MSG $chan $nick $+ , the BlackJack game is now disabled.
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !blackjack is already disabled.  FailFish
+      ELSE MSG $chan $nick $+ , !blackjack is already disabled.  FailFish
     }
   }
 }
@@ -66,12 +66,12 @@ ON $*:TEXT:/^!blackjack(\s|$)/iS:%mychan: {
     IF ((%floodBJ_ACTIVE) || ($($+(%,floodBJ_ACTIVE.,$nick),2))) halt
     SET -u15 %floodBJ_ACTIVE On
     SET -u120 %floodBJ_ACTIVE. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , the BlackJack game is currently disabled.
+    MSG $chan $nick $+ , the BlackJack game is currently disabled.
     halt
   }
   ELSEIF ($2 isnum %bj_minbet - %bj_maxbet) {
-    IF ($($+(%,BJ_CD.,$nick),2)) MSG $nick $twitch_name($nick) $+ , please wait for your cooldown to expire in $duration(%BJ_CD. [ $+ [ $nick ] ]) before trying to play BlackJack again.
-    ELSEIF ($checkpoints($nick, $2) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
+    IF ($($+(%,BJ_CD.,$nick),2)) MSG $nick $nick $+ , please wait for your cooldown to expire in $duration(%BJ_CD. [ $+ [ $nick ] ]) before trying to play BlackJack again.
+    ELSEIF ($checkpoints($nick, $2) == false) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
     ELSE $start_blackjack($nick,$2)
   }
   ELSE {
