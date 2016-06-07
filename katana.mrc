@@ -7,17 +7,17 @@
 ON $*:TEXT:/^!katanapayout(\s\d+)?$/iS:%mychan: {
   IF ($nick isop $chan) {
     IF ($2) {
-      SET %katana.honor.default $2
-      MSG $chan The default payout for !katana and !spin has been set to %katana.honor.default %curname $+ .
+      SET %katanahonor.default $2
+      MSG $chan The default payout for !katana and !spin has been set to %katanahonor.default %curname $+ .
     }
-    ELSE MSG $chan The default payout for !katana and !spin is set to %katana.honor.default %curname $+ .
+    ELSE MSG $chan The default payout for !katana and !spin is set to %katanahonor.default %curname $+ .
   }
 }
 
 ON $*:TEXT:/^!katana(\s\d+)?$/iS:%mychan: {
   IF ($nick isop $chan) {
     IF ($2) SET %katana.honor $2
-    ELSE SET %katana.honor %katana.honor.default
+    ELSE SET %katana.honor %katanahonor.default
     MSG $chan SPIN THE KATANA: In three minutes, %botname will spin the katana, and whoever it points to will receive %katana.honor %curname $+ . Of course, there's a catch. The winner must commit !seppuku in order to receive the %curname $+ . Are you willing to be timed out for two minutes? (must be ACTIVE in chat to participate)
     .timer.katana 1 180 katanaspin
   }
@@ -26,7 +26,7 @@ ON $*:TEXT:/^!katana(\s\d+)?$/iS:%mychan: {
 ON $*:TEXT:/^!spin(\s\d+)?$/iS:%mychan: {
   IF ($nick isop $chan) {
     IF ($2) SET %katana.honor $2
-    ELSE SET %katana.honor %katana.honor.default
+    ELSE SET %katana.honor %katanahonor.default
     katanaspin
   }
 }
