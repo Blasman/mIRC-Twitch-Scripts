@@ -65,7 +65,7 @@ alias payactive {
       VAR %sortlist %sortlist $v1 $+ $chr(44)
       INC %x
     }
-    MSG %mychan Successfully payed out $1 %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
+    MSG %mychan Successfully paid out $1 %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
   }
 }
 
