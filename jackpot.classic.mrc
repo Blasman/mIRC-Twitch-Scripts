@@ -93,7 +93,7 @@ ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|reset)/iS:%mychan: {
   }
 }
 
-ON $*:TEXT:/^!jackpot(\s)?emotes/iS:%mychan: {
+ON $*:TEXT:/^!jackpot\semotes/iS:%mychan: {
 
   IF ($nick isop $chan) {
     IF ($0 == 11) {
