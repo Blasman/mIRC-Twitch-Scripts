@@ -227,7 +227,7 @@ alias livecheck {
 
   IF (%tu == 1000) %tu = 0
   INC %tu
-  JSONOpen -ud live $+ %tu https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
+  JSONOpen -ud live $+ %tu https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   IF ( $json(live $+ %tu $+ ,stream) != $null ) {
     SET %livechannel $1
     return true
@@ -237,7 +237,7 @@ alias livecheck {
 
 alias getcurrenthost {
 
-  JSONOpen -ud currenthost http://tmi.twitch.tv/hosts?include_logins=1&host= $+ %TwitchID
+  JSONOpen -ud currenthost http://tmi.twitch.tv/hosts?include_logins=1&host= $+ %TwitchID $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   IF ( $json(currenthost, hosts, 0, target_login) != $null ) {
     SET %current.host $json(currenthost, hosts, 0, target_login)
     return true
