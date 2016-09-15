@@ -6,7 +6,7 @@
 
 ON *:TEXT:!hosts:%mychan: {
   IF ($nick isop $chan) {
-    JSONOpen -ud gethosts http://tmi.twitch.tv/hosts?include_logins=1&target= $+ %TwitchID
+    JSONOpen -ud gethosts http://tmi.twitch.tv/hosts?include_logins=1&target= $+ %TwitchID $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
     VAR %x = 0 | WHILE ($json(gethosts, hosts, %x, host_login) != $null) {
       VAR %hosts %hosts $cached_name($json(gethosts, hosts, %x, host_login)) $+ $chr(44)
       INC %x
