@@ -106,19 +106,19 @@ alias cached_name {
 alias twitch_name {
   if (%tn == 1000) %tn = 0
   inc %tn
-  JSONOpen -ud twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
+  JSONOpen -ud twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1 $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   return $json(twitch_name $+ %tn $+ , display_name)
   JSONClose twitch_name $+ %tn
 }
 
 alias twitch_id {
-  JSONOpen -ud twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
+  JSONOpen -ud twitch_id https://api.twitch.tv/kraken/channels/ $+ $1 $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   return $json(twitch_id, _id)
   JSONClose twitch_id
 }
 
 alias followcheck {
-  JSONOpen -ud followcheck https://api.twitch.tv/kraken/users/ $+ $1 $+ /follows/channels/ $+ %streamer
+  JSONOpen -ud followcheck https://api.twitch.tv/kraken/users/ $+ $1 $+ /follows/channels/ $+ %streamer $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   return $json(followcheck, created_at)
   JSONClose followcheck
 }
