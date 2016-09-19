@@ -7,10 +7,12 @@ ON *:TEXT:!highlight *:%mychan: {
 }
 
 alias -l streamuptime {
-  JSONOpen -ud streamuptime https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  IF ($JSON(streamuptime, stream, created_at)) return $duration($calc($ctime - $TwitchTime($JSON(streamuptime, stream, created_at))),2)
-  ELSE return ????
+  JSONOpen -uw streamuptime https://api.twitch.tv/kraken/streams/ $+ $1
+  JSONUrlHeader streamuptime Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONUrlGet streamuptime
+  VAR %x $IIF($JSON(streamuptime, stream, created_at),$duration($calc($ctime - $TwitchTime($JSON(streamuptime, stream, created_at))),2),????)
   JSONClose streamuptime
+  RETURN %x
 }
 
 alias -l TwitchTime {
