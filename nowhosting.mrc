@@ -10,24 +10,30 @@ RAW *:*: {
 }
 
 alias currentgame {
-  JSONOpen -ud currentgame https://api.twitch.tv/kraken/channels/ $+ $1 $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  IF ($json(currentgame, game)) return $v1
-  ELSE return ????
+  JSONOpen -uw currentgame https://api.twitch.tv/kraken/channels/ $+ $1
+  JSONUrlHeader currentgame Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONUrlGet currentgame
+  VAR %x $IIF($json(currentgame, game),$v1,????)
   JSONClose currentgame
+  RETURN %x
 }
 
 alias viewers {
-  JSONOpen -ud viewers https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  IF ($json(viewers, stream, viewers)) return $v1
-  ELSE return ????
+  JSONOpen -uw viewers https://api.twitch.tv/kraken/streams/ $+ $1
+  JSONUrlHeader viewers Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONUrlGet viewers
+  VAR %x $IIF($json(viewers, stream, viewers),$v1,????)
   JSONClose viewers
+  RETURN %x
 }
 
 alias streamuptime {
-  JSONOpen -ud uptime https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  IF ($JSON(uptime, stream, created_at)) return $duration($calc($ctime - $TwitchTime($JSON(uptime, stream, created_at))),2)
-  ELSE return ????
-  JSONClose streamuptime
+  JSONOpen -uw uptime https://api.twitch.tv/kraken/streams/ $+ $1
+  JSONUrlHeader uptime Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONUrlGet uptime
+  VAR %x $IIF($JSON(uptime, stream, created_at),$duration($calc($ctime - $TwitchTime($JSON(uptime, stream, created_at))),2),????)
+  JSONClose uptime
+  RETURN %x
 }
 
 alias TwitchTime {
