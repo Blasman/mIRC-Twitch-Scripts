@@ -34,7 +34,7 @@
 
 ON *:LOAD: {
   SET %t2.wait 3600
-  SET %t3.wait 1800
+  SET %t3.wait 3600
   SET %rh.wait 28800
 }
 
@@ -55,7 +55,7 @@ ON *:EXIT: {
 ; ** This also sets the %current.host variable needed for the rest of the script.
 
 RAW *:*: {
-  IF ($nick == tmi.twitch.tv) && (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) {
+  IF (($nick == tmi.twitch.tv) && (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg)) {
     tokenize 32 $rawmsg
     IF ($chr(45) !isin $4) {
       SET %current.host $twitch_name($remove($4, :))
@@ -70,7 +70,7 @@ RAW *:*: {
 ; ** isn't already searching for another host).
 
 RAW *:*: {
-  IF (%AutoHost == On) && (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) && ($chr(45) isin $rawmsg) && ($nick == tmi.twitch.tv) && (!%ah.run) {
+  IF ((%AutoHost == On) && (HOSTTARGET isin $rawmsg) && (%mychan isin $rawmsg) && ($chr(45) isin $rawmsg) && ($nick == tmi.twitch.tv) && (!%ah.run)) {
     timer.[AUTOHOST] 0 300 autohost
     autohost
   }
@@ -92,7 +92,7 @@ ON *:TEXT:!autohost &:?: {
       IF (!%AutoHost) {
         MSG $nick Auto-Host is now on!
         UNSET %current.host
-        IF ($getcurrenthost == true) {
+        IF ($getcurrenthost == $true) {
           SET %ah.tier 1
           SET %ah.uptime $ctime
         }
@@ -152,7 +152,7 @@ alias autohost {
   ; ** two ways to check if the current host is live, as Twitch is prone to API
   ; ** downtime and other various malfunctions quite often.
 
-  IF (($livecheck(%current.host) == true) || ($getcurrenthost == true)) VAR %still.live True
+  IF (($livechecker(%current.host) == $true) || ($getcurrenthost == $true)) VAR %still.live $true
 
   IF (%still.live) {
     IF (%ah.tier == 1) { UNSET %ah.run | halt }
@@ -163,7 +163,7 @@ alias autohost {
   VAR %x = 1
   WHILE ($wildtok($read(autohost.txt, n, 1), *, %x, 32) != $null) {
     VAR %ahn $wildtok($read(autohost.txt, n, 1), *, %x, 32)
-    IF ($livecheck(%ahn) == true) && ($rehostcheck(%ahn) != true) && (%livechannel != %current.host) {
+    IF ($livechecker(%ahn) == $true) && ($rehostcheck(%ahn) != $true) && (%livechannel != %current.host) {
       SET %ah.tier 1
       autohost2
       halt
@@ -175,7 +175,7 @@ alias autohost {
   VAR %x = 1
   WHILE ($wildtok($read(autohost.txt, n, 2), *, %x, 32) != $null) {
     VAR %ahn $wildtok($read(autohost.txt, n, 2), *, %x, 32)
-    IF ($livecheck(%ahn) == true) && ($rehostcheck(%ahn) != true) && (%livechannel != %current.host) {
+    IF ($livechecker(%ahn) == $true) && ($rehostcheck(%ahn) != $true) && (%livechannel != %current.host) {
       SET %ah.tier 2
       autohost2
       halt
@@ -187,7 +187,7 @@ alias autohost {
   VAR %x = 1
   WHILE ($wildtok($read(autohost.txt, n, 3), *, %x, 32) != $null) {
     VAR %ahn $wildtok($read(autohost.txt, n, 3), *, %x, 32)
-    IF ($livecheck(%ahn) == true) && ($rehostcheck(%ahn) != true) && (%livechannel != %current.host) {
+    IF ($livechecker(%ahn) == $true) && ($rehostcheck(%ahn) != $true) && (%livechannel != %current.host) {
       SET %ah.tier 3
       autohost2
       halt
@@ -198,7 +198,6 @@ alias autohost {
 }
 
 alias autohost2 {
-
   MSG %mychan .host %livechannel
   SET %ah.uptime $ctime
   INC %no.rehost
@@ -211,36 +210,43 @@ alias autohost2 {
 ; ****** These are the various aliases needed for the script to function.  ******
 
 alias rehostcheck {
-
   VAR %rhcount = 1
   IF ($exists(norehost.txt)) {
     WHILE ($read(norehost.txt, %rhcount) != $null) {
       VAR %rhnick = $wildtok($read(norehost.txt, %rhcount), *, 1, 32)
       VAR %rhtime = $wildtok($read(norehost.txt, %rhcount), *, 2, 32)
-      IF ($calc($ctime - %rhtime) < %rh.wait) && (%rhnick == $1) return true
+      IF ($calc($ctime - %rhtime) < %rh.wait) && (%rhnick == $1) RETURN $true
       INC %rhcount
     }
   }
 }
 
-alias livecheck {
-
+alias -l livechecker {
   IF (%tu == 1000) %tu = 0
   INC %tu
-  JSONOpen -ud live $+ %tu https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONOpen -uw live $+ %tu https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
+  JSONUrlHeader live $+ %tu Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONUrlGet live $+ %tu
   IF ( $json(live $+ %tu $+ ,stream) != $null ) {
     SET %livechannel $1
-    return true
+    VAR %x $true
   }
   JSONClose live $+ %tu
+  IF (%x == $true) RETURN $true
 }
 
 alias getcurrenthost {
-
-  JSONOpen -ud currenthost http://tmi.twitch.tv/hosts?include_logins=1&host= $+ %TwitchID $+ ?client_id=avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  IF ( $json(currenthost, hosts, 0, target_login) != $null ) {
-    SET %current.host $json(currenthost, hosts, 0, target_login)
-    return true
+  JSONOpen -uw currenthost http://tmi.twitch.tv/hosts?host=83931881
+  JSONUrlHeader currenthost Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONUrlGet currenthost
+  IF ( $json(currenthost, hosts, 0, target_id) != $null ) {
+    JSONOpen -uw hostname https://api.twitch.tv/api/friendships/users?ids= $+ $v1
+    JSONUrlHeader hostname Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+    JSONUrlGet hostname
+    SET %current.host $json(hostname, users, 0, display_name)
+    VAR %x $true
+    JSONClose hostname
   }
   JSONClose currenthost
+  IF (%x == $true) RETURN $true
 }
