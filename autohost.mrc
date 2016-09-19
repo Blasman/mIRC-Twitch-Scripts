@@ -236,7 +236,7 @@ alias -l livechecker {
 }
 
 alias getcurrenthost {
-  JSONOpen -uw currenthost http://tmi.twitch.tv/hosts?host=83931881
+  JSONOpen -uw currenthost http://tmi.twitch.tv/hosts?host= $+ %TwitchID
   JSONUrlHeader currenthost Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONUrlGet currenthost
   IF ( $json(currenthost, hosts, 0, target_id) != $null ) {
