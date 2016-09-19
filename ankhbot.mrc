@@ -107,8 +107,8 @@ alias twitch_name {
   IF (%tn == 1000) %tn = 0
   INC %tn
   JSONOpen -uw twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONUrlHeader twitch_name Client-ID e8e68mu4x2sxsewuw6w82wpfuyprrdx
-  JSONUrlGet twitch_name
+  JSONUrlHeader twitch_name $+ %tn Client-ID e8e68mu4x2sxsewuw6w82wpfuyprrdx
+  JSONUrlGet twitch_name $+ %tn
   VAR %x $json(twitch_name $+ %tn $+ , display_name)
   JSONClose twitch_name $+ %tn
   RETURN %x
