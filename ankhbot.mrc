@@ -107,7 +107,7 @@ alias twitch_name {
   IF (%tn == 1000) %tn = 0
   INC %tn
   JSONOpen -uw twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONUrlHeader twitch_name $+ %tn Client-ID e8e68mu4x2sxsewuw6w82wpfuyprrdx
+  JSONUrlHeader twitch_name $+ %tn Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONUrlGet twitch_name $+ %tn
   VAR %x $json(twitch_name $+ %tn $+ , display_name)
   JSONClose twitch_name $+ %tn
@@ -116,7 +116,7 @@ alias twitch_name {
 
 alias twitch_id {
   JSONOpen -uw twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONUrlHeader twitch_id Client-ID e8e68mu4x2sxsewuw6w82wpfuyprrdx
+  JSONUrlHeader twitch_id Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONUrlGet twitch_id
   VAR %x $json(twitch_id, _id)
   JSONClose twitch_id
@@ -125,7 +125,7 @@ alias twitch_id {
 
 alias followcheck {
   JSONOpen -uw followcheck https://api.twitch.tv/kraken/users/ $+ $1 $+ /follows/channels/ $+ %streamer
-  JSONUrlHeader followcheck Client-ID e8e68mu4x2sxsewuw6w82wpfuyprrdx
+  JSONUrlHeader followcheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONUrlGet followcheck
   VAR %x $json(followcheck, created_at)
   JSONClose followcheck
