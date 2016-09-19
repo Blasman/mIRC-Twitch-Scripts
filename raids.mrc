@@ -57,21 +57,25 @@ ON $*:TEXT:/^!raid(\s|$)/iS:%mychan: {
           SET %raid.name %raid.temp
           SET %raid.chan $chr(35) $+ $lower($2)
           SET %raid.url twitch.tv/ $+ %raid.name
-          DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:  %raid_msg
-          .timer.raid.payoutmsg 1 3 DESCRIBE $chan Everyone who posts the raid message will automatically receieve %raid.payout %curname after 90 seconds!
-          .timer.raid.repeat 1 4 .timer.raid.repeat 3 2 DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
-          .timer.raid.joinchannel 1 20 JOIN %raid.chan
+          DESCRIBE $chan ATTENTION EVERYONE!  We are about to raid %raid.url !  Silently go to their channel and SAY NOTHING.  When %streamer starts the raid, paste the following message into their chat:
+          DESCRIBE $chan %raid_msg
+          .timer.raid.repeat 1 3 .timer.raid.repeat -m 5 200 DESCRIBE $chan http:// $+ %raid.url
+          .timer.raid.joinchannel 1 5 JOIN %raid.chan
           .timer.raid.timeout 1 1800 raidcancel
         }
-        ELSE MSG $chan %streamer $+ , uhhh... %raid.temp doesn't appear to be live at the moment.  FailFish
+        ELSE MSG $chan $nick $+ , uhhh... %raid.temp doesn't appear to be live at the moment.  FailFish
       }
-      ELSE MSG $chan %streamer $+ , uhhh... check the spelling of that name.  FailFish
+      ELSE MSG $chan $nick $+ , uhhh... check the spelling of that name.  FailFish
     }
     ELSE MSG $chan $nick $+ , there is a raid set up already for %raid.name $+ .  Type !raidcancel if you want to cancel this raid.
   }
-  ELSEIF ($nick isop $chan) {
-    IF (%raid.name) DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:  %raid_msg
-    ELSE DESCRIBE $chan COPY THE FOLLOWING MESSAGE: %raid_msg  Paste it back in Chat and prepare for the RAID!!
+  ELSEIF (($nick isop $chan) && (%raid.name) && (!$2)) {
+    DESCRIBE $chan GO TO http:// $+ %raid.url AND COPY AND PASTE THE FOLLOWING MESSAGE AFTER $upper(%streamer) DOES:
+    DESCRIBE $chan %raid_msg
+  }
+  ELSEIF ((!%CD_raid_msg) && (!$2)) {
+    SET -eu2 %CD_raid_msg On
+    DESCRIBE $chan %raid_msg
   }
 }
 
@@ -150,7 +154,10 @@ ON *:TEXT:!raidhelp:%mychan: {
 }
 
 alias -l livecheck {
-  JSONOpen -ud livecheck https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
-  RETURN $IIF($json(livecheck,stream),$true,$false)
+  JSONOpen -uw livecheck https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
+  JSONUrlHeader livecheck Client-ID e8e68mu4x2sxsewuw6w82wpfuyprrdx
+  JSONUrlGet livecheck
+  VAR %x $IIF($json(livecheck,stream),$true,$false)
   JSONClose livecheck
+  RETURN %x
 }
