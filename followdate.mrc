@@ -1,7 +1,7 @@
-ON $*:TEXT:/^!date(\s\w+)?$/iS:#: {
+ON $*:TEXT:/^!date(\s@?\w+)?$/iS:#: {
   IF ($nick isop $chan) {
     IF (!$2) MSG $chan $followdate($nick)
-    ELSE MSG $chan $IIF($twitch_name($2) != $null,$followdate($v1),$nick $+ $chr(44) $2 is not a valid user on Twitch. FailFish)
+    ELSE MSG $chan $IIF($twitch_name($remove($2,@)) != $null,$followdate($v1),$nick $+ $chr(44) $remove($2,@) is not a valid user on Twitch. FailFish)
   }
   ELSEIF ((!$($+(%,followdate_CD.,$nick),2)) && (!$2)) {
     SET -eu60 %followdate_CD. $+ $nick On
