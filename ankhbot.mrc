@@ -28,9 +28,17 @@ ON *:UNLOAD: {
 ON *:CONNECT: {
   IF ($server == tmi.twitch.tv) {
     IF (!$hget(bot)) HMAKE bot
+    IF (!$hget(displaynames)) {
+      IF ($script(hosts.mrc)) {
+        HMAKE displaynames
+        IF ($file(displaynames.htb)) HLOAD displaynames displaynames.htb
+      }
+    }
     UNSET %ActiveGame
   }
 }
+
+ON *:EXIT: IF ($hget(displaynames)) HSAVE -o displaynames displaynames.htb
 
 ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
   IF ($nick isop $chan) {
@@ -95,12 +103,11 @@ alias ankhbot_setup {
 }
 
 alias cached_name {
-  VAR %nick $wildtok(%display.names, $1, 1, 32)
-  IF (%nick != $null) return %nick
-  ELSE {
-    SET %display.names $addtok(%display.names, $twitch_name($1), 32)
-    return $wildtok(%display.names, $1, 1, 32)
+  IF (!$hfind(displaynames,$1)) {
+    HADD displaynames $twitch_name($1)
+    RETURN $hfind(displaynames,$1)
   }
+  ELSE RETURN $hfind(displaynames,$1)
 }
 
 alias twitch_name {
