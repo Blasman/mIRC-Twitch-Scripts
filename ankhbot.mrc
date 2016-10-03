@@ -44,6 +44,7 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
   IF ($nick isop $chan) {
     IF ($script(blackjack.mrc)) VAR %games !blackjack -
     IF ($script(jackpot.classic.mrc)) VAR %games %games !jackpot -
+    IF ($script(jackpot.v2.mrc)) VAR %games %games !jackpot -
     IF ($script(roulette.mrc)) VAR %games %games !roulette -
     IF ($script(dice.mrc)) VAR %games %games !dice -
     IF ($script(rps.mrc)) VAR %games %games !rps -
@@ -54,6 +55,7 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
       IF ($2 == on) {
         IF ($script(blackjack.mrc)) SET %GAMES_BJ_ACTIVE On
         IF ($script(jackpot.classic.mrc)) SET %GAMES_JACKPOTC_ACTIVE On
+        IF ($script(jackpot.v2.mrc)) SET %GAMES_JACKPOT_ACTIVE On
         IF ($script(roulette.mrc)) SET %GAMES_ROUL_ACTIVE On
         IF ($script(dice.mrc)) SET %GAMES_DICE_ACTIVE On
         IF ($script(rps.mrc)) SET %GAMES_RPS_ACTIVE On
@@ -229,4 +231,18 @@ alias editorcheck {
   IF ($sqlite_num_rows(%request) == 0) return false
   ELSE return true
   sqlite_free %request
+}
+
+; TwitchTime alias written by SReject and friends
+alias TwitchTime {
+  if ($regex($1-, /^(\d\d(?:\d\d)?)-(\d\d)-(\d\d)T(\d\d)\:(\d\d)\:(\d\d)(?:(?:Z$)|(?:([+-])(\d\d)\:(\d+)))?$/i)) {
+    var %m = $Gettok(January February March April May June July August September October November December, $regml(2), 32), %d = $ord($base($regml(3),10,10)), %o = +0, %t
+    if ($regml(0) > 6) %o = $regml(7) $+ $calc($regml(8) * 3600 + $regml(9))
+    %t = $calc($ctime(%m %d $regml(1) $regml(4) $+ : $+ $regml(5) $+ : $+ $regml(6)) - %o)
+    if ($asctime(zz) !== 0 && $regex($v1, /^([+-])(\d\d)(\d+)$/)) {
+      %o = $regml(1) $+ $calc($regml(2) * 3600 + $regml(3))
+      %t = $calc(%t + %o )
+    }
+    return %t
+  }
 }
