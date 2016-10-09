@@ -6,7 +6,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 # Credits  
 
 AnkhHeart: For [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/), the bot that my scripts are designed to work with.  
-SReject: For the [JSON Parser](http://hawkee.com/snippet/10194/) and [mTwitch scripts](https://github.com/SReject/mTwitch).  
+SReject: For the [JSON Parser](http://hawkee.com/snippet/10194/), [mTwitch scripts](https://github.com/SReject/mTwitch) and the "TwitchTime" alias used in ankhbot.mrc.  
 Ramirez: For the [mIRC SQLite](http://hawkee.com/profile/12444/) script.  
 
 # Installation
