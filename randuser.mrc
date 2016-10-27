@@ -29,6 +29,7 @@ considered active.
 ON *:LOAD: {
   IF (!%activetime) SET %activetime 1800
   IF (!$hget(activeusers)) HMAKE activeusers
+  IF (!%commonbots) SET %commonbots moobot nightbot revlobot vivbot xanbot wizebot
 }
 
 ON *:CONNECT: IF (($server == tmi.twitch.tv) && (!$hget(activeusers))) HMAKE activeusers
@@ -89,5 +90,5 @@ alias randuser {
   }
 }
 
-ON *:TEXT:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
-ON *:ACTION:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me)) HADD -z activeusers $nick %activetime
+ON *:TEXT:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me) && (!$istok(%commonbots,$nick,32))) HADD -z activeusers $nick %activetime
+ON *:ACTION:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me) && (!$istok(%commonbots,$nick,32))) HADD -z activeusers $nick %activetime
