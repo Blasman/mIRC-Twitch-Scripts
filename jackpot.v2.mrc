@@ -285,6 +285,7 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     MSG $chan $nick $+ , you do not have %jackpot.bet %curname to play !jackpot  FailFish
   }
   ELSEIF (!$istok(%queue, $nick $+ .jackpot,32)) {
+    IF (%ActiveGame == $nick) halt
     REMOVEPOINTS $nick %jackpot.bet
     IF (%ActiveGame) SET %queue %queue $nick $+ .jackpot
     ELSE play_jackpot $nick
@@ -294,7 +295,7 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
 alias play_jackpot {
   ; PLAY THE JACKPOT AND GENERATE REELS
   .timer.JACKPOT. $+ $1 1 %jackpot.cd MSG $1 $1 $+ , your !jackpot cooldown has expired.  Feel free to play again.  BloodTrail
-  SET %ActiveGame On
+  SET %ActiveGame $1
   WRITEINI jackpot.ini @Stats Jackpot $calc($readini(jackpot.ini,@Stats,Jackpot) + %jackpot.bet)
   WRITEINI jackpot.ini $1 Games $calc($readini(jackpot.ini,$1,Games) + 1)
   WRITEINI jackpot.ini $1 Losses $calc($readini(jackpot.ini,$1,Losses) + %jackpot.bet)
