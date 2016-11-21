@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.100 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.101 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackpot_setup
@@ -279,8 +279,12 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     SET -eu180 %floodJACKPOT2. $+ $nick On
     MSG $nick Be patient, $nick $+ !  You still have $duration($timer(.JACKPOT. $+ $nick).secs) left in your !jackpot cooldown.
   }
-  ELSEIF ($checkpoints($nick, %jackpot.bet) == false) MSG $chan $nick $+ , you do not have %jackpot.bet %curname to play !jackpot  FailFish
-  ELSEIF (!$istok(%queue,$1 $+ . $+ $2,32)) {
+  ELSEIF ($checkpoints($nick, %jackpot.bet) == false) {
+    IF ($($+(%,pointcheck_CD.,$nick),2)) halt
+    SET -eu10 %pointcheck_CD. $+ $nick On
+    MSG $chan $nick $+ , you do not have %jackpot.bet %curname to play !jackpot  FailFish
+  }
+  ELSEIF (!$istok(%queue, $nick $+ .jackpot,32)) {
     REMOVEPOINTS $nick %jackpot.bet
     IF (%ActiveGame) SET %queue %queue $nick $+ .jackpot
     ELSE play_jackpot $nick
