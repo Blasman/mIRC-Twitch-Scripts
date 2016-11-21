@@ -233,6 +233,53 @@ alias editorcheck {
   sqlite_free %request
 }
 
+alias checkhours {
+  set %ankhbot_hours $sqlite_open(%CurrencyDB)
+  if (!%ankhbot_hours) {
+    echo 4 -a Error: %sqlite_errstr
+    return
+  }
+  var %sql = SELECT Hours FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
+  var %request = $sqlite_query(%ankhbot_hours, %sql)
+  if (!%request) {
+    echo 4 -a Error: %sqlite_errstr
+    return
+  }
+  if ($sqlite_num_rows(%request) == 0) { return 0  |  return }
+  else {
+    $sqlite_fetch_row(%request, row)
+    var %hours_full = $hget(row, Hours)
+    var %hr_pos = $pos(%hours_full,:)
+    dec %hr_pos
+    var %hours = $left(%hours_full, %hr_pos)
+    var %days_pos = $pos(%hours, .)
+    if (%days_pos) {
+      var %hour_count = $right(%hours, 2)
+      dec %days_pos
+      var %day_count = $left(%hours, %days_pos)
+      var %hours = %day_count * 24
+      var %hours = %hours + %hour_count
+    }
+    if (%hours < 10) { %hours = $right(%hours, 1) }
+    if (%hours < $2) { return %hours  |  return }
+    else { return true }
+  }
+  sqlite_free %request
+}
+
+alias end_game {
+  IF (%queue) .timer.queue_run 1 1 queue_run
+  ELSE UNSET %ActiveGame
+}
+
+alias queue_run { 
+  VAR %player $gettok($gettok(%queue,1,32),1,46)
+  VAR %game $gettok($gettok(%queue,1,32),2,46)
+  SET %queue $deltok(%queue,1,32)
+  IF (%queue == $null) UNSET %queue
+  play_ [ $+ [ %game ] ] %player
+}
+
 ; TwitchTime alias written by SReject and friends
 alias TwitchTime {
   if ($regex($1-, /^(\d\d(?:\d\d)?)-(\d\d)-(\d\d)T(\d\d)\:(\d\d)\:(\d\d)(?:(?:Z$)|(?:([+-])(\d\d)\:(\d+)))?$/i)) {
@@ -246,3 +293,4 @@ alias TwitchTime {
     return %t
   }
 }
+
