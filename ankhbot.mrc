@@ -275,9 +275,10 @@ alias end_game {
 alias queue_run { 
   VAR %player $gettok($gettok(%queue,1,32),1,46)
   VAR %game $gettok($gettok(%queue,1,32),2,46)
+  IF (%game == slot) VAR %bet $gettok($gettok(%queue,1,32),3,46)
   SET %queue $deltok(%queue,1,32)
   IF (%queue == $null) UNSET %queue
-  play_ [ $+ [ %game ] ] %player
+  play_ [ $+ [ %game ] ] %player %bet
 }
 
 ; TwitchTime alias written by SReject and friends
