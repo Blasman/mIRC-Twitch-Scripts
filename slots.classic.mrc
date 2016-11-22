@@ -14,7 +14,6 @@ You can just leave the %slotc.# variables or you can change them to the
 emotes that you want to use for the slot machine.  The %slotc.1 emote
 is the emote that will appear 50% of the time, and the other five
 appear more rarely the higher that the number is.
-See http://i.imgur.com/ch5vQZ2.png
 
 You will need to UNLOAD and RE-LOAD this script for any changes to the
 variables below to take effect.  This can be done by pressing ALT-R in
@@ -34,8 +33,8 @@ ON *:LOAD: {
   SET %slotc.1 bleedPurple
   SET %slotc.2 duDudu
   SET %slotc.3 riPepperonis
-  SET %slotc.4 ShibeZ
-  SET %slotc.5 OSrob
+  SET %slotc.4 TwitchRPG
+  SET %slotc.5 BudStar
   SET %slotc.6 deIlluminati
 }
 
@@ -65,34 +64,34 @@ ON $*:TEXT:/^!slot(s)?\s(on|off)/Si:%mychan: {
 }
 
 ON $*:TEXT:/^!slot(s)?(\s\d+)?$/Si:%mychan: {
-  IF (%ActiveGame == $nick $+ .slot) halt
+  IF ((%ActiveGame == $nick $+ .slot) || ($wildtok(%queue, $nick $+ .slot.*,0,32))) halt
   ELSEIF (!$2) {
-    IF ($($+(%,floodSLOTSPAM1.,$nick),2)) halt
-    SET -eu10 %floodSLOTSPAM1. $+ $nick On
-    MSG $chan You may bet any amount of %curname from %slotc.minbet to %slotc.maxbet on !slot.  ▌  Example:  !slot %slotc.minbet  ▌  See this link to see the payouts for each combination of symbols.  http://i.imgur.com/ch5vQZ2.png
+    IF ($($+(%,CD_SLOT_HELP.,$nick),2)) halt
+    SET -eu10 %CD_SLOT_HELP. $+ $nick On
+    MSG $chan You may bet any amount of %curname from %slotc.minbet to %slotc.maxbet on !slot.  ▌  Example:  !slot %slotc.minbet
   }
   ELSEIF (!%GAMES_SLOT_ACTIVE) {
-    IF ((%floodSLOT_ACTIVE) || ($($+(%,floodSLOT_ACTIVE.,$nick),2))) halt
-    SET -eu15 %floodSLOT_ACTIVE On
-    SET -eu120 %floodSLOT_ACTIVE. $+ $nick On
+    IF ((%CD_SLOT_ACTIVE) || ($($+(%,CD_SLOT_ACTIVE.,$nick),2))) halt
+    SET -eu10 %CD_SLOT_ACTIVE On
+    SET -eu120 %CD_SLOT_ACTIVE. $+ $nick On
     MSG $chan $nick $+ , the !slot game is currently disabled.
   }
   ELSEIF ($timer(.SLOT. $+ $nick)) {
-    IF ($($+(%,floodSLOTCD.,$nick),2)) halt
-    SET -eu180 %floodSLOTCD. $+ $nick On
+    IF ($($+(%,CD_SLOT_CD.,$nick),2)) halt
+    SET -eu180 %CD_SLOT_CD. $+ $nick On
     MSG $nick Be patient, $nick $+ !  You still have $duration($timer(.SLOT. $+ $nick).secs) left in your !slot cooldown.
   }
   ELSEIF ($2 !isnum %slotc.minbet - %slotc.maxbet) {
-    IF ($($+(%,floodSLOTSPAM2.,$nick),2)) halt
-    SET -eu10 %floodSLOTSPAM2. $+ $nick On
-    MSG $chan $nick $+ , please enter a valid wager between %slotc.minbet and %slotc.maxbet %curname $+ .  ▌  Example:  !slot %slotc.minbet  ▌  See this link to see the payouts for each combination of symbols.  http://i.imgur.com/ch5vQZ2.png
+    IF ($($+(%,CD_SLOT_RANGECHECK.,$nick),2)) halt
+    SET -eu10 %CD_SLOT_RANGECHECK. $+ $nick On
+    MSG $chan $nick $+ , please enter a valid wager between %slotc.minbet and %slotc.maxbet %curname $+ .  ▌  Example:  !slot %slotc.minbet
   }
   ELSEIF ($checkpoints($nick, $2) == false) {
-    IF ($($+(%,floodSLOTSPAM3.,$nick),2)) halt
-    SET -eu10 %floodSLOTSPAM3. $+ $nick On
+    IF ($($+(%,CD_SLOT_CHECKPOINTS.,$nick),2)) halt
+    SET -eu10 %CD_SLOT_CHECKPOINTS. $+ $nick On
     MSG $chan $nick $+ , you do not have $2 %curname to play slots.  FailFish
   }
-  ELSEIF (!$wildtok(%queue, $nick $+ .slot.*,0,32)) {
+  ELSE {
     REMOVEPOINTS $nick $2
     IF (%ActiveGame) SET %queue %queue $nick $+ .slot. $+ $2
     ELSE play_slot $nick $2
