@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.101 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.102 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackpot_setup
@@ -268,7 +268,8 @@ ON $*:TEXT:/^!myjackpot(\s@?\w+)?$/iS:%mychan: {
 }
 
 ON $*:TEXT:/^!jackpot$/iS:%mychan: {
-  IF (!%GAMES_JACKPOT_ACTIVE) {
+  IF (%ActiveGame == $nick $+ .jackpot) halt
+  ELSEIF (!%GAMES_JACKPOT_ACTIVE) {
     IF ((%floodJACK_ACTIVE) || ($($+(%,floodJACKC_ACTIVE.,$nick),2))) halt
     SET -eu15 %floodJACK_ACTIVE On
     SET -eu120 %floodJACK_ACTIVE. $+ $nick On
@@ -280,12 +281,11 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     MSG $nick Be patient, $nick $+ !  You still have $duration($timer(.JACKPOT. $+ $nick).secs) left in your !jackpot cooldown.
   }
   ELSEIF ($checkpoints($nick, %jackpot.bet) == false) {
-    IF ($($+(%,pointcheck_CD.,$nick),2)) halt
-    SET -eu10 %pointcheck_CD. $+ $nick On
+    IF ($($+(%,jp_cp_CD.,$nick),2)) halt
+    SET -eu10 %jp_cp_CD. $+ $nick On
     MSG $chan $nick $+ , you do not have %jackpot.bet %curname to play !jackpot  FailFish
   }
   ELSEIF (!$istok(%queue, $nick $+ .jackpot,32)) {
-    IF (%ActiveGame == $nick) halt
     REMOVEPOINTS $nick %jackpot.bet
     IF (%ActiveGame) SET %queue %queue $nick $+ .jackpot
     ELSE play_jackpot $nick
@@ -294,8 +294,8 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
 
 alias play_jackpot {
   ; PLAY THE JACKPOT AND GENERATE REELS
+  SET %ActiveGame $1 $+ .jackpot
   .timer.JACKPOT. $+ $1 1 %jackpot.cd MSG $1 $1 $+ , your !jackpot cooldown has expired.  Feel free to play again.  BloodTrail
-  SET %ActiveGame $1
   WRITEINI jackpot.ini @Stats Jackpot $calc($readini(jackpot.ini,@Stats,Jackpot) + %jackpot.bet)
   WRITEINI jackpot.ini $1 Games $calc($readini(jackpot.ini,$1,Games) + 1)
   WRITEINI jackpot.ini $1 Losses $calc($readini(jackpot.ini,$1,Losses) + %jackpot.bet)
