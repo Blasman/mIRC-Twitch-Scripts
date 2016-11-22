@@ -268,24 +268,24 @@ ON $*:TEXT:/^!myjackpot(\s@?\w+)?$/iS:%mychan: {
 }
 
 ON $*:TEXT:/^!jackpot$/iS:%mychan: {
-  IF (%ActiveGame == $nick $+ .jackpot) halt
+  IF ((%ActiveGame == $nick $+ .jackpot) || ($istok(%queue, $nick $+ .jackpot,32))) halt
   ELSEIF (!%GAMES_JACKPOT_ACTIVE) {
-    IF ((%floodJACK_ACTIVE) || ($($+(%,floodJACKC_ACTIVE.,$nick),2))) halt
-    SET -eu15 %floodJACK_ACTIVE On
-    SET -eu120 %floodJACK_ACTIVE. $+ $nick On
+    IF ((%CD_JACKPOT_ACTIVE) || ($($+(%,CD_JACKPOT_ACTIVE.,$nick),2))) halt
+    SET -eu10 %CD_JACKPOT_ACTIVE On
+    SET -eu120 %CD_JACKPOT_ACTIVE. $+ $nick On
     MSG $chan $nick $+ , the !jackpot game is currently disabled.
   }
   ELSEIF ($timer(.JACKPOT. $+ $nick)) {
-    IF ($($+(%,floodJACKPOT2.,$nick),2)) halt
-    SET -eu180 %floodJACKPOT2. $+ $nick On
+    IF ($($+(%,CD_JACKPOT_CD.,$nick),2)) halt
+    SET -eu180 %CD_JACKPOT_CD. $+ $nick On
     MSG $nick Be patient, $nick $+ !  You still have $duration($timer(.JACKPOT. $+ $nick).secs) left in your !jackpot cooldown.
   }
   ELSEIF ($checkpoints($nick, %jackpot.bet) == false) {
-    IF ($($+(%,jp_cp_CD.,$nick),2)) halt
-    SET -eu10 %jp_cp_CD. $+ $nick On
+    IF ($($+(%,CD_JACKPOT_CHECKPOINTS.,$nick),2)) halt
+    SET -eu10 %CD_JACKPOT_CHECKPOINTS. $+ $nick On
     MSG $chan $nick $+ , you do not have %jackpot.bet %curname to play !jackpot  FailFish
   }
-  ELSEIF (!$istok(%queue, $nick $+ .jackpot,32)) {
+  ELSE {
     REMOVEPOINTS $nick %jackpot.bet
     IF (%ActiveGame) SET %queue %queue $nick $+ .jackpot
     ELSE play_jackpot $nick
