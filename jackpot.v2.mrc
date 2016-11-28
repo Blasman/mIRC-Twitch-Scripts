@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.102 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.103 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackpot_setup
@@ -8,6 +8,7 @@ ON *:LOAD: jackpot_setup
 ON *:UNLOAD: UNSET %jackpot.*
 
 alias jackpot_setup {
+  IF (!%jackpot.odds) SET %jackpot.odds 1.234
   jp_odds
   jp_emotes
   jp_cost
@@ -396,7 +397,7 @@ alias jackpotwinner {
   WRITEINI jackpot.ini @Stats Total_Winners $calc($readini(jackpot.ini,@Stats,Total_Winners) + 1)
   WRITEINI jackpot.ini @Stats Total_Winnings $calc($readini(jackpot.ini,@Stats,Total_Winnings) + $readini(jackpot.ini,@Stats,Jackpot))
   WRITEINI jackpot.ini $1 Wins $calc($readini(jackpot.ini,$1,Wins) + 1)
-  WRITEINI jackpot.ini $1 Winnings $calc($readini(jackpot.ini,$1,Winnings) + %jackpot)
+  WRITEINI jackpot.ini $1 Winnings $calc($readini(jackpot.ini,$1,Winnings) + $readini(jackpot.ini,@Stats,Jackpot))
   WRITEINI jackpot.ini @Stats Jackpot %jackpot.newpot
   end_game
 }
