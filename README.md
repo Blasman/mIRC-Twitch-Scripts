@@ -44,11 +44,19 @@ For detailed information about each script, please visit the [WIKI](https://gith
 
 You may install as many of the games scripts as desired, as to prevent spam, most of the games are designed so that if one of them is currently being played by a user in the channel, then another game cannot be started by a user until that current game is completed.  
 
-### Contact Info / Help  
+### Contact Info  
 
 By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch message me regarding any help that you may require with anything on this GitHub, and/or make a donation for my hard work by clicking on the donation link. Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts. For general mIRC help, consider joining the [mirchelp](http://www.twitch.tv/mirchelp) chat on Twitch.  
 
-#### Channels Currently Running These Scripts  
+### Troubleshooting / FAQ  
+
+**Issue:** The scripts are not responding to my commands or do not appear to work at all.  
+**Answer:** Please be sure that you are right clicking the scripts on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) and choosing "save as..." rather than using the main GitHub page, as the links on the main page are links to html pages. If you know what you're doing, you can also just download the zip file of all the scripts using the link on the GitHub page and load those files into mIRC.  
+
+**Issue:** The scripts appear to be running very slow and/or using a lot of CPU.  
+**Answer:** I have had this issue as well as others using my scripts using the latest mIRC version 7.46. I recommend using [version 7.45](http://filehippo.com/download_mirc/67569/) in the meantime as that is what I am using and it is functioning properly.  
+
+### Twitch Channels Currently Running These Scripts  
 
 Some of the Twitch channels currently using some of the scripts on this GitHub:  
 [Blasman13](http://twitch.tv/Blasman13) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx) | [NakedAngel](http://twitch.tv/NakedAngel) | [thaithyme](http://twitch.tv/thaithyme) | [Evraee](http://twitch.tv/Evraee) | [AeroGarfield29](http://twitch.tv/AeroGarfield29) | [abrekke83](http://twitch.tv/abrekke83) | [KatieKakes32](http://twitch.tv/KatieKakes32) | [SmokinDank5280](http://twitch.tv/SmokinDank5280) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision) | [Tygastripe](http://twitch.tv/Tygastripe) | [XinarTheNeko](http://twitch.tv/XinarTheNeko) | [BruisedRetro](http://twitch.tv/BruisedRetro) | [TheYasmein](http://twitch.tv/TheYasmein) | [LeagueOfGambling](http://twitch.tv/LeagueOfGambling) | [ESurge](http://twitch.tv/ESurge) | [TripodGG](http://twitch.tv/TripodGG)
