@@ -39,7 +39,7 @@ In mIRC, type in the following commands anywhere. Accept and run any initializat
 `/load -rs msqlite.mrc`  
 `/load -rs ankhbot.mrc`  
 
-**You will have to disconnect and reconnect to the Twitch server after installing these scripts.**  
+**You will have to exit and re-open mIRC after installing these scripts.**  
 
 ### Download and Install Desired Scripts
 For detailed information about each script, please visit the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) page.  You can also right click the links on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) (NOT THE MAIN GITHUB PAGE) and select "save link as..." and then use `/load -rs scriptname.mrc` just like the previous install instructions.  Again, do NOT "save link as..." using the links on the main GitHub page, as they are links to the GitHub html pages! Use the  [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation)!  
