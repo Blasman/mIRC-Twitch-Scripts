@@ -22,7 +22,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 ## Once You Do Have a mIRC Twitch Bot
 ### Download Required Scripts
 To use any of the games scripts on this GitHub, you will need to download the following scripts to your MAIN (root) mIRC directory.  If you did not change the default install directory of mIRC, you can find the directory by typing %APPDATA%/mIRC into your Windows Folder Titlebar.
-* [JSONForMirc.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.41-beta/JSONForMirc.v0.2.41.mrc): right click this link and "save link as..." to your mIRC directory.
+* [JSONForMirc.v0.2.41.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.41-beta/JSONForMirc.v0.2.41.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.DisplayName.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.DisplayName.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory. (you may [download here](https://dl.dropboxusercontent.com/u/1231209/msqlite.zip) if the website is currently offline)
@@ -31,7 +31,7 @@ To use any of the games scripts on this GitHub, you will need to download the fo
 ### Install Required Scripts
 In mIRC, type in the following commands anywhere. Accept and run any initialization command prompts. When loading the last script (ankhbot.mrc), you will have to enter some information into input boxes that will pop up. Ignore the "unknown command" error messages that will pop up in mIRC:  
 
-`/load -rs JSONForMirc.mrc`  
+`/load -rs JSONForMirc.v0.2.41.mrc`  
 `/load -rs mTwitch.Core.mrc`  
 `/load -rs mTwitch.DisplayName.mrc`  
 `/load -rs msqlite.mrc`  
