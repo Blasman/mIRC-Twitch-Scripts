@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;; SLOT VERSION 2.000 BETA ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; SLOT VERSION 2.001 BETA ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: slot_setup
@@ -453,7 +453,7 @@ alias play_slot {
     .timer.slotsym2 1 %slot.reel_2_speed $IIF(%slot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %slot.1 ▌ %slot.2 ▌
     .timer.slotsym3 1 %slot.reel_3c_speed $IIF(%slot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %slot.1 ▌ %slot.2 ▌ %slot.3 ▌ ::: You WON %payout %curname $+ , $1 $+ !!!  PogChamp
     IF (%slot.whispers == ON) .timer.slotwinner 1 %slot.reel_3c_speed MSG %mychan $1 just WON %payout %curname playing !slot! PogChamp
-    .timer.slotpayout 1 %slot.reel_3c_speed slotwinner $nick %payout
+    .timer.slotpayout 1 %slot.reel_3c_speed slotwinner $1 %payout
   }
   ELSEIF (%slot.1 == %slot.2) {
     .timer.slotsym1 1 %slot.reel_1_speed $IIF(%slot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %slot.1 ▌
