@@ -282,7 +282,7 @@ alias play_slot {
   WRITEINI slot.ini $1 Losses $calc($readini(slot.ini,$1,Losses) + %slotbet)
   IF ($readini(slot.ini,$1,Wins) == $null) WRITEINI slot.ini $1 Wins 0
   IF ($readini(slot.ini,$1,Winnings) == $null) WRITEINI slot.ini $1 Winnings 0
-  $IIF(%slot.whispers == OFF,DESCRIBE %mychan,MSG $1) $replace(%slot.pull_msg,user,$1)
+  $IIF(%slot.whispers == OFF,MSG %mychan,MSG $1) $replace(%slot.pull_msg,user,$1)
   IF (%slot.houseedge == 0) VAR %houseedge = 0
   ELSEIF (%slot.houseedge < 0) VAR %houseedge = %slot.houseedge * -68.67
   ELSEIF (%slot.houseedge > 0) VAR %houseedge = %slot.houseedge * -31.33
