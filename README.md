@@ -11,17 +11,19 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 # Installation
 
-### If You Do Not Have a mIRC Twitch Bot, Set One Up
+### If You Do Not Have a mIRC Twitch Bot, Set One Up  
+
+**Here is a video tutorial on how to set everything up as quickly and painlessly as possible:**  
+
+[![Instructional Video](http://i3.ytimg.com/vi/8YefioQhUZA/hqdefault.jpg)](https://www.youtube.com/watch?v=8YefioQhUZA "Instructional Video")
 
 1. Download and install mIRC. UNCHECK EVERYTHING except "Scripts" and "Help Files" on the "Choose Components" section of the install, as you don't need most of it. http://www.mirc.com/get.html  
 
 2. Get **YOUR BOT'S** Twitch account (**NOT** the Twitch name that you stream with) up and running with mIRC, and set up your main Twitch account's channel as an auto-join channel as well. See http://help.twitch.tv/customer/portal/articles/1302780-twitch-irc#MIRC You may ignore the section titled "Join/Parts - mIRC," as one of the required scripts below will perform the same function automatically.  Keep in mind that for Step 5 of the tutorial, you will need to be logged into Twitch using your BOT'S Twitch account when retreiving the oauth token to use as your password.  
 
-3. [Optional] I have created a YouTube video for setting up mIRC and making it as unobtrusive as possible.  It is created with the purpose of lurking in channels in mind, however, you may find some of the information useful.  https://www.youtube.com/watch?v=k7ULgVCZ3Ns
-
 ## Once You Do Have a mIRC Twitch Bot
 ### Download Required Scripts
-To use any of the games scripts on this GitHub, you will need to download the following scripts to your MAIN (root) mIRC directory.  If you did not change the default install directory of mIRC, you can find the directory by typing %APPDATA%/mIRC into your Windows Folder Titlebar.
+To use any of the games scripts on this GitHub, you will need to download the following scripts to your MAIN (root) mIRC directory.  If you did not change the default install directory of mIRC, you can find the directory by typing **%APPDATA%/mIRC** into your Windows Folder Titlebar.
 * [JSONForMirc.v0.2.41.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v0.2.41-beta/JSONForMirc.v0.2.41.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.DisplayName.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.DisplayName.mrc): right click this link and "save link as..." to your mIRC directory.
