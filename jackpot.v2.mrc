@@ -1,6 +1,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.103 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.104 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackpot_setup
@@ -8,6 +8,7 @@ ON *:LOAD: jackpot_setup
 ON *:UNLOAD: UNSET %jackpot.*
 
 alias jackpot_setup {
+  $dialog(jackpot_important,jackpot_important)
   IF (!%jackpot.odds) SET %jackpot.odds 1.234
   jp_odds
   jp_emotes
@@ -23,6 +24,15 @@ alias jackpot_setup {
   IF (!%jackpot.pull_msg) SET %jackpot.pull_msg user pulls the jackpot machine's lever... PogChamp [Current Jackpot: jptotal]
   IF (!%jackpot.whispers) SET %jackpot.whispers Off
   IF (!%jackpot.stats) SET %jackpot.stats On
+}
+
+dialog jackpot_important {
+  title "IMPORTANT!"
+  size -1 -1 200 80
+  option dbu
+  text "PLEASE make sure that you are using the latest version of ankhbot.mrc from the GitHub. Otherwise, this script will likely not work for you!", 1, 10 10 180 20
+  link "https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation", 2, 10 40 180 20
+  button "I Understand.", 3, 80 65 40 12, ok
 }
 
 menu menubar,channel,status {
@@ -186,19 +196,19 @@ ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|odds|emotes|whispers|setup)/iS:
       }
       ELSE MSG $chan $nick $+ , !jackpot is already disabled.  FailFish
     }
-    ELSEIF ($2 == set) && ($3 isnum) {
+    ELSEIF (($2 == set) && ($3 isnum)) {
       SET %jackpot_pot $floor($3)
       MSG $chan The !jackpot has been manually set to %jackpot_pot %curname $+ !
     }
-    ELSEIF ($2 == bet) && ($3 isnum) {
+    ELSEIF (($2 == bet) && ($3 isnum)) {
       SET %jackpot.bet $floor($3)
       MSG $chan The amount of %curname to play !jackpot has been changed to %jackpot.bet $+ !
     }
-    ELSEIF ($2 == cd) && ($3 isnum) {
+    ELSEIF (($2 == cd) && ($3 isnum)) {
       SET %jackpot.cd $floor($3)
       MSG $chan The cooldown time for !jackpot has been changed to %jackpot.cd seconds!
     }
-    ELSEIF ($2 == newpot) && ($3 isnum) {
+    ELSEIF (($2 == newpot) && ($3 isnum)) {
       SET %jackpot.newpot $floor($3)
       MSG $chan The starting !jackpot amount has been set to %jackpot.newpot $+ !
     }
@@ -256,7 +266,7 @@ ON $*:TEXT:/^!myjackpot(\s@?\w+)?$/iS:%mychan: {
       IF ($ini(jackpot.ini,%user) != $null) {
         MSG $chan Jackpot Stats for $twitch_name(%user) ▌ Games Played: $readini(jackpot.ini,%user,Games) ▌ Wins: $readini(jackpot.ini,%user,Wins) ▌ Winnings: $readini(jackpot.ini,%user,Winnings) ▌ Losses: $readini(jackpot.ini,%user,Losses) ▌ Net Winnings: $calc($readini(jackpot.ini,%user,Winnings) - $readini(jackpot.ini,%user,Losses))
       }
-      ELSE MSG $chan $remove($2,@) has never played a game of !jackpot!
+      ELSE MSG $chan %user has never played a game of !jackpot!
     }
     ELSEIF ((!$($+(%,myjackpot_CD.,$nick),2)) && (!$2)) {
       SET -eu30 %myjackpot_CD. $+ $nick On
