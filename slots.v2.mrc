@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;; SLOTS VERSION 2.002 ;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;; SLOTS VERSION 2.0.0.3 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: slot_setup
@@ -8,6 +9,13 @@ ON *:LOAD: slot_setup
 ON *:UNLOAD: UNSET %slot.*
 
 alias slot_setup {
+  IF ($blasbot_version < 1.0.0.0) {
+    $dialog(slot_important,slot_important)
+    url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation
+    unload -rs slot.v2.mrc
+    halt
+  }
+  SET %slot.version 2.0.0.3
   IF (!%slot.houseedge) SET %slot.houseedge 0
   IF (!%slot.minbet) SET %slot.minbet 50
   IF (!%slot.maxbet) SET %slot.maxbet 1000
@@ -28,8 +36,17 @@ alias slot_setup {
   IF (!%slot.stats) SET %slot.stats On
 }
 
+dialog slot_important {
+  title "IMPORTANT!"
+  size -1 -1 200 60
+  option dbu
+  text "You are NOT running the latest version of blasbot.mrc from Blasman's GitHub. This script will NOT work for you until you install it! Setup will exit once you click Okay.", 1, 10 10 180 20
+  button "Okay", 3, 80 65 40 12, ok
+}
+
 menu menubar,channel,status {
   !Slot
+  .$style(2) Version %slot.version:$null
   .!Slot is $IIF(%GAMES_SLOT_ACTIVE,ON,OFF) [click to $IIF(%GAMES_SLOT_ACTIVE,disable,enable) $+ ]:slot_switch
   .EMOTES
   ..CLICK HERE TO CONFIGURE:slot_emotes
@@ -102,7 +119,7 @@ alias -l slot_emotes {
 alias -l slot_houseedge {
   :houseedge
   $input(Be careful with this setting! IF THIS CONFUSES YOU $+ $chr(44) JUST LEAVE THIS SET TO 0. Specify the "house edge" for !slot? $chr(40) $+ from -100 to 100 percent $+ $chr(41) $chr(40) $+ example: -100 guarantees the user always wins ▌ 100 guarantees the bot always wins ▌ 0 means the user will win 31.33% of games. Overall $+ $chr(44) they will win 1 %curname for every 1 %curname bet. They will break even. ▌ -45.624 will DOUBLE the overall amount of wins per user. They will win 2 %curname for every 1 %curname bet. ▌ 50 will DOUBLE the overall losses per user. They will win 1 %curname for every 2 %curname bet. $+ $chr(41) Decimal places are okay. See the documentation on the GitHub wiki for more information.,eo,Required Input,%slot.houseedge)
-  IF ((!$!) || ($remove($!,$chr(37)) !isnum -100 - 100)) { ECHO You need to enter a number between -100 and 100! | GOTO houseedge }
+  IF ($remove($!,$chr(37)) !isnum -100 - 100) { ECHO You need to enter a number between -100 and 100! | GOTO houseedge }
   ELSE SET %slot.houseedge $round($!,5)
 }
 
