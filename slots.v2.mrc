@@ -4,6 +4,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; SLOTS VERSION 2.0.0.3 ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+alias slot_version return 2.0.0.3
+
 ON *:LOAD: slot_setup
 
 ON *:UNLOAD: UNSET %slot.*
@@ -15,7 +17,6 @@ alias slot_setup {
     unload -rs slot.v2.mrc
     halt
   }
-  SET %slot.version 2.0.0.3
   IF (!%slot.houseedge) SET %slot.houseedge 0
   IF (!%slot.minbet) SET %slot.minbet 50
   IF (!%slot.maxbet) SET %slot.maxbet 1000
@@ -46,7 +47,7 @@ dialog slot_important {
 
 menu menubar,channel,status {
   !Slot
-  .$style(2) Version %slot.version:$null
+  .$style(2) Version $slot_version:$null
   .!Slot is $IIF(%GAMES_SLOT_ACTIVE,ON,OFF) [click to $IIF(%GAMES_SLOT_ACTIVE,disable,enable) $+ ]:slot_switch
   .EMOTES
   ..CLICK HERE TO CONFIGURE:slot_emotes
