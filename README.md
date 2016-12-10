@@ -6,7 +6,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 # Credits  
 
 **AnkhHeart**: For [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/), the bot that my scripts are designed to work with.  
-**SReject**: For the [JSON Parser](https://github.com/SReject/JSON-For-Mirc), [mTwitch scripts](https://github.com/SReject/mTwitch) and the "TwitchTime" alias used in ankhbot.mrc.  
+**SReject**: For the [JSON Parser](https://github.com/SReject/JSON-For-Mirc), [mTwitch scripts](https://github.com/SReject/mTwitch) and the "TwitchTime" alias used in BlasBot.mrc.  
 **Ramirez**: For the [mIRC SQLite](http://hawkee.com/profile/12444/) script.  
 
 # Installation
@@ -28,16 +28,16 @@ To use any of the games scripts on this GitHub, you will need to download the fo
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.DisplayName.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.DisplayName.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory. (you may [download here](https://dl.dropboxusercontent.com/u/1231209/msqlite.zip) if the website is currently offline)
-* [ankhbot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/ankhbot.mrc) : right click this link and "save link as..." to your mIRC directory.
+* [BlasBot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/BlasBot.mrc) : right click this link and "save link as..." to your mIRC directory.
 
 ### Install Required Scripts
-In mIRC, type in the following commands anywhere. Accept and run any initialization command prompts. When loading the last script (ankhbot.mrc), you will have to enter some information into input boxes that will pop up. Ignore the "unknown command" error messages that will pop up in mIRC:  
+In mIRC, type in the following commands anywhere. Accept and run any initialization command prompts. When loading the last script (BlasBot.mrc), you will have to enter some information into input boxes that will pop up. Ignore the "unknown command" error messages that will pop up in mIRC:  
 
 `/load -rs JSONForMirc.v0.2.41.mrc`  
 `/load -rs mTwitch.Core.mrc`  
 `/load -rs mTwitch.DisplayName.mrc`  
 `/load -rs msqlite.mrc`  
-`/load -rs ankhbot.mrc`  
+`/load -rs BlasBot.mrc`  
 
 **You will have to exit and re-open mIRC after installing these scripts.**  
 
@@ -53,7 +53,7 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch
 ### Troubleshooting / FAQ  
 
 **Issue:** The scripts are not responding to my commands or do not appear to work at all.  
-**Answer:** Please be sure that you are right clicking the scripts on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) and choosing "save as..." rather than using the main GitHub page, as the links on the main page are links to html pages. If you know what you're doing, you can also just download the zip file of all the scripts using the link on the GitHub page and load those files into mIRC. **Always be sure that you are running the LATEST versions of the scripts on the GitHub as well, especially ankhbot.mrc.**  
+**Answer:** Please be sure that you are right clicking the scripts on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) and choosing "save as..." rather than using the main GitHub page, as the links on the main page are links to html pages. If you know what you're doing, you can also just download the zip file of all the scripts using the link on the GitHub page and load those files into mIRC. **Always be sure that you are running the LATEST versions of the scripts on the GitHub as well, especially BlasBot.mrc.**  
 
 **Issue:** The scripts appear to be running very slow and/or using a lot of CPU.  
 **Answer:** I have had this issue as well as others using my scripts using the latest mIRC version 7.46. I recommend using [version 7.45](http://filehippo.com/download_mirc/67569/) in the meantime as that is what I am using and it is functioning properly.  
