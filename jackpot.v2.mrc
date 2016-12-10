@@ -4,6 +4,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.5 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+alias jackpot_version return 2.1.0.5
+
 ON *:LOAD: jackpot_setup
 
 ON *:UNLOAD: UNSET %jackpot.*
@@ -42,6 +44,7 @@ dialog jackpot_important {
 
 menu menubar,channel,status {
   !JackPot
+  .$style(2) Version $jackpot_version:$null
   .!JackPot is $IIF(%GAMES_JACKPOT_ACTIVE,ON,OFF) [click to $IIF(%GAMES_JACKPOT_ACTIVE,disable,enable) $+ ]:jp_switch
   .EMOTES
   ..CLICK HERE TO CONFIGURE:jp_emotes
