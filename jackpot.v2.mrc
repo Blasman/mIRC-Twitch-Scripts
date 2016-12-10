@@ -1,6 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.104 ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.5 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackpot_setup
@@ -8,7 +9,12 @@ ON *:LOAD: jackpot_setup
 ON *:UNLOAD: UNSET %jackpot.*
 
 alias jackpot_setup {
-  $dialog(jackpot_important,jackpot_important)
+  IF ($blasbot_version < 1.0.0.0) {
+    $dialog(jackpot_important,jackpot_important)
+    url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation
+    unload -rs jackpot.v2.mrc
+    halt
+  }
   IF (!%jackpot.odds) SET %jackpot.odds 1.234
   jp_odds
   jp_emotes
@@ -28,11 +34,10 @@ alias jackpot_setup {
 
 dialog jackpot_important {
   title "IMPORTANT!"
-  size -1 -1 200 80
+  size -1 -1 200 60
   option dbu
-  text "PLEASE make sure that you are using the latest version of ankhbot.mrc from the GitHub. Otherwise, this script will likely not work for you!", 1, 10 10 180 20
-  link "https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation", 2, 10 40 180 20
-  button "I Understand.", 3, 80 65 40 12, ok
+  text "You are NOT running the latest version of blasbot.mrc from Blasman's GitHub. This script will NOT work for you until you install it! Setup will exit once you click Okay.", 1, 8 8 180 30
+  button "Okay", 3, 80 45 40 12, ok
 }
 
 menu menubar,channel,status {
