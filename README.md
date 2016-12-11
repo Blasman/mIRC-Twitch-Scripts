@@ -1,4 +1,7 @@
-# mIRC-Twitch-Scripts
+# Updates  
+__**December 10, 2016**__: The **ankhbot.mrc** script has been removed from the GitHub and has been replaced with **BlasBot.mrc**. A "version check" has been added to this file. Updates that I perform to other scripts will now check to see if the user is running a high enough version of BlasBot.mrc. The reason for this is that far too many people were ignoring the "PLEASE MAKE SURE YOU HAVE THE LATEST VERSION OF ANKHBOT.MRC" on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) documentation and asking me why their scripts were not working. This should resolve that issue. Installing BlasBot.mrc should automatically unload your old ankhbot.mrc. You will have to answer the three basic questions again (twitch name, ankhbot database directory, currency name) when installing BlasBot.mrc. Ideally, you should "order" this script in mIRC after the first four that you have installed from the directions below on this GitHub `ALT-R > File > Order`, although this is not required.  
+
+# mIRC-Twitch-Scripts  
 The main focus of the scripts on this GitHub are for use with a Twitch [mIRC](http://www.mirc.com/) bot that works in conjunction with [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/) and AnkhBot's point system. [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/) is highly regarded as a great choice for a free and versatile Twitch bot, yet development on it has stopped, and it's creator, AnkhHeart, refuses to release the source code to other creators. Therefor, these scripts are designed to compliment and enchance a Twitch channel that is currently using AnkhBot, however, many of the scripts can also be easily modified to work without AnkhBot. See the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) for documentation regarding each script.  
 
 Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day trial period, after which you will be required to purchase a license for the program. The standard cost is $20 US, however, there is a permanent [50% off coupon which drops the price to $10 found here](http://www.mirc.com/register.php?coupon=MIRC-SWV0-MNKL).  
@@ -9,7 +12,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 **SReject**: For the [JSON Parser](https://github.com/SReject/JSON-For-Mirc), [mTwitch scripts](https://github.com/SReject/mTwitch) and the "TwitchTime" alias used in BlasBot.mrc.  
 **Ramirez**: For the [mIRC SQLite](http://hawkee.com/profile/12444/) script.  
 
-# Installation
+# Installation  
 
 ### If You Do Not Have a mIRC Twitch Bot, Set One Up  
 
