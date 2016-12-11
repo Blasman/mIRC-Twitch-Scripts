@@ -1,10 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.5 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.6 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-alias jackpot_version return 2.1.0.5
+alias jackpot_version return 2.1.0.6
 
 ON *:LOAD: jackpot_setup
 
@@ -115,7 +115,7 @@ alias -l jp_newpot {
   IF ((!$!) || ($! !isnum)) { ECHO You need to input a numerical value for the starting amount on !jackpot! | GOTO startamount }
   ELSE {
     SET %jackpot.newpot $floor($!)
-    IF (!%jackpot_pot) SET %jackpot_pot $floor($!)
+    IF (!$readini(jackpot.ini,@Stats,Jackpot)) WRITEINI jackpot.ini @Stats Jackpot %jackpot.newpot
   }
 }
 
