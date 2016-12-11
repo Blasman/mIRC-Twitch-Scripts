@@ -1,3 +1,9 @@
+<a href="https://twitch.streamlabs.com/blasman13/">
+  <p align="center">
+    <img src="http://i.imgur.com/iQvKeJx.jpg" alt="DONATE HERE">
+  </p>
+</a>
+
 # Updates  
 __**December 10, 2016**__: The **ankhbot.mrc** script has been removed from the GitHub and has been replaced with **BlasBot.mrc**. A "version check" has been added to this file. Updates that I perform to other scripts will now check to see if the user is running a high enough version of BlasBot.mrc. The reason for this is that far too many people were ignoring the "PLEASE MAKE SURE YOU HAVE THE LATEST VERSION OF ANKHBOT.MRC" on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) documentation and asking me why their scripts were not working. This should resolve that issue. Installing BlasBot.mrc should automatically unload your old ankhbot.mrc. You will have to answer the three basic questions again (twitch name, ankhbot database directory, currency name) when installing BlasBot.mrc. Ideally, you should "order" this script in mIRC after the first four that you have installed from the directions below on this GitHub `ALT-R > File > Order`, although this is not required.  
 
@@ -51,7 +57,7 @@ You may install as many of the games scripts as desired, as to prevent spam, mos
 
 ### Contact Info  
 
-By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch message me regarding any help that you may require with anything on this GitHub (provided that it is not something that can be easily done yourself by following the instructions on this GitHub), and/or make a donation for my hard work by clicking on the donation link. Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts. For general mIRC help, consider joining the [mirchelp](http://www.twitch.tv/mirchelp) chat on Twitch.  
+By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch message me regarding any help that you may require with anything on this GitHub (provided that it is not something that can easily be done yourself by following the instructions on this GitHub). Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts. For general mIRC help, consider joining the [mirchelp](http://www.twitch.tv/mirchelp) chat on Twitch.  
 
 ### Troubleshooting / FAQ  
 
