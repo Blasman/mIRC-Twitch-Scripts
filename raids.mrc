@@ -98,7 +98,7 @@ alias -l raidpayout {
     VAR %sortlist $left(%sortlist, -1)
     VAR %num $numtok(%sortlist, 32)
     WRITE raid_history.txt $asctime(mmm d h:nn TT) - %raid.name - %num Raiders: %sortlist
-    MSG %mychan Thank you, Raiders!  Successfully payed out %raid.payout %curname to all of the following %num raiders:  %sortlist
+    MSG %mychan Thank you, Raiders!  Successfully paid out %raid.payout %curname to all of the following %num raiders:  %sortlist
   }
   UNSET %raid.*
 }
