@@ -1,6 +1,7 @@
 /*
 *******************************************************************************
-****************************** RANDUSER SCRIPT ********************************
+**************************** TWITCH.TV/BLASMAN13 ******************************
+*********************** PAYACTIVE AND RANDUSER SCRIPT *************************
 *******************************************************************************
 
 This is a similar command to AnkhBot's $randuser, except it allows for more
@@ -18,7 +19,7 @@ of active users, useful for some commands.
 The other command is a !payactive command that is similar to AnkhBot's
 "!points add +viewers #" command, except that it will only give points to the users
 who have been active in the last X seconds (or what you set the time to).
-Simply type "!payactive [number of points to give]"
+Simply type "!payactive [number of points to give] [optional timer]"
 
 The default time for a user to be considered active is 1800 seconds (30 minutes).
 You can change the active time required from 1800 seconds by typing
