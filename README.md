@@ -18,6 +18,10 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 **SReject**: For the [JSON Parser](https://github.com/SReject/JSON-For-Mirc), [mTwitch scripts](https://github.com/SReject/mTwitch) and the "TwitchTime" alias used in BlasBot.mrc.  
 **Ramirez**: For the [mIRC SQLite](http://hawkee.com/profile/12444/) script.  
 
+# Script Documentation  
+
+**[Click here to visit the WIKI for detailed information and documentation for most of the scripts on this GitHub](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation).**  
+
 # Installation  
 
 ### If You Do Not Have a mIRC Twitch Bot, Set One Up  
