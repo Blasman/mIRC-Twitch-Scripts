@@ -21,15 +21,16 @@ The other command is a !payactive command that is similar to AnkhBot's
 who have been active in the last X seconds (or what you set the time to).
 Simply type "!payactive [number of points to give] [optional timer]"
 
-The default time for a user to be considered active is 1800 seconds (30 minutes).
-You can change the active time required from 1800 seconds by typing
+The default time for a user to be considered active is 900 seconds (15 minutes).
+You can change the active time required from 900 seconds by typing
 "!set activetime #" where # is the amount of time in seconds for a user to be
 considered active.
 */
 
 ON *:LOAD: {
-  IF (!%activetime) SET %activetime 1800
+  IF (!%activetime) SET %activetime 900
   IF (!$hget(activeusers)) HMAKE activeusers
+  IF (!%paylimit) SET %paylimit 1000000
   IF (!%commonbots) SET %commonbots moobot nightbot revlobot vivbot xanbot wizebot
 }
 
@@ -39,11 +40,45 @@ ON $*:TEXT:/^!set\sactivetime\s\d+$/iS:%mychan: IF ($nick isop $chan) { SET %act
 
 ON $*:TEXT:/^!payactive\s\d+(\s\d+)?$/iS:%mychan: {
   IF ($editorcheck($nick) == true) {
-    IF (!$3) payactive $2
-    ELSEIF ($3) {
-      MSG $chan KAPOW Attention all lurkers!  In $IIF($regex($calc($3 / 30),^\d+$),$calc($3 / 60) minutes,$3 seconds) $+ , everyone who has been chatting in the previous $calc(%activetime / 60) minutes from that point will receive $2 %curname $+ !
-      .timer.payactive 1 $3 payactive $2
+    IF ($2 <= %paylimit) payactive_start $2 $3
+    ELSE MSG $chan $nick $+ , that amount is above the max limit of %paylimit %curname for !payactive.
+  }
+}
+
+ON $*:TEXT:/^!payauto/iS:%mychan: {
+  IF ($editorcheck($nick) == true) {
+    IF (($regex($2,^\d+$)) && ($regex($3,^\d+$)) && ($regex($4,^\d+$))) {
+      IF ($2 >= %paylimit) MSG $chan $nick $+ , that amount is above the max limit of %paylimit %curname for !payactive.
+      ELSE {
+        VAR %repeat $IIF($regex($5,^\d+$),$5,0)
+        .timer.payauto %repeat $4 payactive_start $2 $3
+        IF (%repeat == 0) MSG $chan KAPOW Every $IIF($regex($calc($4 / 30),^\d+$),$calc($4 / 60) minutes,$4 seconds) there will be an automatic !payactive $2 $3
+        ELSE MSG $chan KAPOW Every $IIF($regex($calc($4 / 30),^\d+$),$calc($4 / 60) minutes,$4 seconds) $+ , for the next $IIF($regex($calc(%repeat * $4 / 30),^\d+$),$calc(%repeat * $4 / 60) minutes,$4 seconds) $+ , there will be an automatic !payactive $2 $3 for a total of %repeat times.
+      }
     }
+    ELSEIF (($0 == 2) && ($2 == off) && ($timer(.payauto))) {
+      .timer.payauto off
+      MSG $chan The automatic !payactive has been turned off.
+    }
+    ELSE MSG $chan $nick $+ , use !payauto [AMOUNT of %curname $+ ] [TIMER OF !payactive] [HOW OFTEN the !payactive] [OPTIONAL: HOW MANY TIMES to keep repeating the !payactive] ••• To turn off the !payauto, type !payauto off
+  }
+}
+
+ON $*:TEXT:/^!paylimit($|\s\d+)/iS:%mychan: {
+  IF ($nick isop $chan) {
+    IF (!$2) MSG $chan The current max amount for !payactive is %paylimit %curname $+ .
+    ELSEIF ($2) {
+      SET %paylimit $2
+      MSG $chan The max amount for !payactive has been set to %paylimit %curname $+ .
+    }
+  }
+}
+
+alias payactive_start {
+  IF (!$2) payactive $1
+  ELSE {
+    MSG %mychan KAPOW Attention all lurkers!  In $IIF($regex($calc($2 / 30),^\d+$),$calc($2 / 60) minutes,$2 seconds) $+ , everyone who has been chatting in the previous $calc(%activetime / 60) minutes from that point will receive $1 %curname $+ !
+    .timer.payactive 1 $2 payactive $1
   }
 }
 
@@ -67,7 +102,7 @@ alias payactive {
       VAR %sortlist %sortlist $v1 $+ $chr(44)
       INC %x
     }
-    MSG %mychan Successfully paid out $1 %curname to all of the following $numtok(%sortlist, 32) active users:  $left(%sortlist, -1)
+    MSG %mychan Successfully paid out $1 %curname to all of the following $numtok(%sortlist, 32) active users: $left(%sortlist, -1)
   }
 }
 
