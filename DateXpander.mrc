@@ -2,7 +2,6 @@
 ; ALL CREDITS GO TO RAMIUS FOR THIS SCRIPT http://www.kakkoiitranslations.net/mircscripts/
 
 alias DateXpander {
-  unset %dateoutput
 
   if ($1 isalpha) {
     echo -a Error.  Use the same format as in $chr(36) $+ duration's output or seconds for the "value".
