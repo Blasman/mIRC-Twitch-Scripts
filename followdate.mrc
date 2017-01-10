@@ -18,7 +18,7 @@ alias followdate {
   JSONUrlGet date $+ %fd
   VAR %time $JSON(date $+ %fd, created_at)
   IF ($v1 != $null) VAR %date $TwitchTime(%time)
-  VAR %x %nick $IIF(%time != $null,has been following this channel for $duration($calc($ctime - %date),2) since $asctime(%date,mmm dd yyyy) $+ .,is not following the channel.)
+  VAR %x %nick $IIF(%time != $null,has been following this channel for $DateXpander($calc($ctime - %date),2) since $asctime(%date,mmm dd yyyy) $+ .,is not following the channel.)
   JSONClose date $+ %fd
   RETURN %x
 }
