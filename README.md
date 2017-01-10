@@ -17,6 +17,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 **AnkhHeart**: For [AnkhBot](http://marcinswierzowski.com/Code/AnkhBotR2/), the bot that my scripts are designed to work with.  
 **SReject**: For the [JSON Parser](https://github.com/SReject/JSON-For-Mirc), [mTwitch scripts](https://github.com/SReject/mTwitch) and the "TwitchTime" alias used in BlasBot.mrc.  
 **Ramirez**: For the [mIRC SQLite](http://hawkee.com/profile/12444/) script.  
+**Riamus**: For the [original DateXpander script](http://www.kakkoiitranslations.net/mircscripts/) (used for followdate.mrc).  
 
 # Script Documentation  
 
