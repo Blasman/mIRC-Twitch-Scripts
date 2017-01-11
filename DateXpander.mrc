@@ -2,7 +2,6 @@
 ; ALL CREDITS GO TO RAMIUS FOR THIS SCRIPT http://www.kakkoiitranslations.net/mircscripts/
 
 alias DateXpander {
-
   if ($1 isalpha) {
     echo -a Error.  Use the same format as in $chr(36) $+ duration's output or seconds for the "value".
     halt
@@ -118,8 +117,6 @@ alias DateXpander {
       if (%dx_seconds > 1) { set %dateoutput %dateoutput %dx_seconds $+ _seconds }
       elseif (%dx_seconds == 1) { set %dateoutput %dateoutput %dx_seconds $+ _second }
     }
-    unset %dx_*
-
     set %dateoutput $replace(%dateoutput,$chr(32),$chr(44) $+ $chr(32),_,$chr(32))
   }
   if ($gettok(%dateoutput,0,32) > 2) {
