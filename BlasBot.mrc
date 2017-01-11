@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.2 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,7 +17,7 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.1
+alias blasbot_version return 1.0.0.2
 
 menu menubar,channel,status {
   $chr(36) $+ $chr(36) $+ $chr(36) PLEASE CLICK HERE TO DONATE TO BLASMAN13 $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
@@ -137,7 +137,8 @@ alias twitch_name {
   JSONUrlGet twitch_name $+ %tn
   VAR %x $json(twitch_name $+ %tn $+ , display_name)
   JSONClose twitch_name $+ %tn
-  RETURN %x
+  IF ($1 == %x) RETURN %x
+  ELSEIF (%x != $null) RETURN $1
 }
 
 alias twitch_id {
@@ -170,6 +171,11 @@ alias wdelay {
     HADD bot wdelay $calc($ticks + 1100)
     return $1
   }
+}
+
+alias ModCheck {
+  IF (($msgtags(mod).key == 1) || ($nick == %streamer) || ($nick isop %mychan)) return $true
+  ELSE return $false
 }
 
 alias addpoints {
