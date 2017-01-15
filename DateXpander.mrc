@@ -109,11 +109,15 @@ alias DateXpander {
       if (%dx_totaldays > 1) { set %dateoutput %dateoutput %dx_totaldays $+ _days }
       elseif (%dx_totaldays == 1) { set %dateoutput %dateoutput %dx_totaldays $+ _day }
     }
-    else {
+    if ($1 isnum 3600-604799) {
       if (%dx_hours > 1) { set %dateoutput %dateoutput %dx_hours $+ _hours }
       elseif (%dx_hours == 1) { set %dateoutput %dateoutput %dx_hours $+ _hour }
+    }
+    if ($1 isnum 60-86399) {
       if (%dx_minutes > 1) { set %dateoutput %dateoutput %dx_minutes $+ _minutes }
       elseif (%dx_minutes == 1) { set %dateoutput %dateoutput %dx_minutes $+ _minute }
+    }
+    if ($1 < 3600) {
       if (%dx_seconds > 1) { set %dateoutput %dateoutput %dx_seconds $+ _seconds }
       elseif (%dx_seconds == 1) { set %dateoutput %dateoutput %dx_seconds $+ _second }
     }
