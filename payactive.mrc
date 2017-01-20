@@ -107,7 +107,7 @@ alias payauto {
 
 alias payactive_start {
   IF ($hget(payactivex_command)) HFREE payactivex_command
-  IF (!$2) payactive $1
+  IF ($2 == 0) payactive $1 reg
   ELSE {
     MSG %mychan KAPOW Attention all lurkers! In $ext_dur($2) $+ , everyone who has been chatting in the previous $ext_dur(%activetime) from that point will receive $1 %curname $+ !
     .timer.payactive. $+ $IIF($3 == command,command,auto) 1 $2 payactive $1 $3 reg
@@ -123,7 +123,7 @@ alias payactivex_start {
 
 alias payactive {
   VAR %x = 1
-  IF ($3 == reg) VAR %htable activeusers
+  IF (($2 == reg) || ($3 == reg)) VAR %htable activeusers
   ELSEIF ($3 == x) {
     IF ($2 == command) VAR %htable payactivex_command
     ELSEIF ($2 == auto) VAR %htable payactivex_auto
