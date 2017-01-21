@@ -177,3 +177,4 @@ alias activeuser {
   IF ($hget(payactivex_command)) HADD payactivex_command $nick True
   IF ($hget(payactivex_auto)) HADD payactivex_auto $nick True
 }
+
