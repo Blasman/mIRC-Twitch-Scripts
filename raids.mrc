@@ -155,9 +155,9 @@ ON *:TEXT:!raidhelp:%mychan: {
 
 alias -l livecheck {
   JSONOpen -uw livecheck https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
-  JSONUrlHeader livecheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet livecheck
-  VAR %x $IIF($json(livecheck,stream),$true,$false)
+  JSONHttpHeader livecheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch livecheck
+  VAR %x $IIF($json(livecheck,stream).value,$true,$false)
   JSONClose livecheck
   RETURN %x
 }
