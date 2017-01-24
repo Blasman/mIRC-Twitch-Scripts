@@ -14,7 +14,7 @@ alias slot_setup {
   IF ($blasbot_version < 1.0.0.0) {
     $dialog(slot_important,slot_important)
     url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation
-    unload -rs slot.v2.mrc
+    unload -rs slot.50x.v2.mrc
     halt
   }
   IF (!%slot.houseedge) SET %slot.houseedge 0
