@@ -26,7 +26,7 @@
 ** before being allowed to host the same channel again.
 **
 ** This script needs the JSON and mTwitch scripts in the "required scripts" section of the GitHub.
-** This script needs the $twitch_name alias and %mychan and %TwitchID variables from ankhbot.mrc.
+** This script needs the $twitch_name alias and %mychan and %TwitchID variables from BlasBot.mrc.
 **
 ** You will need to un-load and re-load this script for the changes to the variables below
 ** to take effect.
@@ -225,9 +225,9 @@ alias -l livechecker {
   IF (%tu == 1000) %tu = 0
   INC %tu
   JSONOpen -uw live $+ %tu https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
-  JSONUrlHeader live $+ %tu Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet live $+ %tu
-  IF ( $json(live $+ %tu $+ ,stream) != $null ) {
+  JSONHttpHeader live $+ %tu Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch live $+ %tu
+  IF ( $json(live $+ %tu $+ ,stream).value != $null ) {
     SET %livechannel $1
     VAR %x $true
   }
@@ -237,13 +237,13 @@ alias -l livechecker {
 
 alias getcurrenthost {
   JSONOpen -uw currenthost http://tmi.twitch.tv/hosts?host= $+ %TwitchID
-  JSONUrlHeader currenthost Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet currenthost
-  IF ( $json(currenthost, hosts, 0, target_id) != $null ) {
+  JSONHttpHeader currenthost Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch currenthost
+  IF ( $json(currenthost, hosts, 0, target_id).value != $null ) {
     JSONOpen -uw hostname https://api.twitch.tv/api/friendships/users?ids= $+ $v1
-    JSONUrlHeader hostname Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-    JSONUrlGet hostname
-    SET %current.host $json(hostname, users, 0, display_name)
+    JSONHttpHeader hostname Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+    JSONHttpFetch hostname
+    SET %current.host $json(hostname, users, 0, display_name).value
     VAR %x $true
     JSONClose hostname
   }
