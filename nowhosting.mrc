@@ -11,32 +11,32 @@ RAW *:*: {
 
 alias currentgame {
   JSONOpen -uw currentgame https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONUrlHeader currentgame Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet currentgame
-  VAR %x $IIF($json(currentgame, game),$v1,????)
+  JSONHttpHeader currentgame Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch currentgame
+  VAR %x $IIF($json(currentgame, game).value,$v1,????)
   JSONClose currentgame
   RETURN %x
 }
 
 alias viewers {
   JSONOpen -uw viewers https://api.twitch.tv/kraken/streams/ $+ $1
-  JSONUrlHeader viewers Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet viewers
-  VAR %x $IIF($json(viewers, stream, viewers),$v1,????)
+  JSONHttpHeader viewers Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch viewers
+  VAR %x $IIF($json(viewers, stream, viewers).value,$v1,????)
   JSONClose viewers
   RETURN %x
 }
 
 alias streamuptime {
   JSONOpen -uw uptime https://api.twitch.tv/kraken/streams/ $+ $1
-  JSONUrlHeader uptime Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet uptime
-  VAR %x $IIF($JSON(uptime, stream, created_at),$duration($calc($ctime - $TwitchTime($JSON(uptime, stream, created_at))),2),????)
+  JSONHttpHeader uptime Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch uptime
+  VAR %x $IIF($JSON(uptime, stream, created_at).value,$duration($calc($ctime - $TwitchTime($JSON(uptime, stream, created_at).value)),2),????)
   JSONClose uptime
   RETURN %x
 }
 
-alias TwitchTime {
+alias -l TwitchTime {
   if ($regex($1-, /^(\d\d(?:\d\d)?)-(\d\d)-(\d\d)T(\d\d)\:(\d\d)\:(\d\d)(?:(?:Z$)|(?:([+-])(\d\d)\:(\d+)))?$/i)) {
     var %m = $Gettok(January February March April May June July August September October November December, $regml(2), 32), %d = $ord($base($regml(3),10,10)), %o = +0, %t
     if ($regml(0) > 6) %o = $regml(7) $+ $calc($regml(8) * 3600 + $regml(9))
