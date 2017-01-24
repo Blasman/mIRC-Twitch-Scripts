@@ -8,9 +8,9 @@ ON *:TEXT:!highlight *:%mychan: {
 
 alias -l streamuptime {
   JSONOpen -uw streamuptime https://api.twitch.tv/kraken/streams/ $+ $1
-  JSONUrlHeader streamuptime Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet streamuptime
-  VAR %x $IIF($JSON(streamuptime, stream, created_at),$duration($calc($ctime - $TwitchTime($JSON(streamuptime, stream, created_at))),2),????)
+  JSONHttpHeader streamuptime Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch streamuptime
+  VAR %x $IIF($JSON(streamuptime, stream, created_at).value,$duration($calc($ctime - $TwitchTime($JSON(streamuptime, stream, created_at).value)),2),????)
   JSONClose streamuptime
   RETURN %x
 }
