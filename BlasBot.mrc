@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.2 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.3 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,7 +17,7 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.2
+alias blasbot_version return 1.0.0.3
 
 menu menubar,channel,status {
   $chr(36) $+ $chr(36) $+ $chr(36) PLEASE CLICK HERE TO DONATE TO BLASMAN13 $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
@@ -33,6 +33,7 @@ ON *:LOAD: blasbot_setup
 ON *:UNLOAD: {
   UNSET %CurrencyDB
   UNSET %EditorsDB
+  UNSET %ExternalSubDB
   UNSET %streamer
   UNSET %curname
   UNSET %mychan
@@ -112,6 +113,7 @@ alias blasbot_setup {
     ELSE VAR %path $!
     SET %CurrencyDB $qt(%path $+ CurrencyDB.sqlite)
     SET %EditorsDB $qt(%path $+ EditorsDB.sqlite)
+    SET %ExternalSubDB $qt(%path $+ ExternalSubDB.sqlite)
   }
   :curname
   $input(Please enter the name of your channel's currency:,eo,Required Input,points)
@@ -122,20 +124,17 @@ alias blasbot_setup {
 }
 
 alias cached_name {
-  IF (!$hfind(displaynames,$1)) {
-    HADD displaynames $twitch_name($1)
-    RETURN $hfind(displaynames,$1)
-  }
-  ELSE RETURN $hfind(displaynames,$1)
+  IF (!$hfind(displaynames,$1)) HADD displaynames $twitch_name($1)
+  RETURN $hfind(displaynames,$1)
 }
 
 alias twitch_name {
   IF (%tn == 1000) %tn = 0
   INC %tn
   JSONOpen -uw twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONUrlHeader twitch_name $+ %tn Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet twitch_name $+ %tn
-  VAR %x $json(twitch_name $+ %tn $+ , display_name)
+  JSONHttpHeader twitch_name $+ %tn Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch twitch_name $+ %tn
+  VAR %x $json(twitch_name $+ %tn $+ , display_name).value
   JSONClose twitch_name $+ %tn
   IF ($1 == %x) RETURN %x
   ELSEIF (%x != $null) RETURN $1
@@ -143,18 +142,18 @@ alias twitch_name {
 
 alias twitch_id {
   JSONOpen -uw twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONUrlHeader twitch_id Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet twitch_id
-  VAR %x $json(twitch_id, _id)
+  JSONHttpHeader twitch_id Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch twitch_id
+  VAR %x $json(twitch_id, _id).value
   JSONClose twitch_id
   RETURN %x
 }
 
 alias followcheck {
   JSONOpen -uw followcheck https://api.twitch.tv/kraken/users/ $+ $1 $+ /follows/channels/ $+ %streamer
-  JSONUrlHeader followcheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONUrlGet followcheck
-  VAR %x $json(followcheck, created_at)
+  JSONHttpHeader followcheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch followcheck
+  VAR %x $json(followcheck, created_at).value
   JSONClose followcheck
   RETURN %x
 }
@@ -287,6 +286,23 @@ alias checkhours {
     if (%hours < $2) { return %hours  |  return }
     else { return true }
   }
+  sqlite_free %request
+}
+
+alias isExtSub {
+  SET %AnkhBot_Subs $sqlite_open(%ExternalSubDB)
+  IF (!%AnkhBot_Subs) {
+    echo 4 -a Error: %sqlite_errstr
+    return
+  }
+  VAR %sql = SELECT * FROM ExternalSub WHERE user = ' $+ $1 $+ ' COLLATE NOCASE
+  VAR %request = $sqlite_query(%AnkhBot_Subs, %sql)
+  IF (!%request) {
+    echo 4 -a Error: %sqlite_errstr
+    return
+  }
+  IF ($sqlite_num_rows(%request) == 0) return $false
+  ELSE return $true
   sqlite_free %request
 }
 
