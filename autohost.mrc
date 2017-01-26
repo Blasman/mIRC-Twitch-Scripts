@@ -239,14 +239,15 @@ alias getcurrenthost {
   JSONOpen -uw currenthost http://tmi.twitch.tv/hosts?host= $+ %TwitchID
   JSONHttpHeader currenthost Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONHttpFetch currenthost
-  IF ( $json(currenthost, hosts, 0, target_id).value != $null ) {
+  var %chost = $JSON(currenthost, hosts, 0, target_id).value
+  ECHO -a %chost
+  JSONClose currenthost
+  if (%chost != $null) {
     JSONOpen -uw hostname https://api.twitch.tv/api/friendships/users?ids= $+ $v1
     JSONHttpHeader hostname Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
     JSONHttpFetch hostname
-    SET %current.host $json(hostname, users, 0, display_name).value
-    VAR %x $true
+    set %current.host $json(hostname, users, 0, display_name).value
     JSONClose hostname
+    return $true
   }
-  JSONClose currenthost
-  IF (%x == $true) RETURN $true
 }
