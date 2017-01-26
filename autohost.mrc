@@ -227,7 +227,7 @@ alias -l livechecker {
   JSONOpen -uw live $+ %tu https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
   JSONHttpHeader live $+ %tu Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONHttpFetch live $+ %tu
-  IF ( $json(live $+ %tu $+ ,stream).value != $null ) {
+  IF ( $json(live $+ %tu $+ ,stream, created_at).value != $null ) {
     SET %livechannel $1
     VAR %x $true
   }
