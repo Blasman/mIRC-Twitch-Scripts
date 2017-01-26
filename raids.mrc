@@ -157,7 +157,7 @@ alias -l livecheck {
   JSONOpen -uw livecheck https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
   JSONHttpHeader livecheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONHttpFetch livecheck
-  VAR %x $IIF($json(livecheck,stream).value,$true,$false)
+  VAR %x $IIF($json(livecheck,stream,created_at).value,$true,$false)
   JSONClose livecheck
   RETURN %x
 }
