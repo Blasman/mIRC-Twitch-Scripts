@@ -17,7 +17,7 @@ alias followdate {
   JSONHttpHeader date $+ %fd Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONHttpFetch date $+ %fd
   VAR %time $JSON(date $+ %fd, created_at).value
-  IF ($v1 != $null) VAR %date $TwitchTime(%time)
+  IF (%time != $null) VAR %date $TwitchTime(%time)
   VAR %x %nick $IIF(%time != $null,has been following this channel for $DateXpander($calc($ctime - %date)) since $asctime(%date,mmm dd yyyy) $+ .,is not following the channel.)
   JSONClose date $+ %fd
   RETURN %x
