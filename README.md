@@ -38,7 +38,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 ## Once You Do Have a mIRC Twitch Bot
 ### Download Required Scripts
 To use any of the games scripts on this GitHub, you will need to download the following scripts to your MAIN (root) mIRC directory.  If you did not change the default install directory of mIRC, you can find the directory by typing **%APPDATA%/mIRC** into your Windows Folder Titlebar.
-* [JSONForMirc.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v1.0.3-rc/JSONForMirc.mrc): right click this link and "save link as..." to your mIRC directory.
+* [JSONForMirc.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v1.0.3006-rc2/JSONFormIRC.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.DisplayName.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.DisplayName.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory. (you may [download here](https://dl.dropboxusercontent.com/u/1231209/msqlite.zip) if the website is currently offline)
