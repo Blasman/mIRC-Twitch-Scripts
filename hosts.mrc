@@ -5,7 +5,8 @@
 ; This script relies on sections of BlasBot.mrc, otherwise you will have to edit the script to work properly without it.
 
 ON *:TEXT:!hosts:%mychan: {
-  IF ($ModCheck) {
+  IF (($ModCheck) && (!%CD_hosts)) {
+    SET -eu10 %CD_hosts On
     JSONOpen -uw gethosts http://tmi.twitch.tv/hosts?include_logins=1&target= $+ %TwitchID $+ &nocache= $+ $ticks
     JSONHttpHeader gethosts Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
     JSONHttpFetch gethosts
