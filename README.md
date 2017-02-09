@@ -66,6 +66,9 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch
 
 ### Troubleshooting / FAQ  
 
+**Question:** How do I get rid of (unload) a script, I don't want it on my mIRC anymore!?  
+**Answer:** Simply do the same as if you were loading the script from the instructions above, just replace **/load** with **/unload**.  
+
 **Issue:** The scripts are not responding to my commands or do not appear to work at all.  
 **Answer:** Please be sure that you are right clicking the scripts on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) and choosing "save as..." rather than using the main GitHub page, as the links on the main page are links to html pages. If you know what you're doing, you can also just download the zip file of all the scripts using the link on the GitHub page and load those files into mIRC. **Always be sure that you are running the LATEST versions of the scripts on the GitHub as well, especially BlasBot.mrc.**  
 
@@ -75,5 +78,5 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch
 ### Twitch Channels Currently Running These Scripts  
 
 Some of the Twitch channels currently using some of the scripts on this GitHub:  
-[Blasman13](http://twitch.tv/Blasman13) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx) | [thaithyme](http://twitch.tv/thaithyme) | [Evraee](http://twitch.tv/Evraee) | [NakedAngel](http://twitch.tv/NakedAngel) | [AeroGarfield29](http://twitch.tv/AeroGarfield29) | [abrekke83](http://twitch.tv/abrekke83) | [KatieKakes32](http://twitch.tv/KatieKakes32) | [SmokinDank5280](http://twitch.tv/SmokinDank5280) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision) | [Tygastripe](http://twitch.tv/Tygastripe) | [XinarTheNeko](http://twitch.tv/XinarTheNeko) | [BruisedRetro](http://twitch.tv/BruisedRetro) | [TheYasmein](http://twitch.tv/TheYasmein) | [LeagueOfGambling](http://twitch.tv/LeagueOfGambling) | [ESurge](http://twitch.tv/ESurge) | [TripodGG](http://twitch.tv/TripodGG) | [sketty1881](http://twitch.tv/sketty1881) | [HybridMagpie](http://twitch.tv/HybridMagpie) | [Rick92647](http://twitch.tv/Rick92647) | [EpicStreamMan](http://twitch.tv/EpicStreamMan)  
+[Blasman13](http://twitch.tv/Blasman13) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx) | [thaithyme](http://twitch.tv/thaithyme) | [Evraee](http://twitch.tv/Evraee) | [NakedAngel](http://twitch.tv/NakedAngel) | [AeroGarfield29](http://twitch.tv/AeroGarfield29) | [abrekke83](http://twitch.tv/abrekke83) | [KatieKakes32](http://twitch.tv/KatieKakes32) | [SmokinDank5280](http://twitch.tv/SmokinDank5280) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision) | [Tygastripe](http://twitch.tv/Tygastripe) | [XinarTheNeko](http://twitch.tv/XinarTheNeko) | [BruisedRetro](http://twitch.tv/BruisedRetro) | [TheYasmein](http://twitch.tv/TheYasmein) | [LeagueOfGambling](http://twitch.tv/LeagueOfGambling) | [ESurge](http://twitch.tv/ESurge) | [TripodGG](http://twitch.tv/TripodGG) | [sketty1881](http://twitch.tv/sketty1881) | [HybridMagpie](http://twitch.tv/HybridMagpie) | [Rick92647](http://twitch.tv/Rick92647) | [EpicStreamMan](http://twitch.tv/EpicStreamMan) | [Cillibear](http://twitch.tv/Cillibear)  
 
