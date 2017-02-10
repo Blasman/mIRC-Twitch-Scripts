@@ -1,6 +1,6 @@
 <a href="https://twitch.streamlabs.com/blasman13/">
   <p align="center">
-    <img src="http://i.imgur.com/iQvKeJx.jpg" alt="DONATE HERE">
+    <img src="http://i.imgur.com/5HN8EnD.png" alt="DONATE HERE">
   </p>
 </a>
 
