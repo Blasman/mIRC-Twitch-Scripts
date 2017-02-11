@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.3 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.4 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,10 +17,10 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.3
+alias blasbot_version return 1.0.0.4
 
 menu menubar,channel,status {
-  $chr(36) $+ $chr(36) $+ $chr(36) PLEASE CLICK HERE TO DONATE TO BLASMAN13 $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
+  $chr(36) $+ $chr(36) $+ $chr(36) CLICK HERE TO DONATE $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
   BlasBot
   .$style(2) Version $blasbot_version:$null
   .$style(2) Created by Blasman13:$null
@@ -57,7 +57,7 @@ ON *:CONNECT: {
 ON *:EXIT: IF ($hget(displaynames)) HSAVE -o displaynames displaynames.htb
 
 ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
-  IF ($nick isop $chan) {
+  IF ($ModCheck) {
     IF ($script(blackjack.mrc)) VAR %games !blackjack -
     IF ($script(jackpot.classic.mrc)) VAR %games %games !jackpot -
     IF ($script(jackpot.v2.mrc)) VAR %games %games !jackpot -
