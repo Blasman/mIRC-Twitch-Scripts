@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.4 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.5 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,7 +17,7 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.4
+alias blasbot_version return 1.0.0.5
 
 menu menubar,channel,status {
   $chr(36) $+ $chr(36) $+ $chr(36) CLICK HERE TO DONATE $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
@@ -318,6 +318,15 @@ alias queue_run {
   SET %queue $deltok(%queue,1,32)
   IF (%queue == $null) UNSET %queue
   play_ [ $+ [ %game ] ] %player %bet
+}
+
+alias livecheck {
+  JSONOpen -uw livecheck https://api.twitch.tv/kraken/streams/ $+ $1 $+ ?nocache= $+ $ticks
+  JSONHttpHeader livecheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch livecheck
+  VAR %x $IIF($json(livecheck,stream,created_at).value,$true,$false)
+  JSONClose livecheck
+  RETURN %x
 }
 
 ; TwitchTime alias written by SReject and friends
