@@ -1,17 +1,17 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.6 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.7 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-alias jackpot_version return 2.1.0.6
+alias jackpot_version return 2.1.0.7
 
 ON *:LOAD: jackpot_setup
 
 ON *:UNLOAD: UNSET %jackpot.*
 
 alias jackpot_setup {
-  IF ($blasbot_version < 1.0.0.0) {
+  IF ($blasbot_version < 1.0.0.5) {
     $dialog(jackpot_important,jackpot_important)
     url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation
     unload -rs jackpot.v2.mrc
@@ -32,6 +32,7 @@ alias jackpot_setup {
   IF (!%jackpot.pull_msg) SET %jackpot.pull_msg user pulls the jackpot machine's lever... PogChamp [Current Jackpot: jptotal]
   IF (!%jackpot.whispers) SET %jackpot.whispers Off
   IF (!%jackpot.stats) SET %jackpot.stats On
+  IF (!%jackpot.sound_livecheck) SET %jackpot.sound_livecheck On
 }
 
 dialog jackpot_important {
@@ -65,6 +66,9 @@ menu menubar,channel,status {
   .CURRENT POT $chr(91) $+ $readini(jackpot.ini,@Stats,Jackpot) %curname $+ $chr(93):jp_currentpot
   .!myjackpot is $IIF(%jackpot.stats == On,ON,OFF) [click to $IIF(%jackpot.stats == On,disable,enable) $+ ]:jp_stats
   .WHISPER MODE is $IIF(%jackpot.whispers == On,ON,OFF) [click to $IIF(%jackpot.whispers == On,disable,enable) $+ ]:jp_whispers
+  .WINNING SOUND EFFECT
+  ..MP3 FILE $chr(91) $+ $IIF(%jackpot.sound,$remove($gettok(%jackpot.sound,$numtok(%jackpot.sound,47),47),$chr(34)),OFF) $+ $chr(93) [click to change]:jp_sound
+  ..ONLY PLAY SOUND WHEN STREAM IS LIVE IS $IIF(%jackpot.sound_livecheck == On,ON,OFF) [click to $IIF(%jackpot.sound_livecheck == On,disable,enable) $+ ]:jp_sound_livecheck
 }
 
 alias -l _jackpot_emote_menu {
@@ -86,51 +90,57 @@ alias -l jp_switch {
 
 alias -l jp_cost {
   :cost
-  $input(How much %curname will it cost to play !jackpot?,eo,Required Input,%jackpot.bet)
-  IF ((!$!) || ($! !isnum)) { ECHO You need to input a numerical value for the cost to play !jackpot! | GOTO cost }
-  ELSE SET %jackpot.bet $floor($!)
+  $input(How much %curname will it cost to play !jackpot?,eof,Required Input,%jackpot.bet)
+  IF ($! isnum) SET %jackpot.bet $floor($!)
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to input a numerical value for the cost to play !jackpot! | GOTO cost }
 }
 
 alias -l jp_cooldown {
   :cooldown
-  $input(What will be the cooldown in seconds per user for !jackpot?,eo,Required Input,%jackpot.cd)
-  IF ((!$!) || ($! !isnum)) { ECHO You need to input a numerical value for the per-user cooldown on !jackpot! | GOTO cooldown }
-  ELSE SET %jackpot.cd $floor($!)
+  $input(What will be the cooldown in seconds per user for !jackpot?,eof,Required Input,%jackpot.cd)
+  IF ($! isnum) SET %jackpot.cd $floor($!)
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to input a numerical value for the per-user cooldown on !jackpot! | GOTO cooldown }
 }
 
 alias -l jp_emotes {
   :emotes
-  $input(Input at LEAST two emotes that you would like to use for !jackpot separated by spaces:,eo,Required Input,%jackpot.emotes)
-  IF (!$!) { ECHO You need to input at least two emotes for !jackpot! | GOTO emotes }
-  ELSE {
+  $input(Input at LEAST two emotes that you would like to use for !jackpot separated by spaces:,eof,Required Input,%jackpot.emotes)
+  IF ($!) {
     VAR %emotes $!
     IF ($numtok(%emotes,32) < 2) GOTO emotes
     SET %jackpot.emotes %emotes
   }
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to input at least two emotes for !jackpot! | GOTO emotes }
 }
 
 alias -l jp_newpot {
   :startamount
-  $input(What will be the staring amount of %curname for !jackpot?,eo,Required Input,%jackpot.newpot)
-  IF ((!$!) || ($! !isnum)) { ECHO You need to input a numerical value for the starting amount on !jackpot! | GOTO startamount }
-  ELSE {
+  $input(What will be the staring amount of %curname for !jackpot?,eof,Required Input,%jackpot.newpot)
+  IF ($! isnum) {
     SET %jackpot.newpot $floor($!)
     IF (!$readini(jackpot.ini,@Stats,Jackpot)) WRITEINI jackpot.ini @Stats Jackpot %jackpot.newpot
   }
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to input a numerical value for the starting amount on !jackpot! | GOTO startamount }
 }
 
 alias -l jp_odds {
   :odds
-  $input(What will be the percentage odds of winning !jackpot? $chr(40) $+ up to three decimal places $+ $chr(41),eo,Required Input,%jackpot.odds)
-  IF ((!$!) || ($remove($!,$chr(37)) !isnum)) { ECHO You need to input a numerical value for the odds of winning on !jackpot! | GOTO odds }
-  ELSE SET %jackpot.odds $round($!,3)
+  $input(What will be the percentage odds of winning !jackpot? $chr(40) $+ up to three decimal places $+ $chr(41),eof,Required Input,%jackpot.odds)
+  IF ($remove($!,$chr(37)) isnum) SET %jackpot.odds $round($!,3)
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to input a numerical value for the odds of winning on !jackpot! | GOTO odds }
 }
 
 alias -l jp_currentpot {
   :currentpot
-  $input(Enter the CURRENT $chr(40) $+ NOT the starting $+ $chr(41) pot for !jackpot,eo,Required Input,$readini(jackpot.ini,@Stats,Jackpot))
-  IF ((!$!) || ($! !isnum)) { ECHO You need to input a numerical value for the current pot on !jackpot! | GOTO currentpot }
-  ELSE WRITEINI jackpot.ini @Stats Jackpot $floor($!)
+  $input(Enter the CURRENT $chr(40) $+ NOT the starting $+ $chr(41) pot for !jackpot,eof,Required Input,$readini(jackpot.ini,@Stats,Jackpot))
+  IF ($! isnum) WRITEINI jackpot.ini @Stats Jackpot $floor($!)
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to input a numerical value for the current pot on !jackpot! | GOTO currentpot }
 }
 
 alias -l jp_whispers {
@@ -143,53 +153,77 @@ alias -l jp_stats {
   ELSE SET %jackpot.stats Off
 }
 
+alias -l jp_sound_livecheck {
+  IF (%jackpot.sound_livecheck == Off) SET %jackpot.sound_livecheck On
+  ELSE SET %jackpot.sound_livecheck Off
+}
+
 alias jp_losemsg {
-  $input(Enter the LOSING message $chr(40) $+ if any $+ $chr(41) that will appear on the third reel. Use the word "user" $chr(40) $+ without qutoes $+ $chr(41) where you want the users name to be displayed:,eo,Required Input,%jackpot.lose_msg)
-  SET %jackpot.lose_msg $!
+  $input(Enter the LOSING message $chr(40) $+ if any $+ $chr(41) that will appear on the third reel. Use the word "user" $chr(40) $+ without qutoes $+ $chr(41) where you want the users name to be displayed:,eof,Required Input,%jackpot.lose_msg)
+  IF ($! == $false) halt
+  ELSE SET %jackpot.lose_msg $!
 }
 
 alias jp_pullmsg {
-  $input(Enter the message that will appear when pulling the jackpot lever. Use the word "user" $chr(40) $+ without qutoes $+ $chr(41) where you want the users name to be displayed and the word "jptotal" $chr(40) $+ without qutoes $+ $chr(41) where you want the current jackpot total to be displayed:,eo,Required Input,%jackpot.pull_msg)
-  SET %jackpot.pull_msg $!
+  $input(Enter the message that will appear when pulling the jackpot lever. Use the word "user" $chr(40) $+ without qutoes $+ $chr(41) where you want the users name to be displayed and the word "jptotal" $chr(40) $+ without qutoes $+ $chr(41) where you want the current jackpot total to be displayed:,eof,Required Input,%jackpot.pull_msg)
+  IF ($! == $false) halt
+  ELSE SET %jackpot.pull_msg $!
 }
 
 alias jp_reelspeed_1 {
   :reelspeed
-  $input(Enter the number of seconds that the first jackpot reel will appear after the lever pull message:,eo,Required Input,%jackpot.reel_1_speed)
-  IF (!$regex($!,^\d+$)) { ECHO You need to use a positive whole number. | GOTO reelspeed }
-  ELSE SET %jackpot.reel_1_speed $!
+  $input(Enter the number of seconds that the first jackpot reel will appear after the lever pull message:,eof,Required Input,%jackpot.reel_1_speed)
+  IF ($regex($!,^\d+$)) SET %jackpot.reel_1_speed $!
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to use a positive whole number. | GOTO reelspeed }
 }
 
 alias jp_reelspeed_2 {
   :reelspeed
-  $input(Enter the number of seconds that the second jackpot reel will appear after the lever pull message:,eo,Required Input,%jackpot.reel_2_speed)
-  IF (!$regex($!,^\d+$)) { ECHO You need to use a positive whole number. | GOTO reelspeed }
-  ELSE SET %jackpot.reel_2_speed $!
+  $input(Enter the number of seconds that the second jackpot reel will appear after the lever pull message:,eof,Required Input,%jackpot.reel_2_speed)
+  IF ($regex($!,^\d+$)) SET %jackpot.reel_2_speed $!
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to use a positive whole number. | GOTO reelspeed }
 }
 
 alias jp_reelspeed_3a {
   :reelspeed
-  $input(Enter the number of seconds that the third losing jackpot reel will appear after the lever pull message when the first two reels are NOT identical:,eo,Required Input,%jackpot.reel_3a_speed)
-  IF (!$regex($!,^\d+$)) { ECHO You need to use a positive whole number. | GOTO reelspeed }
-  ELSE SET %jackpot.reel_3a_speed $!
+  $input(Enter the number of seconds that the third losing jackpot reel will appear after the lever pull message when the first two reels are NOT identical:,eof,Required Input,%jackpot.reel_3a_speed)
+  IF ($regex($!,^\d+$)) SET %jackpot.reel_3a_speed $!
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to use a positive whole number. | GOTO reelspeed }
 }
 
 alias jp_reelspeed_3b {
   :reelspeed
-  $input(Enter the number of seconds that the third losing jackpot reel will appear after the lever pull message when the first two reels ARE identical:,eo,Required Input,%jackpot.reel_3b_speed)
-  IF (!$regex($!,^\d+$)) { ECHO You need to use a positive whole number. | GOTO reelspeed }
-  ELSE SET %jackpot.reel_3b_speed $!
+  $input(Enter the number of seconds that the third losing jackpot reel will appear after the lever pull message when the first two reels ARE identical:,eof,Required Input,%jackpot.reel_3b_speed)
+  IF ($regex($!,^\d+$)) SET %jackpot.reel_3b_speed $!
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to use a positive whole number. | GOTO reelspeed }
 }
 
 alias jp_reelspeed_3c {
   :reelspeed
-  $input(Enter the number of seconds that the third WINNING jackpot reel will appear after the lever pull message:,eo,Required Input,%jackpot.reel_3c_speed)
-  IF (!$regex($!,^\d+$)) { ECHO You need to use a positive whole number. | GOTO reelspeed }
-  ELSE SET %jackpot.reel_3c_speed $!
+  $input(Enter the number of seconds that the third WINNING jackpot reel will appear after the lever pull message:,eof,Required Input,%jackpot.reel_3c_speed)
+  IF ($regex($!,^\d+$)) SET %jackpot.reel_3c_speed $!
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to use a positive whole number. | GOTO reelspeed }
+}
+
+alias jp_sound {
+  :sound
+  $input(Enter the path and filename to the MP3 file that you wish to use when a user wins the jackpot:,eof,Required Input,$noqt(%jackpot.sound))
+  IF ($right($!,4) == .mp3) {
+    IF ($isfile($qt($!))) SET %jackpot.sound $qt($!)
+    ELSE { ECHO File not found! Please check that the path and filename are correct! | GOTO sound }
+  }
+  ELSEIF (!$!) UNSET %jackpot.sound
+  ELSEIF ($! == $false) halt
+  ELSE { ECHO You need to specify an .MP3 file for the jackpot win sound! | GOTO sound }
 }
 
 ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|odds|emotes|whispers|setup)/iS:%mychan: {
-  IF ($nick isop $chan) {
+  IF ($ModCheck) {
     IF ($2 == on) {
       IF (!%GAMES_JACKPOT_ACTIVE) {
         SET %GAMES_JACKPOT_ACTIVE On
@@ -269,7 +303,7 @@ ON $*:TEXT:/^!jackpot(\s)?record$/iS:%mychan: {
 
 ON $*:TEXT:/^!myjackpot(\s@?\w+)?$/iS:%mychan: {
   IF (%jackpot.stats == On) {
-    IF ($nick isop $chan) {
+    IF ($ModCheck) {
       VAR %user $IIF($2,$remove($2,@),$nick)
       IF ($ini(jackpot.ini,%user) != $null) {
         MSG $chan Jackpot Stats for $twitch_name(%user) ▌ Games Played: $readini(jackpot.ini,%user,Games) ▌ Wins: $readini(jackpot.ini,%user,Wins) ▌ Winnings: $readini(jackpot.ini,%user,Winnings) ▌ Losses: $readini(jackpot.ini,%user,Losses) ▌ Net Winnings: $calc($readini(jackpot.ini,%user,Winnings) - $readini(jackpot.ini,%user,Losses))
@@ -335,6 +369,8 @@ alias play_jackpot {
     .timer.jackpot_01 1 %jackpot.reel_1_speed $IIF(%jackpot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %reel.1 ▌
     .timer.jackpot_02 1 %jackpot.reel_2_speed $IIF(%jackpot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %reel.1 ▌ %reel.2 ▌
     .timer.jackpot_03 1 %jackpot.reel_3c_speed $IIF(%jackpot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %reel.1 ▌ %reel.2 ▌ %reel.3 ▌ ::: You Won %jackpot %curname $+ , $1 $+ ! Congratulations! PogChamp
+    IF ((%jackpot.sound) && (((%jackpot.sound_livecheck == On) && ($livecheck(%streamer))) || (%jackpot.sound_livecheck == Off))) .timer.jackpot_04 1 %jackpot.reel_3c_speed SPLAY -pq %jackpot.sound
+    .timer.jackpot_04 1 %jackpot.reel_3c_speed SPLAY -pq %jackpot.sound
     .timer.jackpotwinner1 1 $calc(%jackpot.reel_3c_speed +1) MSG %mychan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! $1 just won %jackpot %curname $+ !!!  KAPOW KAPOW KAPOW
     .timer.jackpotwinner2 1 $calc(%jackpot.reel_3c_speed +2) MSG %mychan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! $1 just won %jackpot %curname $+ !!!  KAPOW KAPOW KAPOW
     .timer.jackpotwinner3 1 $calc(%jackpot.reel_3c_speed +3) MSG %mychan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! $1 just won %jackpot %curname $+ !!!  KAPOW KAPOW KAPOW
