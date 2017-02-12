@@ -112,7 +112,7 @@ alias -l raidpayout {
     WHILE ($gettok(%raid.list,%x,32) != $null) {
       VAR %nick $v1
       ADDPOINTS %nick %raid.payout
-      WRITEINI raiders.ini %nick $calc($readini(raiders.ini,%nick,Raids) + 1)
+      WRITEINI raiders.ini %nick Raids $calc($readini(raiders.ini,%nick,Raids) + 1)
       INC %x
     }
     VAR %raid.list $sorttok(%raid.list, 32, a)
