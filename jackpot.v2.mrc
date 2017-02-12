@@ -370,7 +370,6 @@ alias play_jackpot {
     .timer.jackpot_02 1 %jackpot.reel_2_speed $IIF(%jackpot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %reel.1 ▌ %reel.2 ▌
     .timer.jackpot_03 1 %jackpot.reel_3c_speed $IIF(%jackpot.whispers == OFF,DESCRIBE %mychan,MSG $1)  ▌ %reel.1 ▌ %reel.2 ▌ %reel.3 ▌ ::: You Won %jackpot %curname $+ , $1 $+ ! Congratulations! PogChamp
     IF ((%jackpot.sound) && (((%jackpot.sound_livecheck == On) && ($livecheck(%streamer))) || (%jackpot.sound_livecheck == Off))) .timer.jackpot_04 1 %jackpot.reel_3c_speed SPLAY -pq %jackpot.sound
-    .timer.jackpot_04 1 %jackpot.reel_3c_speed SPLAY -pq %jackpot.sound
     .timer.jackpotwinner1 1 $calc(%jackpot.reel_3c_speed +1) MSG %mychan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! $1 just won %jackpot %curname $+ !!!  KAPOW KAPOW KAPOW
     .timer.jackpotwinner2 1 $calc(%jackpot.reel_3c_speed +2) MSG %mychan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! $1 just won %jackpot %curname $+ !!!  KAPOW KAPOW KAPOW
     .timer.jackpotwinner3 1 $calc(%jackpot.reel_3c_speed +3) MSG %mychan KAPOW KAPOW KAPOW OMG!!!  JACKPOT!!! $1 just won %jackpot %curname $+ !!!  KAPOW KAPOW KAPOW
