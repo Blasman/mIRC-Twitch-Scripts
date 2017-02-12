@@ -66,8 +66,14 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch
 
 ### Troubleshooting / FAQ  
 
+**Issue:** User names are either blank and/or being returned as "$true" and/or other weird stuff has recently started to happen since updating scripts.  
+**Answer:** The creator of the mTwitch and JSON scripts (SReject) recently updated those scripts. They now require that you are running the most recent version of mIRC. Many of the scripts that I have writen have had to be edited to work with those new versions. Therefor, all required scripts (except SQLite) need to be updated as well most other scripts on the GitHub. Update all the scripts from the "Install Required Scripts" section of this GitHub (except SQLite), as well as any other scripts that you are using from this GitHub. Again, be sure that you are also running the most recent version of mIRC. This should solve any issues.  
+
 **Question:** How do I get rid of (unload) a script, I don't want it on my mIRC anymore!?  
 **Answer:** Simply do the same as if you were loading the script from the instructions above, just replace **/load** with **/unload**.  
+
+**Question:** How do I "update" a script from this GitHub?  
+**Answer:** They are multiple ways. I recommend unloading the script that you wish to update (see question above). Then download the updated script and overwrite the old one. Then /load in mIRC as you originally did when you first installed the script.  
 
 **Issue:** The scripts are not responding to my commands or do not appear to work at all.  
 **Answer:** Please be sure that you are right clicking the scripts on the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) and choosing "save as..." rather than using the main GitHub page, as the links on the main page are links to html pages. If you know what you're doing, you can also just download the zip file of all the scripts using the link on the GitHub page and load those files into mIRC. **Always be sure that you are running the LATEST versions of the scripts on the GitHub as well, especially BlasBot.mrc.**  
