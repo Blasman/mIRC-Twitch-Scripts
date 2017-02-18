@@ -118,16 +118,11 @@ alias -l autohost_modaccess_switch {
 alias autohost_channel {
   :start
   $input(Input the name of your Twitch channel that you will be hosting from:,eof,Required Input,%ah_channel)
-  IF ($!) {
-    VAR %result $!
-    IF ($left(%result,1) != $chr(35)) {
-      VAR %result $chr(35) $+ %result
-      SET %ah_channel %result
-      SET %ah_twitchid $twitch_id($remove(%result,$chr(35)))
-    }
-    ELSE GOTO start
+  IF ($regex($!,^#?(\w+)$)) {
+    SET %ah_channel $chr(35) $+ $regml(1)
+    SET %ah_twitchid $twitch_id($regml(1))
   }
-  ELSE { ECHO You need to input a name for your channel! | GOTO start }
+  ELSE { ECHO You need to input a valid name for your channel! | GOTO start }
 }
 
 alias autohost_rehost {
