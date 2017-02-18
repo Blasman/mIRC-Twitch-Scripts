@@ -4,7 +4,7 @@
 ;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.0 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation/_edit#advanced-autohost-version-2
+; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
 
 alias autohost_version RETURN 2.0.0.0
 
