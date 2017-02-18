@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.0 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.1 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
@@ -9,7 +9,7 @@
 ; UNCOMMENT the line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running.
 ;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
-alias autohost_version RETURN 2.0.0.0
+alias autohost_version RETURN 2.0.0.1
 
 ON *:LOAD: autohost_setup
 
@@ -358,9 +358,9 @@ alias autohost {
     }
   }
   IF ((%still.live) && ((!%ah_forceswitch) || ((%ah_forceswitch) && ($calc($ctime - %host.uptime) <= %ah_forceswitch)))) {
+    IF (%host.tier == 1) { UNSET %ah_run | RETURN }
     VAR %x = 1
     WHILE ((%host.tier) && (%x <= %host.tier)) {
-      IF (%x == %host.tier) { UNSET %ah_run | RETURN }
       IF ($gettok(%ah_tiers,$calc(%x - 1),44)) VAR %rh_time $v1
       ELSE VAR %rh_time $gettok(%ah_tiers,1,44)
       IF ($calc($ctime - %host.uptime) <= %rh_time) { UNSET %ah_run | RETURN }
