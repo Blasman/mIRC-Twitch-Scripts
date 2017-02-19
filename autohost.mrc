@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.1 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.2 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
@@ -9,35 +9,35 @@
 ; UNCOMMENT the line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running.
 ;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
-alias autohost_version RETURN 2.0.0.1
+alias autohost_version RETURN 2.0.0.2
 
 ON *:LOAD: autohost_setup
 
 alias autohost_setup {
   IF (!$isfile(autohost.txt)) WRITE -l1 autohost.txt
+  IF (!%ah_rehost) SET %ah_rehost 28800
+  IF (!%ah_tiers) SET %ah_tiers 3600,3600
+  IF (!%ah_repeat) SET %ah_repeat 300
+  IF (!%ah_grace) SET %ah_grace 300
+  IF (!%ah_random) SET %ah_random $false
+  IF (!%ah_hostmsg) SET %ah_hostmsg $true
+  IF (!%ah_unhost_disables) SET %ah_unhost_disables $false
+  IF (!%ah_modaccess) SET %ah_modaccess $true
+  IF (!%ah_enable_tier_01) SET %ah_enable_tier_01 1
+  IF (!%ah_enable_tier_02) SET %ah_enable_tier_02 -1
+  IF (!%ah_forceswitch) SET %ah_forceswitch 0
   $dialog(welcome,welcome)
   autohost_channel
-  IF (!%ah_rehost) SET %ah_rehost 28800
   autohost_rehost
-  IF (!%ah_tiers) SET %ah_tiers 3600,3600
   autohost_tiers
-  IF (!%ah_repeat) SET %ah_repeat 300
   autohost_repeat
-  IF (!%ah_grace) SET %ah_grace 300
   autohost_grace
-  IF (!%ah_random) SET %ah_random $false
   autohost_random
-  IF (!%ah_hostmsg) SET %ah_hostmsg $true
   autohost_hostmsg
-  IF (!%ah_unhost_disables) SET %ah_unhost_disables $false
   autohost_unhost
-  IF (!%ah_modaccess) SET %ah_modaccess $true
   autohost_modaccess
-  IF (!%ah_enable_tier_01) SET %ah_enable_tier_01 1
   autohost_enable_tier_01
-  IF (!%ah_enable_tier_02) SET %ah_enable_tier_02 -1
   autohost_enable_tier_02
-  IF (!%ah_forceswitch) SET %ah_forceswitch 0
   autohost_forceswitch
   $dialog(finish,finish)
 }
@@ -357,14 +357,12 @@ alias autohost {
       IF ((%double.check) && (%double.check != $offline)) VAR %still.live $true
     }
   }
-  IF ((%still.live) && ((!%ah_forceswitch) || ((%ah_forceswitch) && ($calc($ctime - %host.uptime) <= %ah_forceswitch)))) {
+  IF ((%still.live) && (%host.tier) && ((!%ah_forceswitch) || ((%ah_forceswitch) && ($calc($ctime - %host.uptime) <= %ah_forceswitch)))) {
     IF (%host.tier == 1) { UNSET %ah_run | RETURN }
-    VAR %x = 1
-    WHILE ((%host.tier) && (%x <= %host.tier)) {
-      IF ($gettok(%ah_tiers,$calc(%x - 1),44)) VAR %rh_time $v1
+    ELSE {
+      IF ($gettok(%ah_tiers,$calc(%host.tier - 1),44)) VAR %rh_time $v1
       ELSE VAR %rh_time $gettok(%ah_tiers,1,44)
       IF ($calc($ctime - %host.uptime) <= %rh_time) { UNSET %ah_run | RETURN }
-      INC %x
     }
   }
   ELSE UNSET %host.*
