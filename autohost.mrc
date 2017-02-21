@@ -78,7 +78,7 @@ menu menubar,channel,status {
   ..If channel is NOT in the autohost.txt file $+ $chr(44) set tier to $chr(91) $+ %ah_enable_tier_01 $+ $chr(93):autohost_enable_tier_01
   ..If channel IS in the autohost.txt file $+ $chr(44) set tier to $chr(91) $+ %ah_enable_tier_02 $+ $chr(93):autohost_enable_tier_02
   .Force search for new host on any tier $IIF(%ah_forceswitch isnum 0,after X amount of time is DISABLED,after $duration(%ah_forceswitch)) $+ .:autohost_forceswitch
-  .Visit Online Documentation by clicking here:url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation/_edit#advanced-autohost-version-2
+  .Visit Online Documentation by clicking here:url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
 }
 
 alias -l _autohost_tiers {
