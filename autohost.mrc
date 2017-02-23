@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.2 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.3 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
@@ -9,7 +9,7 @@
 ; UNCOMMENT the line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running.
 ;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
-alias autohost_version RETURN 2.0.0.2
+alias autohost_version RETURN 2.0.0.3
 
 ON *:LOAD: autohost_setup
 
@@ -26,6 +26,7 @@ alias autohost_setup {
   IF (!%ah_enable_tier_01) SET %ah_enable_tier_01 1
   IF (!%ah_enable_tier_02) SET %ah_enable_tier_02 -1
   IF (!%ah_forceswitch) SET %ah_forceswitch 0
+  IF (!%ah_msg) SET %ah_msg $true
   $dialog(welcome,welcome)
   autohost_channel
   autohost_rehost
@@ -62,6 +63,7 @@ menu menubar,channel,status {
   AutoHost
   .$style(2) Version $autohost_version:$null
   .!AutoHost is $IIF(%autohost,ON,OFF) [click to $IIF(%autohost,disable,enable) $+ ]:autohost_switch
+  .Announce in channel when AutoHost is enabled/disabled with the above option is set to $IIF(%ah_msg,ON,OFF) [click to $IIF(%ah_msg,disable,enable) $+ ]:autohost_msg_switch
   .Click to EDIT autohost.txt file:RUN autohost.txt
   .Channel $chr(91) $+ %ah_channel $+ $chr(93):autohost_channel
   .Display message in chat when hosting a channel is $IIF(%ah_hostmsg,ON,OFF) [click to $IIF(%ah_hostmsg,disable,enable) $+ ]:autohost_hostmsg_switch
@@ -90,17 +92,24 @@ alias -l _autohost_tiers {
 alias -l autohost_switch {
   IF (!%autohost) {
     autohost_enable
-    MSG %ah_channel Autohost is now enabled!
+    IF (%ah_msg) MSG %ah_channel Autohost is now enabled!
+    ELSE ECHO -a Autohost is now enabled!
   }
   ELSE {
     autohost_disable
-    MSG %ah_channel Autohost is now disabled!
+    IF (%ah_msg) MSG %ah_channel Autohost is now disabled!
+    ELSE ECHO -a Autohost is now disabled!
   }
 }
 
 alias -l autohost_random_switch {
   IF (!%ah_random) SET %ah_random $true
   ELSE SET %ah_random $false
+}
+
+alias -l autohost_msg_switch {
+  IF (!%ah_msg) SET %ah_msg $true
+  ELSE SET %ah_msg $false
 }
 
 alias -l autohost_hostmsg_switch {
@@ -264,6 +273,17 @@ ON *:TEXT:!nexthost:?: {
   }
 }
 
+ON *:TEXT:!hostinfo:%mychan: {
+  IF ($AccessCheck) {
+    VAR %target $get_target
+    IF (%host.name) {
+      hostinfo %host.name
+      MSG %target We have been hosting %host.name for $duration($calc($ctime - %host.uptime),2) $+ . They are playing %host.game for %host.viewers viewers. Uptime: %host.created_at $+ . You can visit them at twitch.tv/ $+ %host.name
+    }
+    ELSE MSG %target We do not appear to be hosting anyone at the moment!
+  }
+}
+
 alias autohost_enable {
   SET %autohost $true
   IF (%host.name) VAR %livechecker $livechecker(%host.name)
@@ -305,13 +325,24 @@ RAW HOSTTARGET:*: {
     SET %host.name $twitch_name($regml(1))
     SET %host.uptime $ctime
     IF (%ah_hostmsg) {
-      JSONOpen -uw hostinfo https://api.twitch.tv/kraken/streams/ $+ %host.name
-      JSONHttpHeader hostinfo Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-      JSONHttpFetch hostinfo
-      MSG %ah_channel We are now hosting %host.name $IIF($5 > 1,for $5 active viewers) who is playing $IIF($json(hostinfo, stream, game).value,$v1,????) for $IIF($json(hostinfo, stream, viewers).value,$v1,????) viewers. Uptime: $IIF($json(hostinfo, stream, created_at).value,$duration($calc($ctime - $TwitchTime($json(hostinfo, stream, created_at).value)),2),????) $+ . You can visit them at twitch.tv/ $+ %host.name
-      JSONClose hostinfo
+      hostinfo %host.name
+      MSG %ah_channel We are now hosting %host.name $IIF($5 > 1,for $5 active viewers) who is playing %host.game for %host.viewers viewers. Uptime: %host.created_at $+ . You can visit them at twitch.tv/ $+ %host.name
     }
   }
+}
+
+alias -l hostinfo {
+  JSONOpen -uw hostinfo https://api.twitch.tv/kraken/streams/ $+ $1
+  JSONHttpHeader hostinfo Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch hostinfo
+  IF ($json(hostinfo, stream).value == null) { SET %host.name ???? | SET %host.game ???? | SET %host.viewers ???? | SET %host.uptime ???? }
+  ELSE {
+    SET %host.name $json(hostinfo, stream, channel, display_name).value
+    SET %host.game $json(hostinfo, stream, game).value
+    SET %host.viewers $json(hostinfo, stream, viewers).value
+    SET %host.created_at $duration($calc($ctime - $TwitchTime($JSON(hostinfo, stream, created_at).value)),2)
+  }
+  JSONClose hostinfo
 }
 
 ON *:NOTICE:*:%ah_channel: {
