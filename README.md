@@ -21,7 +21,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 # Script Documentation  
 
-**[Click here to visit the WIKI for detailed information and documentation for most of the scripts on this GitHub](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation).**  
+**[![Click here to visit the WIKI for detailed information and documentation for most of the scripts on this GitHub](http://i.imgur.com/CGOx9Sv.png)](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation "Script Documentation")**  
 
 # Installation  
 
@@ -29,7 +29,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 **Here is a video tutorial on how to set everything up as quickly and painlessly as possible:**  
 
-[![Instructional Video](http://i3.ytimg.com/vi/8YefioQhUZA/hqdefault.jpg)](https://www.youtube.com/watch?v=8YefioQhUZA "Instructional Video")
+[![Instructional Video](http://i.imgur.com/ZJqfWom.png)](https://www.youtube.com/watch?v=8YefioQhUZA "Instructional Video")
 
 1. Download and install mIRC. UNCHECK EVERYTHING except "Scripts" and "Help Files" on the "Choose Components" section of the install, as you don't need most of it. http://www.mirc.com/get.html  
 
@@ -80,6 +80,9 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch
 
 **Issue:** The scripts appear to be running very slow and/or using a lot of CPU.  
 **Answer:** Please make sure that you are using the latest mIRC version 7.47 (or higher). Earlier versions contained an old memory leak that has been fixed in the latest version.  
+
+**Issue:** Whispers sent from your bot are not being received by users.  
+**Answer:** If this is happening after your bot has been sending out a lot of whispers successfully and it just happens to temporarily stop working, then it is likely Twitch's anti-spam measures that are preventing the whispers from being sent. See this post on instructions on how to whitelist your bot. [Are your whispers not going through for your bot?](https://discuss.dev.twitch.tv/t/are-your-whispers-not-going-through-for-your-bot/5183)  
 
 ### Twitch Channels Currently Running These Scripts  
 
