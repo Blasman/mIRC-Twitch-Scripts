@@ -256,7 +256,7 @@ ON $*:TEXT:/^!settier\s\d+$/iS:*: {
   }
 }
 
-ON *:TEXT:!nexthost:?: {
+ON *:TEXT:!nexthost:*: {
   IF ($AccessCheck) {
     VAR %target $get_target
     IF (%autohost) {
@@ -273,7 +273,7 @@ ON *:TEXT:!nexthost:?: {
   }
 }
 
-ON *:TEXT:!hostinfo:%mychan: {
+ON *:TEXT:!hostinfo:*: {
   IF ($AccessCheck) {
     VAR %target $get_target
     IF (%host.name) {
