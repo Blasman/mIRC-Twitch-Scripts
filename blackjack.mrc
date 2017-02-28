@@ -71,7 +71,7 @@ ON $*:TEXT:/^!blackjack(\s|$)/iS:%mychan: {
   }
   ELSEIF ($2 isnum %bj_minbet - %bj_maxbet) {
     IF ($($+(%,BJ_CD.,$nick),2)) MSG $nick $nick $+ , please wait for your cooldown to expire in $duration(%BJ_CD. [ $+ [ $nick ] ]) before trying to play BlackJack again.
-    ELSEIF ($checkpoints($nick, $2) == false) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
+    ELSEIF ($GetPoints($nick) < $2) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
     ELSE $start_blackjack($nick,$2)
   }
   ELSE {
@@ -110,7 +110,7 @@ alias start_blackjack {
   }
   SET %bj.Ohands $+(%bj.name $+ 's hand:  $chr(91) $+ %bj.hcard1 $+ $chr(93) $chr(91) $+ %bj.hcard2 $+ $chr(93), $chr(32), ▌, $chr(32), $chr(32), %botname $+ 's hand:  $chr(91) $+ %bj.ccard1 $+ $chr(93) $chr(91) $+ ? $+ $chr(93), $chr(32), ▌, $chr(32) )
   IF (%bj.addh != 21) {
-    IF ($checkpoints(%bj.name,$calc(%bj.bet * 2)) == true) {
+    IF ($GetPoints(%bj.name) >= $calc(%bj.bet * 2)) {
       MSG $chan %bj.Ohands %bj.name $+ , do you want to !hit, !stand, or !double?
       SET %bj.double $calc(%bj.bet * 2)
     }
