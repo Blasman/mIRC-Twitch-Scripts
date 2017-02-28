@@ -149,7 +149,7 @@ ON $*:TEXT:/^!code$/iS:%mychan: {
         ELSE msg_deny
         IF (($regex(%jackbox_permissions,/fo(\d+)/)) && ($calc(($ctime - $TwitchTime(%time)) / 60) < $regml(1))) msg_deny
       }
-      msg_allow $nick nonsub
+      msg_allow nonsub
     }
   }
 }
