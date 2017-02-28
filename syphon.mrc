@@ -21,7 +21,7 @@ ON $*:TEXT:/^!syphon\s(end|\d+(\s\d+\s\d+)?)$/iS:%mychan: {
 
 ON $*:TEXT:/^!syphon$/iS:%mychan: {
   IF ((%syphon.active) && (!$istok(%syphon.entries,$nick,32))) {
-    IF ($checkpoints($nick,%syphon.cost) == false) {
+    IF ($GetPoints($nick) < %syphon.cost) {
       IF (!$($+(%,flood2poor4syphon.,$nick),2)) {
         SET -eu60 %flood2poor4syphon. $+ $nick On
         $wdelay(MSG $nick You do not have %syphon.cost %curname to enter the %curname syphon!  FeelsBadMan)
