@@ -14,7 +14,7 @@ ON $*:TEXT:/^!give\s/iS:%mychan: {
     ELSE {
       IF (!$istok($randuser(list),%target,32)) MSG $chan $nick $+ , $twitch_name(%target) is currently lurking here, but they have not recently been active.  You must choose a user who has recently been active in chat to give your points to.
       ELSE {
-        IF ($checkpoints($nick,$3) == false) MSG $chan $nick $+ , you do not have $3 points to give to $twitch_name(%target) $+ .
+        IF ($GetPoints($nick) < $3) MSG $chan $nick $+ , you do not have $3 points to give to $twitch_name(%target) $+ .
         ELSE {
           REMOVEPOINTS $nick $3
           ADDPOINTS %target $3
