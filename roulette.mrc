@@ -87,7 +87,7 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:%mychan: {
   ELSEIF ((%roul.closed) || (%ActiveGame) || ($timer(.roul.reopen2)) || (%rr.p1)) halt
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
     VAR %wager $floor($3)
-    IF ($CHECKPOINTS($nick, %wager) == false) { MSG $chan $nick $+ , you don't have %wager %curname to wager.  FailFish | halt }
+    IF ($GetPoints($nick) < %wager) { MSG $chan $nick $+ , you don't have %wager %curname to wager.  FailFish | halt }
     REMOVEPOINTS $nick %wager
     IF ($isfile(roulbets.txt)) {
       VAR %x = 1
