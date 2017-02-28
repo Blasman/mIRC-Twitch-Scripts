@@ -53,20 +53,20 @@ alias scramble {
 
 ON $*:TEXT:/^!scram(ble)?\s(on|off)/iS:%mychan: {
 
-  IF ($nick isop $chan) {
+  IF ($ModCheck) {
     IF ($2 == on) {
       IF (!%GAMES_SCRAM_ACTIVE) {
         SET %GAMES_SCRAM_ACTIVE On
-        MSG $chan $twitch_name($nick) $+ , the word scramble game is now enabled!  Type !scram for more info!  Have fun!  PogChamp
+        MSG $chan $nick $+ , the word scramble game is now enabled!  Type !scram for more info!  Have fun!  PogChamp
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !scram is already enabled.  FailFish
+      ELSE MSG $chan $nick $+ , !scram is already enabled.  FailFish
     }
     ELSEIF ($2 == off) {
       IF (%GAMES_SCRAM_ACTIVE) {
         UNSET %GAMES_SCRAM_ACTIVE
-        MSG $chan $twitch_name($nick) $+ , the scramble game is now disabled.
+        MSG $chan $nick $+ , the scramble game is now disabled.
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !scram is already disabled.  FailFish
+      ELSE MSG $chan $nick $+ , !scram is already disabled.  FailFish
     }
   }
 }
@@ -79,14 +79,14 @@ ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:%mychan: {
     IF ((%floodSCRAM_ACTIVE) || ($($+(%,floodSCRAM_ACTIVE.,$nick),2))) halt
     SET -u15 %floodSCRAM_ACTIVE On
     SET -u120 %floodSCRAM_ACTIVE. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , the word scramble game is currently disabled.
+    MSG $chan $nick $+ , the word scramble game is currently disabled.
     halt
   }
   ELSEIF ($2 isnum %scram_minbet - %scram_maxbet) && (!%scram.p1) {
-    IF ($($+(%,SCRAM_CD.,$nick),2)) MSG $nick $twitch_name($nick) $+ , please wait for your cooldown to expire in $duration(%SCRAM_CD. [ $+ [ $nick ] ]) before trying to play scramble again.
-    ELSEIF ($checkpoints($nick, $2) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
+    IF ($($+(%,SCRAM_CD.,$nick),2)) MSG $nick $nick $+ , please wait for your cooldown to expire in $duration(%SCRAM_CD. [ $+ [ $nick ] ]) before trying to play scramble again.
+    ELSEIF ($GetPoints($nick) < $2) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
     ELSEIF (!$3) {
-      SET %scram.p1 $twitch_name($nick)
+      SET %scram.p1 $nick
       SET %scram.bet $floor($2)
       MSG $chan KAPOW %scram.p1 has issued a scramble challenge for %scram.bet %curname to the first person to accept within 90 seconds!  To accept this challenge type "!scram accept"
       .timer.scram.wait1 1 90 MSG $chan Sorry, %scram.p1 $+ , but nobody wanted to accept your scramble challenge!  FeelsBadMan
@@ -96,9 +96,9 @@ ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:%mychan: {
     ELSEIF ($3) && ($3 != $me) {
       VAR %target $remove($3, @)
       IF (%target ison $chan) {
-        IF ($checkpoints(%target, $2) == false) MSG $chan $twitch_name($nick) $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
+        IF ($GetPoints(%target) < $2) MSG $chan $nick $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
         ELSE {
-          SET %scram.p1 $twitch_name($nick)
+          SET %scram.p1 $nick
           SET %scram.p2 $twitch_name(%target)
           SET %scram.bet $floor($2)
           MSG $chan KAPOW %scram.p1 has issued a scramble challenge for %scram.bet %curname to %scram.p2 $+ !  %scram.p2 now has 90 seconds to accept this challenge by typing "!scram accept"
@@ -107,13 +107,13 @@ ON $*:TEXT:/^!scram(ble)?(\s|$)/iS:%mychan: {
           .timer.scram.wait3 1 90 SET -z %SCRAM_CD. $+ $nick %scram_cd
         }
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , %target is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
+      ELSE MSG $chan $nick $+ , %target is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
     }
   }
   ELSEIF ((%scram.p1) && ($nick != %scram.p1) && ($2 == accept)) {
     IF (!%scram.p2) {
-      IF ($checkpoints($nick, %scram.bet) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
-      ELSE SET %scram.p2 $twitch_name($nick)
+      IF ($GetPoints($nick) < %scram.bet) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
+      ELSE SET %scram.p2 $nick
     }
     IF ((%scram.p2 == $nick) && (!$timer(.scram.start)) && (!%scram.origword)) {
       .timer.scram.wait* off
@@ -202,7 +202,7 @@ ON *:TEXT:!scramstats*:%mychan: {
 
   IF ($($+(%,floodSCRAMstats.,$nick),2)) halt
   SET -u3 %floodSCRAMstats. $+ $nick On
-  VAR %nick $twitch_name($nick)
+  VAR %nick $nick
   IF ($2) VAR %target $remove($2, @)
   IF ($ini(scramstats.ini,%nick) == $null) MSG $chan %nick $+ , you have yet to play a game of word scramble here!
   ELSEIF (!$2) {
