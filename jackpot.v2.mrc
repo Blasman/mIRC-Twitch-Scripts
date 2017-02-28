@@ -1,17 +1,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.8 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;; JACKPOT VERSION 2.1.0.9 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-alias jackpot_version return 2.1.0.8
+; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#jackpot-version-21
+
+alias jackpot_version return 2.1.0.9
 
 ON *:LOAD: jackpot_setup
 
 ON *:UNLOAD: UNSET %jackpot.*
 
 alias jackpot_setup {
-  IF ($blasbot_version < 1.0.0.5) {
+  IF ($blasbot_version < 1.0.0.6) {
     $dialog(jackpot_important,jackpot_important)
     url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation
     unload -rs jackpot.v2.mrc
@@ -33,6 +35,7 @@ alias jackpot_setup {
   IF (!%jackpot.whispers) SET %jackpot.whispers Off
   IF (!%jackpot.sound_livecheck) SET %jackpot.sound_livecheck On
   IF (!%jackpot.myjackpot) SET %jackpot.myjackpot On
+  IF (!%jackpot.myjackpot_whispers) SET %jackpot.myjackpot_whispers Off
   IF (!%jackpot.stats) SET %jackpot.stats On
   IF (!%jackpot.record) SET %jackpot.record On
   IF (!%jackpot.addicts) SET %jackpot.addicts On
@@ -66,6 +69,7 @@ menu menubar,channel,status {
   ..LOSE MESSAGE [click to change]:jp_losemsg
   .EXTRA COMMANDS
   ..'!myjackpot' is $IIF(%jackpot.myjackpot == On,ON,OFF) [click to $IIF(%jackpot.myjackpot == On,disable,enable) $+ ]:jp_myjackpot
+  ..If enabled $+ $chr(44) '!myjackpot' WHISPER MODE is set to $IIF(%jackpot.myjackpot_whispers == On,ON,OFF) [click to $IIF(%jackpot.myjackpot_whispers == On,disable,enable) $+ ]:jp_myjackpot_whispers
   ..'!jackpot stats' is $IIF(%jackpot.stats == On,ON,OFF) [click to $IIF(%jackpot.stats == On,disable,enable) $+ ]:jp_stats
   ..'!jackpot record' is $IIF(%jackpot.record == On,ON,OFF) [click to $IIF(%jackpot.record == On,disable,enable) $+ ]:jp_record
   ..'!jackpot addicts' is $IIF(%jackpot.addicts == On,ON,OFF) [click to $IIF(%jackpot.addicts == On,disable,enable) $+ ]:jp_addicts
@@ -74,12 +78,14 @@ menu menubar,channel,status {
   .WINNING SOUND EFFECT
   ..MP3 FILE $chr(91) $+ $IIF(%jackpot.sound,$remove($gettok(%jackpot.sound,$numtok(%jackpot.sound,47),47),$chr(34)),OFF) $+ $chr(93) [click to change]:jp_sound
   ..ONLY PLAY SOUND WHEN STREAM IS LIVE IS $IIF(%jackpot.sound_livecheck == On,ON,OFF) [click to $IIF(%jackpot.sound_livecheck == On,disable,enable) $+ ]:jp_sound_livecheck
+  ..CLICK HERE TO TEST SOUND FILE:SPLAY -pq %jackpot.sound
   .COST $chr(91) $+ %jackpot.bet %curname $+ $chr(93):jp_cost
   .COOLDOWN $chr(91) $+ %jackpot.cd seconds $+ $chr(93):jp_cooldown
   .FRESH POT $chr(91) $+ %jackpot.newpot %curname $+ $chr(93):jp_newpot
   .ODDS OF WINNING $chr(91) $+ %jackpot.odds $+ $chr(37) $+ $chr(93):jp_odds
   .CURRENT POT $chr(91) $+ $readini(jackpot.ini,@Stats,Jackpot) %curname $+ $chr(93):jp_currentpot
   .WHISPER MODE is $IIF(%jackpot.whispers == On,ON,OFF) [click to $IIF(%jackpot.whispers == On,disable,enable) $+ ]:jp_whispers
+  .Click Here to Visit Online Documentation:URL -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#jackpot-version-21
 }
 
 alias -l _jackpot_emote_menu {
@@ -167,6 +173,11 @@ alias -l jp_sound_livecheck {
 alias -l jp_myjackpot {
   IF (%jackpot.myjackpot == Off) SET %jackpot.myjackpot On
   ELSE SET %jackpot.myjackpot Off
+}
+
+alias -l jp_myjackpot_whispers {
+  IF (%jackpot.myjackpot_whispers == Off) SET %jackpot.myjackpot_whispers On
+  ELSE SET %jackpot.myjackpot_whispers Off
 }
 
 alias -l jp_stats {
@@ -258,7 +269,7 @@ alias jp_sound {
   ELSE { ECHO You need to specify an .MP3 file for the jackpot win sound! | GOTO sound }
 }
 
-ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|odds|emotes|whispers|setup)/iS:%mychan: {
+ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|odds|emotes|emotelist|whispers|setup)/iS:%mychan: {
   IF ($ModCheck) {
     IF ($2 == on) {
       IF (!%GAMES_JACKPOT_ACTIVE) {
@@ -317,6 +328,7 @@ ON $*:TEXT:/^!jackpot\s(on|off|set|bet|cd|newpot|odds|emotes|whispers|setup)/iS:
       }
       ELSE MSG $chan $nick $+ , you need to specify at least two emotes for the !jackpot.
     }
+    ELSEIF ($2 == emotelist) MSG $chan Jackpot Emote List: %jackpot.emotes
   }
   ELSEIF (($nick == %streamer) && ($2 == setup)) jackpot_setup
 }
@@ -330,7 +342,7 @@ ON $*:TEXT:/^!jackpot(\s)?stats$/iS:%mychan: {
 }
 
 alias jackpot_totalgames {
-  VAR %x 1, %y 1
+  VAR %x 1, %y 0
   WHILE $ini(jackpot.ini,%x) {
     VAR %y $calc($readini(jackpot.ini,$v1,Games) + %y)
     INC %x
@@ -357,16 +369,16 @@ ON $*:TEXT:/^!myjackpot(\s@?\w+)?$/iS:%mychan: {
     IF ($ModCheck) {
       VAR %user $IIF($2,$remove($2,@),$nick)
       IF ($ini(jackpot.ini,%user) != $null) {
-        MSG $chan Jackpot Stats for $twitch_name(%user) ▌ Games Played: $bytes($readini(jackpot.ini,%user,Games),b) ▌ Wins: $bytes($readini(jackpot.ini,%user,Wins),b) ▌ Winnings: $bytes($readini(jackpot.ini,%user,Winnings),b) ▌ Losses: $bytes($readini(jackpot.ini,%user,Losses),b) ▌ Net Winnings: $bytes($calc($readini(jackpot.ini,%user,Winnings) - $readini(jackpot.ini,%user,Losses)),b)
+        MSG $IIF(%jackpot.myjackpot_whispers == On,$nick,$chan) Jackpot Stats for $twitch_name(%user) ▌ Games Played: $bytes($readini(jackpot.ini,%user,Games),b) ▌ Wins: $bytes($readini(jackpot.ini,%user,Wins),b) ▌ Winnings: $bytes($readini(jackpot.ini,%user,Winnings),b) ▌ Losses: $bytes($readini(jackpot.ini,%user,Losses),b) ▌ Net Winnings: $bytes($calc($readini(jackpot.ini,%user,Winnings) - $readini(jackpot.ini,%user,Losses)),b)
       }
-      ELSE MSG $chan %user has never played a game of !jackpot!
+      ELSE MSG $IIF(%jackpot.myjackpot_whispers == On,$nick,$chan) %user has never played a game of !jackpot!
     }
     ELSEIF ((!$($+(%,myjackpot_CD.,$nick),2)) && (!$2)) {
       SET -eu30 %myjackpot_CD. $+ $nick On
       IF ($ini(jackpot.ini,$nick) != $null) {
-        MSG $chan Jackpot Stats for $nick ▌ Games Played: $bytes($readini(jackpot.ini,$nick,Games),b) ▌ Wins: $bytes($readini(jackpot.ini,$nick,Wins),b) ▌ Winnings: $bytes($readini(jackpot.ini,$nick,Winnings),b) ▌ Losses: $bytes($readini(jackpot.ini,$nick,Losses),b) ▌ Net Winnings: $bytes($calc($readini(jackpot.ini,$nick,Winnings) - $readini(jackpot.ini,$nick,Losses)),b)
+        MSG $IIF(%jackpot.myjackpot_whispers == On,$nick,$chan) Jackpot Stats for $nick ▌ Games Played: $bytes($readini(jackpot.ini,$nick,Games),b) ▌ Wins: $bytes($readini(jackpot.ini,$nick,Wins),b) ▌ Winnings: $bytes($readini(jackpot.ini,$nick,Winnings),b) ▌ Losses: $bytes($readini(jackpot.ini,$nick,Losses),b) ▌ Net Winnings: $bytes($calc($readini(jackpot.ini,$nick,Winnings) - $readini(jackpot.ini,$nick,Losses)),b)
       }
-      ELSE MSG $chan $nick $+ , you've never played !jackpot!
+      ELSE MSG $IIF(%jackpot.myjackpot_whispers == On,$nick,$chan) $nick $+ , you've never played !jackpot!
     }
   }
 }
@@ -445,7 +457,7 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     SET -eu180 %CD_JACKPOT_CD. $+ $nick On
     MSG $nick Be patient, $nick $+ !  You still have $duration($timer(.JACKPOT. $+ $nick).secs) left in your !jackpot cooldown.
   }
-  ELSEIF ($checkpoints($nick, %jackpot.bet) == false) {
+  ELSEIF ($GetPoints < %jackpot.bet) {
     IF ($($+(%,CD_JACKPOT_CHECKPOINTS.,$nick),2)) halt
     SET -eu10 %CD_JACKPOT_CHECKPOINTS. $+ $nick On
     MSG $chan $nick $+ , you do not have $bytes(%jackpot.bet,b) %curname to play !jackpot FailFish
