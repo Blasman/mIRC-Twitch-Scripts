@@ -98,7 +98,7 @@ ON $*:TEXT:/^!dice(\s|$)/iS:%mychan: {
   ELSEIF ((%dice.closed) || (%dice.bet. [ $+ [ $nick ] ]) || (%ActiveGame) || ($timer(.dice.reopen2)) || (%rr.p1)) halt
   ELSEIF (($istok(%dice_options,$2,32)) && ($3 isnum %dice_minbet - %dice_maxbet)) {
     VAR %wager $floor($3)
-    IF ($CHECKPOINTS($nick, %wager) == false) MSG $chan $nick $+ , you don't have %wager %curname to wager.  FailFish
+    IF ($GetPoints($nick) < %wager) MSG $chan $nick $+ , you don't have %wager %curname to wager.  FailFish
     ELSE {
       REMOVEPOINTS $nick %wager
       SET %dice.bet. [ $+ [ $nick ] ] On
