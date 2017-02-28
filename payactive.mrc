@@ -31,7 +31,7 @@ ON $*:TEXT:/^!paylimit($|\s\d+)/iS:%mychan: {
 }
 
 ON $*:TEXT:/^!payactive(x)?\s/iS:%mychan: {
-  IF (($regex($2,^[1-9](\d+)?(-[1-9](\d+)?)?$)) && ($editorcheck($nick) == true)) {
+  IF (($regex($2,^[1-9](\d+)?(-[1-9](\d+)?)?$)) && ($isEditor($nick))) {
     IF (($1 == !payactivex) && (!$regex($3,^[1-9](\d+)?(\.\d+)?(\w+)?(-[1-9](\d+)?(\.\d+)?(\w+)?)?$))) halt
     IF (($regex($2,^(\d+)-(\d+)$)) && (($regml(1) >= $regml(2)))) halt
     IF (($regex(pa_timer,$3,^(((\d+(\.\d+)?(\w+)?)))-(((\d+(\.\d+)?(\w+)?)))$)) && (($getsecs($regml(pa_timer,1)) >= $getsecs($regml(pa_timer,6))))) halt
@@ -46,7 +46,7 @@ ON $*:TEXT:/^!payactive(x)?\s/iS:%mychan: {
 }
 
 ON $*:TEXT:/^!payauto(x)?(\s|$)/iS:%mychan: {
-  IF ($editorcheck($nick) == true) {
+  IF ($isEditor($nick)) {
     IF (($regex($2,^[1-9](\d+)?(-[1-9](\d+)?)?$)) && ($regex($3,^\d+(\.\d+)?(\w+)?(-[1-9](\d+)?(\.\d+)?(\w+)?)?$)) && ($regex($4,^[1-9](\d+)?(\.\d+)?(\w+)?(-[1-9](\d+)?(\.\d+)?(\w+)?)?$))) {
       IF (($1 == !payautox) && (!$regex($3,^[1-9](\d+)?(\.\d+)?(\w+)?(-[1-9](\d+)?(\.\d+)?(\w+)?)?$))) halt
       IF (($regex($2,^(\d+)-(\d+)$)) && (($regml(1) >= $regml(2)))) halt
@@ -150,23 +150,6 @@ alias payactive {
     }
     MSG %mychan Successfully paid out $1 %curname to all of the following $numtok(%sortlist, 32) active users: $left(%sortlist, -1)
   }
-}
-
-alias getsecs {
-  IF ($regex($1,\d+)) {
-    VAR %result
-    IF ($regex($1,(\d+)(s|$))) VAR %result $calc($regml(1))
-    IF ($regex($1,((\d+)(\.\d+)?)m)) VAR %result $calc($regml(1) * 60 + %result)
-    IF ($regex($1,((\d+)(\.\d+)?)h)) VAR %result $calc($regml(1) * 3600 + %result)
-    IF ($regex($1,((\d+)(\.\d+)?)d)) VAR %result $calc($regml(1) * 86400 + %result)
-    RETURN $round(%result,0)
-  }
-}
-
-alias ext_dur {
-  VAR %result $left($replacex($duration($1),wks,$chr(32) weeks $+ $chr(44),wk,$chr(32) week $+ $chr(44),days,$chr(32) days $+ $chr(44),day,$chr(32) day $+ $chr(44),hrs,$chr(32) hours $+ $chr(44),hr,$chr(32) hour $+ $chr(44),mins,$chr(32) minutes $+ $chr(44),min,$chr(32) minute $+ $chr(44),secs,$chr(32) seconds $+ $chr(44),sec,$chr(32) second $+ $chr(44)),-1)
-  IF ($numtok(%result,32) > 2) RETURN $replace(%result,$gettok(%result,$calc($numtok(%result,32) - 2),32),$replace($gettok(%result,$calc($numtok(%result,32) - 2),32),$chr(44),$chr(32) and))
-  ELSE RETURN %result
 }
 
 ON *:TEXT:*:%mychan:IF (($nick != twitchnotify) && ($nick != $me) && (!$istok(%commonbots,$nick,32))) activeuser
