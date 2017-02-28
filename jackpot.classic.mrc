@@ -134,7 +134,7 @@ ON $*:TEXT:/^!jackpot$/iS:%mychan: {
     MSG $nick Be patient, $twitch_name($nick) $+ !  You still have $duration($timer(.JACKC. $+ $nick).secs) left in your !jackpot cooldown.
   }
   ELSEIF ((%ActiveGame) || ($isfile(roulbets.txt)) || ($rr.p1)) halt
-  ELSEIF ($checkpoints($nick, %jackc.bet) == false) MSG $chan $nick $+ , you do not have %jackc.bet %curname to play !jackpot  FailFish
+  ELSEIF ($GetPoints($nick) < %jackc.bet) MSG $chan $nick $+ , you do not have %jackc.bet %curname to play !jackpot  FailFish
   ELSE {
     VAR %nick $nick
     .timer.JACKC. $+ %nick 1 %jackc.cd MSG $nick %nick $+ , your !jackpot cooldown has expired.  Feel free to play again.  BloodTrail
