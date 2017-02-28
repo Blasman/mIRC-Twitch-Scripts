@@ -40,20 +40,20 @@ ON *:CONNECT: {
 
 ON $*:TEXT:/^!rr\s(on|off)$/iS:%mychan: {
 
-  IF ($nick isop $chan) {
+  IF ($ModCheck) {
     IF ($2 == on) {
       IF (!%GAMES_RR_ACTIVE) {
         SET %GAMES_RR_ACTIVE On
-        MSG $chan $twitch_name($nick) $+ , the Russian Roulette game is now enabled!  Type !rr for more info!  Have fun!  PogChamp
+        MSG $chan $nick $+ , the Russian Roulette game is now enabled!  Type !rr for more info!  Have fun!  PogChamp
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !rr is already enabled.  FailFish
+      ELSE MSG $chan $nick $+ , !rr is already enabled.  FailFish
     }
     ELSEIF ($2 == off) {
       IF (%GAMES_RR_ACTIVE) {
         UNSET %GAMES_RR_ACTIVE
-        MSG $chan $twitch_name($nick) $+ , the Russian Roulette game is now disabled.
+        MSG $chan $nick $+ , the Russian Roulette game is now disabled.
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , Russian Roulette is already disabled.  FailFish
+      ELSE MSG $chan $nick $+ , Russian Roulette is already disabled.  FailFish
     }
   }
 }
@@ -67,14 +67,14 @@ ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
     IF ((%floodRR_ACTIVE) || ($($+(%,floodRR_ACTIVE.,$nick),2))) halt
     SET -u15 %floodRR_ACTIVE On
     SET -u120 %floodRR_ACTIVE. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , the Russian Roulette game is currently disabled.
+    MSG $chan $nick $+ , the Russian Roulette game is currently disabled.
     halt
   }
   ELSEIF (($2 isnum %rr_minbet - %rr_maxbet) && (!%rr.p1)) {
-    IF ($($+(%,RR_CD.,$nick),2)) MSG $nick $twitch_name($nick) $+ , please wait for your cooldown to expire in $duration(%RR_CD. [ $+ [ $nick ] ]) before trying to play Russian Roulette again.
-    ELSEIF ($checkpoints($nick, $2) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
+    IF ($($+(%,RR_CD.,$nick),2)) MSG $nick $nick $+ , please wait for your cooldown to expire in $duration(%RR_CD. [ $+ [ $nick ] ]) before trying to play Russian Roulette again.
+    ELSEIF ($GetPoints($nick) < $2) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
     ELSEIF (!$3) {
-      SET %rr.p1 $twitch_name($nick)
+      SET %rr.p1 $nick
       SET %rr.bet $floor($2)
       MSG $chan KAPOW %rr.p1 has issued a Russian Roulette challenge for %rr.bet %curname to the first person to accept within 90 seconds!  To accept this challenge type "!rr accept"
       .timer.rr.wait1 1 90 MSG $chan Sorry, %rr.p1 $+ , but nobody wanted to accept your Russian Roulette challenge!  FeelsBadMan
@@ -84,9 +84,9 @@ ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
     ELSEIF ($3) && ($3 != $me) {
       VAR %target $remove($3, @)
       IF (%target ison $chan) {
-        IF ($checkpoints(%target, $2) == false) MSG $chan $twitch_name($nick) $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
+        IF ($GetPoints(%target) < $2) MSG $chan $nick $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
         ELSE {
-          SET %rr.p1 $twitch_name($nick)
+          SET %rr.p1 $nick
           SET %rr.p2 $twitch_name(%target)
           SET %rr.bet $floor($2)
           MSG $chan KAPOW %rr.p1 has issued a Russian Roulette challenge for %rr.bet %curname to %rr.p2 $+ !  %rr.p2 now has 90 seconds to accept this challenge by typing "!rr accept"
@@ -95,13 +95,13 @@ ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
           .timer.rr.wait3 1 90 SET -z %RR_CD. $+ $nick %rr_cd
         }
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , $3 is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
+      ELSE MSG $chan $nick $+ , $3 is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
     }
   }
   ELSEIF ((%rr.p1) && ($nick != %rr.p1) && ($2 == accept)) {
     IF (!%rr.p2) {
-      IF ($checkpoints($nick, %rr.bet) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
-      ELSE SET %rr.p2 $twitch_name($nick)
+      IF ($GetPoints($nick) < %rr.bet) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
+      ELSE SET %rr.p2 $nick
     }
     IF (%rr.p2 == $nick) {
       .timer.rr.wait* off
@@ -122,13 +122,13 @@ ON $*:TEXT:/^!rr(\s|$)/iS:%mychan: {
 ON $*:TEXT:/^!rrbet\s/iS:%mychan: {
 
   IF ((%rr.openbets) && ($nick != %rr.p1) && ($nick != %rr.p2) && (!%rr.bet. [ $+ [ $nick ] ]) && (($2 == %rr.p1) || ($2 == %rr.p2)) && ($3 isnum %rr_minbet - %rr_maxbet)) {
-    IF ($checkpoints($nick, $floor($3)) == false) {
+    IF ($GetPoints($nick) < $floor($3)) {
       IF ($($+(%,floodRR_TOOPOOR.,$nick),2)) halt
       SET -u10 %floodRR_TOOPOOR. $+ $nick On
-      MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to make that bet!  FailFish
+      MSG $chan $nick $+ , you don't have enough %curname to make that bet!  FailFish
     }
     ELSE {
-      VAR %nick $twitch_name($nick)
+      VAR %nick $nick
       VAR %wager $floor($3)
       REMOVEPOINTS $nick %wager
       IF ($2 == %rr.p1) VAR %beton %rr.p1
