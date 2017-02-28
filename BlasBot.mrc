@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.5 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.6 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,23 +17,32 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.5
+alias blasbot_version return 1.0.0.6
 
 menu menubar,channel,status {
-  $chr(36) $+ $chr(36) $+ $chr(36) CLICK HERE TO DONATE $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
   BlasBot
   .$style(2) Version $blasbot_version:$null
   .$style(2) Created by Blasman13:$null
   .Visit Twitch.TV/Blasman13:URL -n https://twitch.tv/Blasman13
   .Visit GitHub:URL -n https://github.com/Blasman/mIRC-Twitch-Scripts
+  $chr(36) $+ $chr(36) $+ $chr(36) CLICK HERE TO DONATE $chr(36) $+ $chr(36) $+ $chr(36):URL -n https://twitch.streamlabs.com/blasman13
 }
 
 ON *:LOAD: blasbot_setup
 
 ON *:UNLOAD: {
-  UNSET %CurrencyDB
-  UNSET %EditorsDB
-  UNSET %ExternalSubDB
+  UNSET %CurrencyDB_path
+  UNSET %EditorsDB_path
+  UNSET %ExternalSubDB_path
+  UNSET %GameWispSubDB_path
+  UNSET %TwitchSubDB_path
+  UNSET %RegularsDB_path
+  UNSET %AnkhBot_CurrencyDB
+  UNSET %AnkhBot_EditorsDB
+  UNSET %AnkhBot_ExternalSubDB
+  UNSET %AnkhBot_GameWispSubDB
+  UNSET %AnkhBot_TwitchSubDB
+  UNSET %AnkhBot_RegularsDB
   UNSET %streamer
   UNSET %curname
   UNSET %mychan
@@ -41,17 +50,21 @@ ON *:UNLOAD: {
   UNSET %botname
 }
 
-ON *:CONNECT: {
-  IF ($server == tmi.twitch.tv) {
-    IF (!$hget(bot)) HMAKE bot
-    IF (!$hget(displaynames)) {
-      IF ($script(hosts.mrc)) {
-        HMAKE displaynames
-        IF ($file(displaynames.htb)) HLOAD displaynames displaynames.htb
-      }
+ON *:START: {
+  SET %AnkhBot_CurrencyDB $sqlite_open(%CurrencyDB_path)
+  SET %AnkhBot_EditorsDB $sqlite_open(%EditorsDB_path)
+  SET %AnkhBot_ExternalSubDB $sqlite_open(%ExternalSubDB_path)
+  SET %AnkhBot_GameWispSubDB $sqlite_open(%GameWispSubDB_path)
+  SET %AnkhBot_TwitchSubDB $sqlite_open(%TwitchSubDB_path)
+  SET %AnkhBot_RegularsDB $sqlite_open(%RegularsDB_path)
+  IF (!$hget(bot)) HMAKE bot
+  IF (!$hget(displaynames)) {
+    IF ($script(hosts.mrc)) {
+      HMAKE displaynames
+      IF ($file(displaynames.htb)) HLOAD displaynames displaynames.htb
     }
-    UNSET %ActiveGame
   }
+  UNSET %ActiveGame
 }
 
 ON *:EXIT: IF ($hget(displaynames)) HSAVE -o displaynames displaynames.htb
@@ -80,13 +93,20 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
         IF ($script(scramble.mrc)) SET %GAMES_SCRAM_ACTIVE On
         IF ($script(slots.classic.mrc)) SET %GAMES_SLOT_ACTIVE On
         IF ($script(slots.v2.mrc)) SET %GAMES_SLOT_ACTIVE On
-        MSG $chan The following channel games are now active:  $left(%games, -1)
+        MSG $chan The following channel games are now active: $left(%games, -1)
       }
       ELSEIF ($2 == off) {
         UNSET %GAMES_*_ACTIVE
-        MSG $chan The following channel games are now disabled:  $left(%games, -1)
+        MSG $chan The following channel games are now disabled: $left(%games, -1)
       }
     }
+  }
+}
+
+ON *:TEXT:!blasbot:%mychan: {
+  IF (!$hget(bot,CD_blasbot)) {
+    HADD -z bot CD_blasbot 6
+    MSG %mychan %streamer is running BlasBot Version $blasbot_version by Blasman13. You can check it out at https://github.com/Blasman/mIRC-Twitch-Scripts
   }
 }
 
@@ -96,6 +116,7 @@ ON $*:TEXT:/^!games\s(on|off)$/iS:%mychan: {
 
 alias blasbot_setup {
   IF ($script(ankhbot.mrc)) unload -rs ankhbot.mrc
+  fix_mtwitch_displayname
   SET %botname $twitch_name($me)
   :twitchname
   $input(Please enter YOUR Twitch user name (NOT your bots):,eo,Required Input)
@@ -111,9 +132,12 @@ alias blasbot_setup {
   ELSE {
     IF ($right($!,1) != $chr(92)) VAR %path $! $+ $chr(92)
     ELSE VAR %path $!
-    SET %CurrencyDB $qt(%path $+ CurrencyDB.sqlite)
-    SET %EditorsDB $qt(%path $+ EditorsDB.sqlite)
-    SET %ExternalSubDB $qt(%path $+ ExternalSubDB.sqlite)
+    SET %CurrencyDB_path $qt(%path $+ CurrencyDB.sqlite)
+    SET %EditorsDB_path $qt(%path $+ EditorsDB.sqlite)
+    SET %ExternalSubDB_path $qt(%path $+ ExternalSubDB.sqlite)
+    SET %GameWispSubDB_path $qt(%path $+ GameWispSubDB.sqlite)
+    SET %TwitchSubDB_path $qt(%path $+ TwitchSubDB.sqlite)
+    SET %RegularsDB_path $qt(%path $+ RegularsDB.sqlite)
   }
   :curname
   $input(Please enter the name of your channel's currency:,eo,Required Input,points)
@@ -129,19 +153,19 @@ alias cached_name {
 }
 
 alias twitch_name {
-  IF (%tn == 1000) %tn = 0
-  INC %tn
-  JSONOpen -uw twitch_name $+ %tn https://api.twitch.tv/kraken/channels/ $+ $1
-  JSONHttpHeader twitch_name $+ %tn Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONHttpFetch twitch_name $+ %tn
-  VAR %x $json(twitch_name $+ %tn $+ , display_name).value
-  JSONClose twitch_name $+ %tn
+  INC %bb
+  VAR %nick,%nick $IIF($1,$1,$nick)
+  JSONOpen -uw twitch_name $+ %bb https://api.twitch.tv/kraken/channels/ $+ %nick
+  JSONHttpHeader twitch_name $+ %bb Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch twitch_name $+ %bb
+  VAR %x $json(twitch_name $+ %bb, display_name).value
+  JSONClose twitch_name $+ %bb
   IF ($1 == %x) RETURN %x
-  ELSEIF (%x != $null) RETURN $1
+  ELSEIF (%x != $null) RETURN %nick
 }
 
 alias twitch_id {
-  JSONOpen -uw twitch_id https://api.twitch.tv/kraken/channels/ $+ $1
+  JSONOpen -uw twitch_id https://api.twitch.tv/kraken/channels/ $+ $IIF($1,$1,$nick)
   JSONHttpHeader twitch_id Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
   JSONHttpFetch twitch_id
   VAR %x $json(twitch_id, _id).value
@@ -150,11 +174,12 @@ alias twitch_id {
 }
 
 alias followcheck {
-  JSONOpen -uw followcheck https://api.twitch.tv/kraken/users/ $+ $1 $+ /follows/channels/ $+ %streamer
-  JSONHttpHeader followcheck Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
-  JSONHttpFetch followcheck
-  VAR %x $json(followcheck, created_at).value
-  JSONClose followcheck
+  INC %bb
+  JSONOpen -uw followcheck $+ %bb https://api.twitch.tv/kraken/users/ $+ $IIF($1,$1,$nick) $+ /follows/channels/ $+ %streamer
+  JSONHttpHeader followcheck $+ %bb Client-ID avm4vi7zv0xpjkpi3d4x0qzk8xbrdw8
+  JSONHttpFetch followcheck $+ %bb
+  VAR %x $json(followcheck $+ %bb, created_at).value
+  JSONClose followcheck $+ %bb
   RETURN %x
 }
 
@@ -173,137 +198,110 @@ alias wdelay {
 }
 
 alias ModCheck {
-  IF (($msgtags(mod).key == 1) || ($nick == %streamer) || ($nick isop %mychan)) return $true
-  ELSE return $false
+  IF (($msgtags(mod).key == 1) || ($nick == %streamer) || ($nick == blasman13) || ($nick isop %mychan)) RETURN $true
+  ELSE RETURN $false
 }
 
-alias addpoints {
-  set %ankhbot_currency $sqlite_open(%CurrencyDB)
-  if (!%ankhbot_currency) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  var %sql_points = SELECT Points FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
-  var %request_points = $sqlite_query(%ankhbot_currency, %sql_points)
-  if (!%request_points) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  $sqlite_fetch_row(%request_points, row)
-  var %ankhbot_points = $hget(row, Points)
-
-  sqlite_exec %ankhbot_currency UPDATE CurrencyUser SET Points = Points + $floor($2) WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
-  sqlite_free %request_points
-}
-
-alias removepoints {
-  set %ankhbot_currency $sqlite_open(%CurrencyDB)
-  if (!%ankhbot_currency) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  var %sql_points = SELECT Points FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
-  var %request_points = $sqlite_query(%ankhbot_currency, %sql_points)
-  if (!%request_points) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  $sqlite_fetch_row(%request_points, row)
-  var %ankhbot_points = $hget(row, Points)
-
-  sqlite_exec %ankhbot_currency UPDATE CurrencyUser SET Points = Points - $floor($2) WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
-  sqlite_free %request_points
-}
-
-alias checkpoints {
-  set %ankhbot_currency $sqlite_open(%CurrencyDB)
-  if (!%ankhbot_currency) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  var %sql_points = SELECT Points FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
-  var %request_points = $sqlite_query(%ankhbot_currency, %sql_points)
-  if (!%request_points) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  if ($sqlite_num_rows(%request_points) == 0) { return false }
-  else {
-    $sqlite_fetch_row(%request_points, row)
-    var %ankhbot_points = $hget(row, Points)
-    if (%ankhbot_points < $2) { return false }
-    elseif (%ankhbot_points >= $2) { return true }
-    sqlite_free %request_points
-  }
-}
-
-alias editorcheck {
-  IF (($1 == %streamer) || ($1 == %botname)) return true
-  SET %ankhbot_editors $sqlite_open(%EditorsDB)
-  IF (!%ankhbot_editors) {
-    echo 4 -a Error: %sqlite_errstr
-    halt
-  }
-  VAR %sql = SELECT * FROM Editor WHERE user = ' $+ $1 $+ ' COLLATE NOCASE
-  VAR %request = $sqlite_query(%ankhbot_editors, %sql)
-  IF (!%request) {
-    echo 4 -a Error: %sqlite_errstr
-    halt
-  }
-  IF ($sqlite_num_rows(%request) == 0) return false
-  ELSE return true
+alias AddPoints {
+  VAR %sql SELECT Points FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_CurrencyDB, %sql)
+  sqlite_exec %AnkhBot_CurrencyDB UPDATE CurrencyUser SET Points = Points + $floor($2) WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
   sqlite_free %request
 }
 
-alias checkhours {
-  set %ankhbot_hours $sqlite_open(%CurrencyDB)
-  if (!%ankhbot_hours) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  var %sql = SELECT Hours FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
-  var %request = $sqlite_query(%ankhbot_hours, %sql)
-  if (!%request) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  if ($sqlite_num_rows(%request) == 0) { return 0  |  return }
-  else {
-    $sqlite_fetch_row(%request, row)
-    var %hours_full = $hget(row, Hours)
-    var %hr_pos = $pos(%hours_full,:)
-    dec %hr_pos
-    var %hours = $left(%hours_full, %hr_pos)
-    var %days_pos = $pos(%hours, .)
-    if (%days_pos) {
-      var %hour_count = $right(%hours, 2)
-      dec %days_pos
-      var %day_count = $left(%hours, %days_pos)
-      var %hours = %day_count * 24
-      var %hours = %hours + %hour_count
-    }
-    if (%hours < 10) { %hours = $right(%hours, 1) }
-    if (%hours < $2) { return %hours  |  return }
-    else { return true }
-  }
+alias RemovePoints {
+  VAR %sql SELECT Points FROM CurrencyUser WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_CurrencyDB, %sql)
+  sqlite_exec %AnkhBot_CurrencyDB UPDATE CurrencyUser SET Points = Points - $floor($2) WHERE Name = ' $+ $1 $+ ' COLLATE NOCASE
   sqlite_free %request
 }
 
+; edit $checkpoints and $getpoints in all scripts
+alias GetPoints {
+  VAR %sql SELECT Points FROM CurrencyUser WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_CurrencyDB, %sql)
+  IF ($sqlite_num_rows(%request)) {
+    $sqlite_fetch_row(%request, GetPoints)
+    VAR %x $hget(GetPoints, Points)
+  }
+  ELSE VAR %x 0
+  sqlite_free %request
+  RETURN %x
+}
+
+; edit $editorcheck in all other scripts
+alias isEditor {
+  VAR %nick,%nick $IIF($1,$1,$nick)
+  IF ((%nick == %streamer) || (%nick == %botname) || (%nick == blasman13)) RETURN $true
+  VAR %sql SELECT * FROM Editor WHERE user = ' $+ %nick $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_EditorsDB, %sql)
+  VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
+  sqlite_free %request
+  RETURN %x
+}
+
+; edit $checkhours in all other scripts
+alias GetMinutes {
+  VAR %sql SELECT MinutesWatched FROM CurrencyUser WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_CurrencyDB, %sql)
+  IF ($sqlite_num_rows(%request)) {
+    $sqlite_fetch_row(%request, GetMinutes)
+    VAR %x $hget(GetMinutes, MinutesWatched)
+  }
+  ELSE VAR %x 0
+  sqlite_free %request
+  RETURN %x
+}
+
+alias isSub IF (($isMTSub) || ($isABSub($IIF($1,$1,$nick)))) RETURN $true
+
+alias isMTSub IF ($msgtags(subscriber).key) RETURN $true
+
+alias isABSub {
+  IF ($isGWSub($IIF($1,$1,$nick))) RETURN $true
+  IF ($isExtSub($IIF($1,$1,$nick))) RETURN $true
+  IF ($isTwitchSub($IIF($1,$1,$nick))) RETURN $true
+}
+
+;edit $isExtSub on all other scripts
 alias isExtSub {
-  SET %AnkhBot_Subs $sqlite_open(%ExternalSubDB)
-  IF (!%AnkhBot_Subs) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  VAR %sql = SELECT * FROM ExternalSub WHERE user = ' $+ $1 $+ ' COLLATE NOCASE
-  VAR %request = $sqlite_query(%AnkhBot_Subs, %sql)
-  IF (!%request) {
-    echo 4 -a Error: %sqlite_errstr
-    return
-  }
-  IF ($sqlite_num_rows(%request) == 0) return $false
-  ELSE return $true
+  VAR %sql SELECT * FROM ExternalSub WHERE user = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_ExternalSubDB, %sql)
+  VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
   sqlite_free %request
+  RETURN %x
+}
+
+alias isGWSub {
+  VAR %sql SELECT * FROM GameWispSub WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_GameWispSubDB, %sql)
+  VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
+  sqlite_free %request
+  RETURN %x
+}
+
+alias GWSubCount {
+  VAR %sql SELECT * FROM GameWispSub
+  VAR %request $sqlite_query(%AnkhBot_GameWispSubDB, %sql)
+  VAR %x $sqlite_num_rows(%request)
+  sqlite_free %request
+  RETURN %x
+}
+
+alias isTwitchSub {
+  VAR %sql SELECT * FROM TwitchSub WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_TwitchSubDB, %sql)
+  VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
+  sqlite_free %request
+  RETURN %x
+}
+
+alias isRegular {
+  VAR %sql SELECT * FROM Regular WHERE User = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %request $sqlite_query(%AnkhBot_RegularDB, %sql)
+  VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
+  sqlite_free %request
+  RETURN %x
 }
 
 alias end_game {
@@ -341,4 +339,42 @@ alias TwitchTime {
     }
     return %t
   }
+}
+
+alias GetSecs {
+  IF ($regex($1,\d+)) {
+    VAR %result
+    IF ($regex($1,(\d+)(s|$))) VAR %result $calc($regml(1))
+    IF ($regex($1,((\d+)(\.\d+)?)m)) VAR %result $calc($regml(1) * 60 + %result)
+    IF ($regex($1,((\d+)(\.\d+)?)h)) VAR %result $calc($regml(1) * 3600 + %result)
+    IF ($regex($1,((\d+)(\.\d+)?)d)) VAR %result $calc($regml(1) * 86400 + %result)
+    RETURN $round(%result,0)
+  }
+}
+
+alias Ext_Dur {
+  VAR %result $left($replacex($duration($1),wks,$chr(32) weeks $+ $chr(44),wk,$chr(32) week $+ $chr(44),days,$chr(32) days $+ $chr(44),day,$chr(32) day $+ $chr(44),hrs,$chr(32) hours $+ $chr(44),hr,$chr(32) hour $+ $chr(44),mins,$chr(32) minutes $+ $chr(44),min,$chr(32) minute $+ $chr(44),secs,$chr(32) seconds $+ $chr(44),sec,$chr(32) second $+ $chr(44)),-1)
+  IF ($numtok(%result,32) > 2) RETURN $replace(%result,$gettok(%result,$calc($numtok(%result,32) - 2),32),$replace($gettok(%result,$calc($numtok(%result,32) - 2),32),$chr(44),$chr(32) and))
+  ELSE RETURN %result
+}
+
+alias MakeList {
+  IF ($numtok($1-,32) > 1) {
+    VAR %list $1-
+    VAR %list $left($replace(%list,$gettok(%list,$calc($numtok(%list,32) - 1),32),$replace($gettok(%list,$calc($numtok(%list,32) - 1),32),$chr(44),$chr(32) and)),-1)
+    RETURN %list
+  }
+  ELSEIF ($1) RETURN $left($1,-1)
+}
+
+alias fix_mtwitch_displayname {
+  IF ($script(mTwitch.DisplayName.mrc)) {
+    IF ($read(mTwitch.DisplayName.mrc, nw, *if $chr(40) $+ $chr(37) $+ dnick !== $chr(36) $+ null && $chr(37) $+ dnick !=== $chr(37) $+ nick $+ $chr(41) $chr(123))) {
+      WRITE -l $+ $readn mTwitch.DisplayName.mrc     IF $chr(40) $+ $chr(40) $+ $chr(37) $+ dnick == $chr(37) $+ nick $+ $chr(41) && $chr(40) $+ $chr(37) $+ dnick !=== $chr(37) $+ nick $+ $chr(41) $+ $chr(41) $chr(123)
+      RELOAD -rs mTwitch.DisplayName.mrc
+      ECHO -s 4mTwitch.DisplayName.mrc was successfully modified for use with AnkhBot!
+    }
+    ELSE ECHO -s 4mTwitch.DisplayName.mrc was not modified! (may have already been modified)
+  }
+  ELSE ECHO -s 4mTwitch.DisplayName.mrc not found!
 }
