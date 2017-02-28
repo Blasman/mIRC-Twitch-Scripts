@@ -86,7 +86,7 @@ ON $*:TEXT:/^!slot(s)?(\s\d+)?$/Si:%mychan: {
     SET -eu10 %CD_SLOT_RANGECHECK. $+ $nick On
     MSG $chan $nick $+ , please enter a valid wager between %slotc.minbet and %slotc.maxbet %curname $+ .  ▌  Example:  !slot %slotc.minbet
   }
-  ELSEIF ($checkpoints($nick, $2) == false) {
+  ELSEIF ($GetPoints($nick) < $2) {
     IF ($($+(%,CD_SLOT_CHECKPOINTS.,$nick),2)) halt
     SET -eu10 %CD_SLOT_CHECKPOINTS. $+ $nick On
     MSG $chan $nick $+ , you do not have $2 %curname to play slots.  FailFish
