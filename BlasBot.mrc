@@ -216,7 +216,6 @@ alias RemovePoints {
   sqlite_free %request
 }
 
-; edit $checkpoints and $getpoints in all scripts
 alias GetPoints {
   VAR %sql SELECT Points FROM CurrencyUser WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_CurrencyDB, %sql)
@@ -229,7 +228,6 @@ alias GetPoints {
   RETURN %x
 }
 
-; edit $editorcheck in all other scripts
 alias isEditor {
   VAR %nick,%nick $IIF($1,$1,$nick)
   IF ((%nick == %streamer) || (%nick == %botname) || (%nick == blasman13)) RETURN $true
@@ -240,7 +238,6 @@ alias isEditor {
   RETURN %x
 }
 
-; edit $checkhours in all other scripts
 alias GetMinutes {
   VAR %sql SELECT MinutesWatched FROM CurrencyUser WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_CurrencyDB, %sql)
@@ -263,7 +260,6 @@ alias isABSub {
   IF ($isTwitchSub($IIF($1,$1,$nick))) RETURN $true
 }
 
-;edit $isExtSub on all other scripts
 alias isExtSub {
   VAR %sql SELECT * FROM ExternalSub WHERE user = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_ExternalSubDB, %sql)
