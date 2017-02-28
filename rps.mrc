@@ -39,20 +39,20 @@ ON *:CONNECT: {
 
 ON $*:TEXT:/^!rps\s(on|off)/iS:%mychan: {
 
-  IF ($nick isop $chan) {
+  IF ($ModCheck) {
     IF ($2 == on) {
       IF (!%GAMES_RPS_ACTIVE) {
         SET %GAMES_RPS_ACTIVE On
-        MSG $chan $twitch_name($nick) $+ , the Rock/Paper/Scissors game is now enabled!  Type !rps for more info!  Have fun!  PogChamp
+        MSG $chan $nick $+ , the Rock/Paper/Scissors game is now enabled!  Type !rps for more info!  Have fun!  PogChamp
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !rps is already enabled.  FailFish
+      ELSE MSG $chan $nick $+ , !rps is already enabled.  FailFish
     }
     ELSEIF ($2 == off) {
       IF (%GAMES_RPS_ACTIVE) {
         UNSET %GAMES_RPS_ACTIVE
-        MSG $chan $twitch_name($nick) $+ , the Rock/Paper/Scissors game is now disabled.
+        MSG $chan $nick $+ , the Rock/Paper/Scissors game is now disabled.
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , !rps is already disabled.  FailFish
+      ELSE MSG $chan $nick $+ , !rps is already disabled.  FailFish
     }
   }
 }
@@ -66,14 +66,14 @@ ON $*:TEXT:/^!rps(\s|$)/iS:%mychan: {
     IF ((%floodRPS_ACTIVE) || ($($+(%,floodRPS_ACTIVE.,$nick),2))) halt
     SET -u15 %floodRPS_ACTIVE On
     SET -u120 %floodRPS_ACTIVE. $+ $nick On
-    MSG $chan $twitch_name($nick) $+ , the Rock/Paper/Scissors game is currently disabled.
+    MSG $chan $nick $+ , the Rock/Paper/Scissors game is currently disabled.
     halt
   }
   ELSEIF ($2 isnum %rps_minbet - %rps_maxbet) && (!%rps.p1) {
-    IF ($($+(%,RPS_CD.,$nick),2)) MSG $nick $twitch_name($nick) $+ , please wait for your cooldown to expire in $duration(%RPS_CD. [ $+ [ $nick ] ]) before trying to play RPS again.
-    ELSEIF ($checkpoints($nick, $2) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
+    IF ($($+(%,RPS_CD.,$nick),2)) MSG $nick $nick $+ , please wait for your cooldown to expire in $duration(%RPS_CD. [ $+ [ $nick ] ]) before trying to play RPS again.
+    ELSEIF ($GetPoints($nick) < $2) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
     ELSEIF (!$3) {
-      SET %rps.p1 $twitch_name($nick)
+      SET %rps.p1 $nick
       SET %rps.bet $floor($2)
       MSG $chan KAPOW %rps.p1 has issued a Rock/Paper/Scissors challenge for %rps.bet %curname to the first person to accept within 90 seconds!  To accept this challenge type "!rps accept"
       .timer.rps.wait1 1 90 MSG $chan Sorry, %rps.p1 $+ , but nobody wanted to accept your RPS challenge!  FeelsBadMan
@@ -83,9 +83,9 @@ ON $*:TEXT:/^!rps(\s|$)/iS:%mychan: {
     ELSEIF ($3) && ($3 != $me) {
       VAR %target $remove($3, @)
       IF (%target ison $chan) {
-        IF ($checkpoints(%target, $2) == false) MSG $chan $twitch_name($nick) $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
+        IF ($GetPoints(%target) < $2) MSG $chan $nick $+ , $twitch_name(%target) doesn't have enough %curname to play.  FailFish
         ELSE {
-          SET %rps.p1 $twitch_name($nick)
+          SET %rps.p1 $nick
           SET %rps.p2 $twitch_name(%target)
           SET %rps.bet $floor($2)
           MSG $chan KAPOW %rps.p1 has issued a Rock/Paper/Scissors challenge for %rps.bet %curname to %rps.p2 $+ !  %rps.p2 now has 90 seconds to accept this challenge by typing "!rps accept"
@@ -94,13 +94,13 @@ ON $*:TEXT:/^!rps(\s|$)/iS:%mychan: {
           .timer.rps.wait3 1 90 SET -z %RPS_CD. $+ $nick %rps_cd
         }
       }
-      ELSE MSG $chan $twitch_name($nick) $+ , %target is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
+      ELSE MSG $chan $nick $+ , %target is not the name of a user here in the channel.  Please check the spelling and make sure that they are actually here.
     }
   }
   ELSEIF ((%rps.p1) && ($nick != %rps.p1) && ($2 == accept)) {
     IF (!%rps.p2) {
-      IF ($checkpoints($nick, %rps.bet) == false) MSG $chan $twitch_name($nick) $+ , you don't have enough %curname to play.  FailFish
-      ELSE SET %rps.p2 $twitch_name($nick)
+      IF ($GetPoints($nick) < %rps.bet) MSG $chan $nick $+ , you don't have enough %curname to play.  FailFish
+      ELSE SET %rps.p2 $nick
     }
     IF ((%rps.p2 == $nick) && (!$timer(.rps.start)) && (!%rps.on) && (!$timer(.rps.end))) {
       .timer.rps.wait* off
