@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;; JACKBOX PARTY PACK SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.2 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackbox_setup
@@ -90,17 +90,22 @@ alias -l permissions {
 }
 
 ; mod only command to change required permissions for a user to request a !code
-ON $*:TEXT:/^!jackbox\s(((perm|timer)\s)|help)/iS:%mychan: {
+ON $*:TEXT:/^!jackbox\s(perm|timer|help)/iS:%mychan: {
   IF ($ModCheck) {
-    IF (($2 == perm) && (((fo isin $3) || ($regex($3,/mm\d+/)) || ($regex($3,/mp\d+/)) || (su isin $3) || ($3 isnum 0)))) {
-      SET %jackbox_permissions $remove($3,$chr(34))
-      IF (%jackbox_permissions) MSG $chan $get_permissions
-      ELSE MSG $chan Anyone can now request a !code for the Jackbox Party Pack!
+    IF ($2 == perm) {
+      IF (!$3) MSG $chan $get_permissions
+      ELSEIF ((fo isin $3) || ($regex($3,/mm\d+/)) || ($regex($3,/mp\d+/)) || (su isin $3) || (re isin $3) || ($3 isnum 0)) {
+        SET %jackbox_permissions $remove($3,$chr(34))
+        IF (%jackbox_permissions) MSG $chan $get_permissions
+        ELSE MSG $chan Anyone can now request a !code for the Jackbox Party Pack!
+      }
     }
-    ELSEIF (($2 == timer) && ($regex($3,^\d+$))) {
-      SET %jackbox_subtimer $floor($3)
-      IF (%jackbox_subtimer) MSG $chan Non-Subscribers will receive the !code %jackbox_subtimer seconds after Subscribers do.
-      ELSE MSG $chan There is no waiting time to receive a !code for the Jackbox Party Pack.
+    ELSEIF ($2 == timer) {
+      IF ($regex($3,^\d+$)) SET %jackbox_subtimer $floor($3)
+      IF (($regex($3,^\d+$)) || (!$3)) {
+        IF (%jackbox_subtimer) MSG $chan Non-Subscribers will receive the !code %jackbox_subtimer seconds after Subscribers do.
+        ELSE MSG $chan There is no waiting time to receive a !code for the Jackbox Party Pack.
+      }
     }
     ELSEIF ($2 == help) MSG $chan Jackbox Party Pack Helper Online Documentation: https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#jackbox-party-pack-helper
   }
@@ -156,7 +161,7 @@ ON $*:TEXT:/^!code$/iS:%mychan: {
   }
 }
 
-ON $*:TEXT:/^!invite\s/iS:%mychan: {
+ON $*:TEXT:/^!invite\s\w+/iS:%mychan: {
   IF ((%jackbox.code) && ($ModCheck)) {
     VAR %x = 1 , %list
     WHILE (%x < $0) {
