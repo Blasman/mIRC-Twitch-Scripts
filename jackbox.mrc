@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;; JACKBOX PARTY PACK SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.0 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.1 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON *:LOAD: jackbox_setup
@@ -39,6 +39,7 @@ menu menubar,channel,status {
   .Banned Users
   ..EDIT LIST:banned
   ..$submenu($_banned($1))
+  .Click Here to Visit Online Documentation:URL -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#jackbox-party-pack-helper
 }
 
 alias -l exempt {
@@ -89,7 +90,7 @@ alias -l permissions {
 }
 
 ; mod only command to change required permissions for a user to request a !code
-ON $*:TEXT:/^!jackbox\s(perm|timer)\s/iS:%mychan: {
+ON $*:TEXT:/^!jackbox\s(((perm|timer)\s)|help)/iS:%mychan: {
   IF ($ModCheck) {
     IF (($2 == perm) && (((fo isin $3) || ($regex($3,/mm\d+/)) || ($regex($3,/mp\d+/)) || (su isin $3) || ($3 isnum 0)))) {
       SET %jackbox_permissions $remove($3,$chr(34))
@@ -101,6 +102,7 @@ ON $*:TEXT:/^!jackbox\s(perm|timer)\s/iS:%mychan: {
       IF (%jackbox_subtimer) MSG $chan Non-Subscribers will receive the !code %jackbox_subtimer seconds after Subscribers do.
       ELSE MSG $chan There is no waiting time to receive a !code for the Jackbox Party Pack.
     }
+    ELSEIF ($2 == help) MSG $chan Jackbox Party Pack Helper Online Documentation: https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#jackbox-party-pack-helper
   }
 }
 
@@ -141,7 +143,7 @@ ON $*:TEXT:/^!code$/iS:%mychan: {
     ELSE {
       IF ($istok(%jackbox_allow,$nick,32)) msg_allow nonsub
       IF ((su isin %jackbox_permissions) && (!$isSub)) msg_deny
-	  IF ((re isin %jackbox_permissions) && (!$isRegular)) msg_deny
+      IF ((re isin %jackbox_permissions) && (!$isRegular)) msg_deny
       IF (($regex(%jackbox_permissions,/mp(\d+)/)) && ($GetPoints < $regml(1))) msg_deny
       IF (($regex(%jackbox_permissions,/mm(\d+)/)) && ($GetMinutes < $regml(1))) msg_deny
       IF (fo isin %jackbox_permissions) {
