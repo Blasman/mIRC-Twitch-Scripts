@@ -184,10 +184,9 @@ alias followcheck {
 }
 
 alias wdelay {
-  IF (%wd == 1000) %wd = 0
-  INC %wd
+  INC %bb
   IF ($calc($hget(bot,wdelay) - $ticks + 1100) > 0) {
-    VAR %wmsg .timer.whisper $+ %wd -m 1 $v1 $1
+    VAR %wmsg .timer.whisper $+ %bb -m 1 $v1 $1
     HADD bot wdelay $calc($hget(bot,wdelay) + 1100)
     return %wmsg
   }
