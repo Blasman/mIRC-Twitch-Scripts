@@ -357,7 +357,7 @@ alias jackpot_uniqueplayers {
 }
 
 ON $*:TEXT:/^!jackpot(\s)?record$/iS:%mychan: {
-  IF ((%jackpot.record == On) && (!%CD_JACKPOT_RECORD) {
+  IF ((%jackpot.record == On) && (!%CD_JACKPOT_RECORD)) {
     SET -eu10 %CD_JACKPOT_RECORD On
     IF (!$readini(jackpot.ini,@Stats,Record_Name)) MSG $chan Nobody has won a !jackpot yet!
     ELSE MSG $chan The largest !jackpot ever won was for $bytes($readini(jackpot.ini,@Stats,Record_Amount),b) %curname by $readini(jackpot.ini,@Stats,Record_Name) on $readini(jackpot.ini,@Stats,Record_Date) $+ . PogChamp
