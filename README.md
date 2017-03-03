@@ -24,7 +24,7 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 # Script Documentation  
 
-**[![Click here to visit the WIKI for detailed information and documentation for most of the scripts on this GitHub](http://i.imgur.com/CGOx9Sv.png)](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation "Script Documentation")**  
+**[![Click here to visit the WIKI for detailed information and documentation for most of the scripts on this GitHub](http://i.imgur.com/URVntZX.png)](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation "Script Documentation")**  
 
 # Installation  
 
