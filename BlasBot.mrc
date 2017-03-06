@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.8 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.9 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,7 +17,7 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.8
+alias blasbot_version return 1.0.0.9
 
 menu menubar,channel,status {
   BlasBot
@@ -115,7 +115,32 @@ ON *:TEXT:!blasbot:%mychan: {
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 alias blasbot_setup {
+  IF ($script(JSONForMirc.v0.2.41.mrc)) unload -rs JSONForMirc.v0.2.41.mrc
   IF ($script(ankhbot.mrc)) unload -rs ankhbot.mrc
+  IF (($JSONVersion() == $null) || ($JSONVersion() < 1.0.3006)) {
+    $dialog(Needs_JSON,Needs_JSON)
+    url -m https://github.com/Blasman/mIRC-Twitch-Scripts#download-required-scripts
+    unload -rs BlasBot.mrc
+    halt
+  }
+  IF (!$script(mTwitch.Core.mrc)) {
+    $dialog(Needs_mTwitch_Core,Needs_mTwitch_Core)
+    url -m https://github.com/Blasman/mIRC-Twitch-Scripts#download-required-scripts
+    unload -rs BlasBot.mrc
+    halt
+  }
+  IF (!$script(mTwitch.DisplayName.mrc)) {
+    $dialog(Needs_mTwitch_DisplayName,Needs_mTwitch_DisplayName)
+    url -m https://github.com/Blasman/mIRC-Twitch-Scripts#download-required-scripts
+    unload -rs BlasBot.mrc
+    halt
+  }
+  IF (!$script(msqlite.mrc)) {
+    $dialog(Needs_msqlite,Needs_msqlite)
+    url -m https://github.com/Blasman/mIRC-Twitch-Scripts#download-required-scripts
+    unload -rs BlasBot.mrc
+    halt
+  }
   fix_mtwitch_displayname
   SET %botname $twitch_name($me)
   :twitchname
@@ -127,7 +152,7 @@ alias blasbot_setup {
     SET %TwitchID $twitch_id($!)
   }
   :path
-  $input(Press "OK" if you did NOT change the default install directory of AnkhBot.  Otherwise $+ $chr(44) change this to the PATH ONLY of your AnkhBot's .sqlite files.,eo,Required Input,$sysdir(profile) $+ AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\)
+  $input(Press "OK" if you did NOT change the default install directory of AnkhBot. Otherwise $+ $chr(44) change this to the PATH ONLY of your AnkhBot's .sqlite files.,eo,Required Input,$sysdir(profile) $+ AppData\Roaming\AnkhHeart\AnkhBotR2\Twitch\Databases\)
   IF !$! { ECHO You must enter a valid path! | GOTO path }
   ELSE {
     IF ($right($!,1) != $chr(92)) VAR %path $! $+ $chr(92)
@@ -145,6 +170,38 @@ alias blasbot_setup {
   ELSE SET %curname $!
   IF (!$hget(bot)) HMAKE bot
   ECHO IGNORE THE ERROR MESSAGES ABOVE! All info has been successfully entered!
+}
+
+dialog Needs_JSON {
+  title "IMPORTANT!"
+  size -1 -1 200 80
+  option dbu
+  text "You have NOT loaded the most recent version of JSONForMirc.mrc. This script will NOT work for you until you install it! This script will unload itself and setup will exit once you click Okay and your web browser will load the GitHub page. Please make sure to install all of the Required Scripts listed on the GitHub before loading BlasBot.mrc. If installing a newer version of JSONForMirc, please make sure that you unload and/or delete the old one if it has a different filename.", 1, 8 8 180 50
+  button "Okay", 3, 80 60 40 12, ok
+}
+
+dialog Needs_mTwitch_Core {
+  title "IMPORTANT!"
+  size -1 -1 200 80
+  option dbu
+  text "You have NOT loaded mTwitch.Core.mrc. This script will NOT work for you until you install it! This script will unload itself and setup will exit once you click Okay and your web browser will load the GitHub page. Please make sure to install all of the other Required Scripts before loading BlasBot.mrc.", 1, 8 8 180 50
+  button "Okay", 3, 80 60 40 12, ok
+}
+
+dialog Needs_mTwitch_DisplayName {
+  title "IMPORTANT!"
+  size -1 -1 200 80
+  option dbu
+  text "You have NOT loaded mTwitch.DisplayName.mrc. This script will NOT work for you until you install it! This script will unload itself and setup will exit once you click Okay and your web browser will load the GitHub page. Please make sure to install all of the other Required Scripts before loading BlasBot.mrc.", 1, 8 8 180 50
+  button "Okay", 3, 80 60 40 12, ok
+}
+
+dialog Needs_msqlite {
+  title "IMPORTANT!"
+  size -1 -1 200 80
+  option dbu
+  text "You have NOT loaded msqlite.mrc. This script will NOT work for you until you install it! This script will unload itself and setup will exit once you click Okay and your web browser will load the GitHub page. Please make sure to install all of the other Required Scripts before loading BlasBot.mrc.", 1, 8 8 180 50
+  button "Okay", 3, 80 60 40 12, ok
 }
 
 alias cached_name {
@@ -229,7 +286,7 @@ alias GetPoints {
 
 alias isEditor {
   VAR %nick $IIF($1,$1,$nick)
-  IF ((%nick == %streamer) || (%nick == %botname) || (%nick == blasman13)) RETURN $true
+  IF ((%nick == %streamer) || (%nick == %botname)) RETURN $true
   VAR %sql SELECT * FROM Editor WHERE user = ' $+ %nick $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_EditorsDB, %sql)
   VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
