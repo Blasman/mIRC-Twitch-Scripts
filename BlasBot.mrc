@@ -197,7 +197,7 @@ alias wdelay {
 }
 
 alias ModCheck {
-  IF (($msgtags(mod).key == 1) || ($nick == %streamer) || ($nick == blasman13) || ($nick isop %mychan)) RETURN $true
+  IF (($msgtags(mod).key == 1) || ($nick == %streamer) || ($nick isop %mychan)) RETURN $true
   ELSE RETURN $false
 }
 
