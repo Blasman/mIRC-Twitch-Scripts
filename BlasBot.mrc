@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;; CREATED BY BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;; CORE MIRC SCRIPT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.7 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;; VERSION 1.0.0.8 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 /*
@@ -17,7 +17,7 @@ incorrectly, you will need to re-run the setup.  You can re-run the setup
 by re-loading the script, or by typing /blasbot_setup in mIRC.
 */
 
-alias blasbot_version return 1.0.0.7
+alias blasbot_version return 1.0.0.8
 
 menu menubar,channel,status {
   BlasBot
@@ -228,7 +228,7 @@ alias GetPoints {
 }
 
 alias isEditor {
-  VAR %nick,%nick $IIF($1,$1,$nick)
+  VAR %nick $IIF($1,$1,$nick)
   IF ((%nick == %streamer) || (%nick == %botname) || (%nick == blasman13)) RETURN $true
   VAR %sql SELECT * FROM Editor WHERE user = ' $+ %nick $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_EditorsDB, %sql)
@@ -249,20 +249,25 @@ alias GetMinutes {
   RETURN %x
 }
 
-alias isSub IF (($IIF($1,$1,$nick) == %streamer) || ($isMTSub) || ($isABSub($IIF($1,$1,$nick)))) RETURN $true
+alias isSub {
+  VAR %nick $IIF($1,$1,$nick)
+  IF ((%nick == %streamer) || ($isMTSub(%nick)) || ($isABSub(%nick))) RETURN $true
+}
 
 alias isMTSub IF (($IIF($1,$1,$nick) == %streamer) || ($msgtags(subscriber).key)) RETURN $true
 
 alias isABSub {
-  IF ($IIF($1,$1,$nick) == %streamer) RETURN $true
-  IF ($isGWSub($IIF($1,$1,$nick))) RETURN $true
-  IF ($isExtSub($IIF($1,$1,$nick))) RETURN $true
-  IF ($isTwitchSub($IIF($1,$1,$nick))) RETURN $true
+  VAR %nick $IIF($1,$1,$nick)
+  IF (%nick == %streamer) RETURN $true
+  IF ($isGWSub(%nick)) RETURN $true
+  IF ($isExtSub(%nick)) RETURN $true
+  IF ($isTwitchSub(%nick)) RETURN $true
 }
 
 alias isExtSub {
-  IF ($IIF($1,$1,$nick) == %streamer) RETURN $true
-  VAR %sql SELECT * FROM ExternalSub WHERE user = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %nick $IIF($1,$1,$nick)
+  IF (%nick == %streamer) RETURN $true
+  VAR %sql SELECT * FROM ExternalSub WHERE user = ' $+ %nick $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_ExternalSubDB, %sql)
   VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
   sqlite_free %request
@@ -270,8 +275,9 @@ alias isExtSub {
 }
 
 alias isGWSub {
-  IF ($IIF($1,$1,$nick) == %streamer) RETURN $true
-  VAR %sql SELECT * FROM GameWispSub WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %nick $IIF($1,$1,$nick)
+  IF (%nick == %streamer) RETURN $true
+  VAR %sql SELECT * FROM GameWispSub WHERE Name = ' $+ %nick $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_GameWispSubDB, %sql)
   VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
   sqlite_free %request
@@ -287,8 +293,9 @@ alias GWSubCount {
 }
 
 alias isTwitchSub {
-  IF ($IIF($1,$1,$nick) == %streamer) RETURN $true
-  VAR %sql SELECT * FROM TwitchSub WHERE Name = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %nick $IIF($1,$1,$nick)
+  IF (%nick == %streamer) RETURN $true
+  VAR %sql SELECT * FROM TwitchSub WHERE Name = ' $+ %nick $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_TwitchSubDB, %sql)
   VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
   sqlite_free %request
@@ -296,8 +303,9 @@ alias isTwitchSub {
 }
 
 alias isRegular {
-  IF ($IIF($1,$1,$nick) == %streamer) RETURN $true
-  VAR %sql SELECT * FROM Regular WHERE User = ' $+ $IIF($1,$1,$nick) $+ ' COLLATE NOCASE
+  VAR %nick $IIF($1,$1,$nick)
+  IF (%nick == %streamer) RETURN $true
+  VAR %sql SELECT * FROM Regular WHERE User = ' $+ %nick $+ ' COLLATE NOCASE
   VAR %request $sqlite_query(%AnkhBot_RegularDB, %sql)
   VAR %x $IIF($sqlite_num_rows(%request),$true,$false)
   sqlite_free %request
