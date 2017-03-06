@@ -26,6 +26,10 @@ Be aware that [mIRC](http://www.mirc.com/) is a shareware program with a 30-day 
 
 **[![Click here to visit the WIKI for detailed information and documentation for most of the scripts on this GitHub](http://i.imgur.com/URVntZX.png)](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation "Script Documentation")**  
 
+# Rights and Distributing  
+
+I created this GitHub for the purpose of sharing these scripts for free with anyone who wants to use them. Please feel free to do with any of the scripts as you please. Although not required, it would also be nice if could you let me know if you have found any of the scripts to be of use to you by either sending me a Twitch whisper, following me on Twitch, and/or checking out [my Twitch channel](https://twitch.tv/Blasman13) sometime. :)  
+
 # Installation  
 
 ### If You Do Not Have a mIRC Twitch Bot, Set One Up  
