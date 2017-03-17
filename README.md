@@ -83,7 +83,7 @@ There are multiple ways to "update" your scripts on this GitHub. IMO, the ideal 
 
 **Step 4**: Download and overwrite (if necessary) all of your old .mrc files with all the new ones that you wish to update. Remember to download optional scripts from the [WIKI](https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation) and the required scripts from the "Install Required Scripts" section above. Do NOT download from the very top of the GitHub as those are just HTML files.  
 
-**Step 5**: Proceed to `/load -rs scriptname.mrc` for all the scripts that you are upgrading. If you are updating any of the required scripts, be sure to load them in the order that they are listed in the "Install Required Scripts" section of the GitHub above.  
+**Step 5**: Proceed to `/load -rs scriptname.mrc` for all the scripts that you are upgrading. If you are updating any of the required scripts, be sure to load them in the order that they are listed in the "Install Required Scripts" section of the GitHub above. (you may need to actually be connected to the server if loading BlasBot.mrc so it can get your bot's name)  
 
 **Step 6**: Close mIRC and restart it. If you did everything properly, then you should not have any issues.  
 
