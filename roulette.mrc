@@ -72,7 +72,8 @@ ON $*:TEXT:/^!(roulette|rbet)\s(on|off)$/iS:%mychan: {
 
 ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:%mychan: {
 
-  IF (!%GAMES_ROUL_ACTIVE) {
+  IF ($($+(%,roul.CD_,$nick),2)) halt
+  ELSEIF (!%GAMES_ROUL_ACTIVE) {
     IF ((%floodROUL_ACTIVE) || ($($+(%,floodROUL_ACTIVE.,$nick),2))) halt
     SET -u15 %floodROUL_ACTIVE On
     SET -u120 %floodROUL_ACTIVE. $+ $nick On
@@ -86,8 +87,10 @@ ON $*:TEXT:/^!(roulette|rbet)(\s|$)/iS:%mychan: {
   }
   ELSEIF ((%roul.closed) || (%ActiveGame) || ($timer(.roul.reopen2)) || (%rr.p1)) halt
   ELSEIF (($istok(%roul_options,$2,32)) && ($3 isnum %roul_minbet - %roul_maxbet) && (%roul.bet. [ $+ [ $nick ] ] != 0) && (($calc(%roul.bet. [ $+ [ $nick ] ] - $3) >= 0) || (!%roul.bet. [ $+ [ $nick ] ]))) {
+    SET -eu5 %roul.CD_ $+ $nick $true
     VAR %wager $floor($3)
-    IF ($GetPoints($nick) < %wager) { MSG $chan $nick $+ , you don't have %wager %curname to wager.  FailFish | halt }
+    ;IF (!$isSub) { MSG $chan $nick $+ , Roulette is a subscriber only perk of the channel. Thank you for understanding. | halt }
+    IF ($GetPoints < %wager) { MSG $chan $nick $+ , you don't have %wager %curname to wager. FailFish | halt }
     REMOVEPOINTS $nick %wager
     IF ($isfile(roulbets.txt)) {
       VAR %x = 1
