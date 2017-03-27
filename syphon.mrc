@@ -3,7 +3,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ON $*:TEXT:/^!syphon\s(end|\d+(\s\d+\s\d+)?)$/iS:%mychan: {
-  IF ($editorcheck($nick) == true) {
+  IF ($isEditor) {
     IF (($2 isnum) && (!%syphon.active)) {
       SET %syphon.active On
       SET %syphon.cost $2
