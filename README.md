@@ -50,7 +50,7 @@ To use any of the games scripts on this GitHub, you will need to download the fo
 * [JSONForMirc.mrc](https://github.com/SReject/JSON-For-Mirc/releases/download/v1.0.3006-rc2/JSONFormIRC.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.Core.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.Core.mrc): right click this link and "save link as..." to your mIRC directory.
 * [mTwitch.DisplayName.mrc](https://raw.githubusercontent.com/SReject/mTwitch/master/mTwitch.DisplayName.mrc): right click this link and "save link as..." to your mIRC directory.
-* [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory. (you may [download here]https://www.dropbox.com/s/x5qlju8q0zkt1t6/msqlite1.0.15.zip?dl=1) if the website is currently offline)
+* [mIRC SQLite](http://hawkee.com/scripts/11648275/): Extract the .zip file from this webpage to your mIRC directory. (you may [download here](https://www.dropbox.com/s/x5qlju8q0zkt1t6/msqlite1.0.15.zip?dl=1) if the website is currently offline)
 * [BlasBot.mrc](http://raw.githubusercontent.com/Blasman/mIRC-Twitch-Scripts/master/BlasBot.mrc) : right click this link and "save link as..." to your mIRC directory.
 
 ### Install Required Scripts  
