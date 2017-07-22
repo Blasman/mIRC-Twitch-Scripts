@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.3 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.4 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
@@ -9,7 +9,7 @@
 ; UNCOMMENT the line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running.
 ;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
-alias autohost_version RETURN 2.0.0.3
+alias autohost_version RETURN 2.0.0.4
 
 ON *:LOAD: autohost_setup
 
@@ -27,6 +27,7 @@ alias autohost_setup {
   IF (!%ah_enable_tier_02) SET %ah_enable_tier_02 -1
   IF (!%ah_forceswitch) SET %ah_forceswitch 0
   IF (!%ah_msg) SET %ah_msg $true
+  IF (!%ah_stream_type) SET %ah_stream_type live
   $dialog(welcome,welcome)
   autohost_channel
   autohost_rehost
@@ -40,6 +41,7 @@ alias autohost_setup {
   autohost_enable_tier_01
   autohost_enable_tier_02
   autohost_forceswitch
+  autohost_stream_type
   $dialog(finish,finish)
 }
 
@@ -80,6 +82,7 @@ menu menubar,channel,status {
   ..If channel is NOT in the autohost.txt file $+ $chr(44) set tier to $chr(91) $+ %ah_enable_tier_01 $+ $chr(93):autohost_enable_tier_01
   ..If channel IS in the autohost.txt file $+ $chr(44) set tier to $chr(91) $+ %ah_enable_tier_02 $+ $chr(93):autohost_enable_tier_02
   .Force search for new host on any tier $IIF(%ah_forceswitch isnum 0,after X amount of time is DISABLED,after $duration(%ah_forceswitch)) $+ .:autohost_forceswitch
+  .Only host LIVE streams and NOT VODs is set to $IIF(%ah_stream_type == live,TRUE,FALSE) $+ . [click to $IIF(%ah_stream_type == live,host ALL streams including VODs,host ONLY live streams) $+ ]:autohost_stream_type_switch
   .Visit Online Documentation by clicking here:url -m https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
 }
 
@@ -125,6 +128,11 @@ alias -l autohost_unhost_switch {
 alias -l autohost_modaccess_switch {
   IF (!%ah_modaccess) SET %ah_modaccess $true
   ELSE SET %ah_modaccess $false
+}
+
+alias -l autohost_stream_type_switch {
+  IF ((%ah_stream_type == all) || (!%ah_stream_type)) SET %ah_stream_type live
+  ELSE SET %ah_stream_type all
 }
 
 alias autohost_channel {
@@ -225,6 +233,14 @@ alias autohost_forceswitch {
   ELSE { ECHO You need to input a numeric value for tier number! | GOTO start }
 }
 
+alias autohost_stream_type {
+  :start
+  $input(Click YES if would like the autohost script to only host LIVE streams and NOT VODs. Click NO if you would like to host ALL streams including VODs.,nv,Required Input)
+  IF ($! == $yes) SET %ah_stream_type live
+  ELSEIF ($! == $no) SET %ah_stream_type all
+  ELSE RETURN
+}
+
 ON $*:TEXT:/^!autohost\s(on|off)$/iS:*: {
   IF ($AccessCheck) {
     VAR %target $get_target
@@ -306,17 +322,17 @@ alias autohost_enable {
   .timer.AUTOHOST 0 %ah_repeat autohost
 }
 
+alias -l get_target {
+  IF ($target == %ah_channel) RETURN $target
+  ELSEIF ($target == $me) RETURN $nick
+  ELSE HALT
+}
+
 alias autohost_disable {
   UNSET %autohost
   IF ($timer(.AUTOHOST)) .timer.AUTOHOST off
   IF ($timer(.ah_grace)) .timer.ah_grace off
   IF ($timer(.ah_run_wait)) .timer.ah_run_wait off
-}
-
-alias -l get_target {
-  IF ($target == %ah_channel) RETURN $target
-  ELSEIF ($target == $me) RETURN $nick
-  ELSE HALT
 }
 
 RAW HOSTTARGET:*: {
@@ -444,12 +460,12 @@ alias -l livechecker {
   VAR %total, %list, %x = 0
   VAR %total $json(live $+ %lc,_total).value
   WHILE (%total > %x) {
-    VAR %list %list $json(live $+ %lc,streams, %x, channel, name).value
+    IF ((%ah_stream_type == all) || ((%ah_stream_type == live) && ($json(live $+ %lc,streams, %x, stream_type).value == live))) VAR %list %list $json(live $+ %lc,streams, %x, channel, name).value
     INC %x
   }
   JSONClose live $+ %lc
-  IF (%total isnum 0) RETURN $offline
   IF (%list != $null) RETURN %list
+  ELSE RETURN $offline
 }
 
 alias -l twitch_name {
