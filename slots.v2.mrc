@@ -6,7 +6,7 @@
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#slots-version-20
 
-alias slot_version return 2.0.0.4
+alias slot_version return 2.0.0.5
 
 ON *:LOAD: slot_setup
 
@@ -128,7 +128,7 @@ alias -l slot_emotes {
   IF ($! == $false) RETURN
   ELSE {
     VAR %emotes $!
-    IF ($numtok(%emotes,32) != 5) { ECHO You need to input five emotes for !slot! | GOTO emotes }
+    IF ($numtok(%emotes,32) != 5) { ECHO You need to input five emotes for !slot! | GOTO start }
     ELSE SET %slot.emotes %emotes
   }
 }
