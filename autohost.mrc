@@ -388,7 +388,10 @@ alias ah_grace {
   IF (%autohost) {
     VAR %x = 1,%still.live $livechecker($1)
     IF ((%still.live) && (%still.live != $offline)) MSG %ah_channel .host $1
-    ELSE autohost
+    ELSE {
+      UNSET %host.*
+      autohost
+    }
     .timer.AUTOHOST 0 %ah_repeat autohost
   }
 }
