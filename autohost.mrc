@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.5 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.6 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
@@ -9,7 +9,7 @@
 ; UNCOMMENT the line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running.
 ;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
-alias autohost_version RETURN 2.0.0.5
+alias autohost_version RETURN 2.0.0.6
 
 ON *:LOAD: autohost_setup
 
@@ -187,7 +187,7 @@ alias autohost_random {
 
 alias autohost_hostmsg {
   :start
-  $input(Do you want to display a message in chat when you begin to a host a channel? $chr(40) $+ works when Autohost is off as well $+ $chr(41) $crlf $crlf $+ Eg. "We are now hosting Blasman13 who is playing Watch Dogs for 69 viewers. Uptime: 4hrs 20mins. You can visit them at twitch.tv/Blasman13",nv,Required Input)
+  $input(Do you want to display a message in chat when you begin to a host a channel? $chr(40) $+ works when Autohost is off as well $+ $chr(41) $crlf $crlf $+ Eg. "We are now hosting Blasman13 who is streaming Watch Dogs for 69 viewers. Uptime: 4hrs 20mins. You can visit them at twitch.tv/Blasman13",nv,Required Input)
   IF ($! == $yes) SET %ah_hostmsg $true
   ELSEIF ($! == $no) SET %ah_hostmsg $false
   ELSE RETURN
@@ -337,13 +337,16 @@ alias autohost_disable {
 
 RAW HOSTTARGET:*: {
   TOKENIZE 32 $rawmsg
-  IF (($3 == %ah_channel) && ($regex($4,/:(\w+)/)) && (%host.name != $regml(1))) {
-    SET %host.name $twitch_name($regml(1))
-    SET %host.uptime $ctime
-    IF (%ah_hostmsg) {
-      hostinfo %host.name
-      MSG %ah_channel We are now hosting %host.name $IIF($5 > 1,for $5 active viewers) who is playing %host.game for %host.viewers viewers. Uptime: %host.created_at $+ . You can visit them at twitch.tv/ $+ %host.name
+  IF (($3 == %ah_channel) && ($5 isnum) && ($regex($4,/:(\w+)/))) {
+    IF (%host.name != $regml(1)) {
+      SET %host.name $twitch_name($regml(1))
+      SET %host.uptime $ctime
+      IF (%ah_hostmsg) {
+        hostinfo %host.name
+        MSG %ah_channel We are now hosting %host.name $IIF($5 > 1,for $5 active viewers) who is streaming %host.game for %host.viewers viewers. Uptime: %host.created_at $+ . You can visit them at twitch.tv/ $+ %host.name
+      }
     }
+    ELSEIF (%ah_hostmsg) MSG %ah_channel It looks like %host.name is back online! We have now re-hosted them!
   }
 }
 
@@ -369,29 +372,29 @@ ON *:NOTICE:*:%ah_channel: {
 }
 
 alias unhosted {
+  VAR %host_name %host.name , %host_uptime %host.uptime
+  UNSET %host.*
   IF ($timer(.ah_run_wait)) .timer.ah_run_wait off
-  IF ((%autohost) && ($1 == host_target_went_offline) && (%ah_grace > 0)) .timer.ah_grace 1 %ah_grace ah_grace $2
-  ELSE {
-    UNSET %host.*
-    IF (%autohost) {
-      .timer.AUTOHOST off
-      IF (($1 == host_off) && (%ah_unhost_disables)) autohost_disable
-      ELSE {
-        autohost
-        .timer.AUTOHOST 0 %ah_repeat autohost
-      }
+  IF (%autohost) {
+    .timer.AUTOHOST off
+    IF ((%ah_unhost_disables) && ($1 == host_off)) autohost_disable
+    ELSEIF (($1 == host_target_went_offline) && (%ah_grace > 0)) .timer.ah_grace 1 %ah_grace ah_grace %host_name %host_uptime
+    ELSE {
+      autohost
+      .timer.AUTOHOST 0 %ah_repeat autohost
     }
   }
 }
 
 alias ah_grace {
   IF (%autohost) {
-    VAR %x = 1,%still.live $livechecker($1)
-    IF ((%still.live) && (%still.live != $offline)) MSG %ah_channel .host $1
-    ELSE {
-      UNSET %host.*
-      autohost
+    VAR %x = 1 , %still.live $livechecker($1)
+    IF ((%still.live) && (%still.live != $offline)) {
+      SET %host.name $1
+      SET %host.uptime $2
+      MSG %ah_channel .host $1
     }
+    ELSE autohost
     .timer.AUTOHOST 0 %ah_repeat autohost
   }
 }
