@@ -1,7 +1,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; BLASBOT ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;; TWITCH.TV/BLASMAN13 ;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.6 ;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;; AUTOHOST VERSION 2.0.0.7 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ; Online Documentation @ https://github.com/Blasman/mIRC-Twitch-Scripts/wiki/Script-Documentation#advanced-autohost-version-2
@@ -9,7 +9,7 @@
 ; UNCOMMENT the line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running.
 ;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
-alias autohost_version RETURN 2.0.0.6
+alias autohost_version RETURN 2.0.0.7
 
 ON *:LOAD: autohost_setup
 
@@ -372,13 +372,13 @@ ON *:NOTICE:*:%ah_channel: {
 }
 
 alias unhosted {
-  VAR %host_name %host.name , %host_uptime %host.uptime
+  VAR %host_name %host.name , %host_uptime %host.uptime , %host_tier %host.tier
   UNSET %host.*
   IF ($timer(.ah_run_wait)) .timer.ah_run_wait off
   IF (%autohost) {
     .timer.AUTOHOST off
     IF ((%ah_unhost_disables) && ($1 == host_off)) autohost_disable
-    ELSEIF (($1 == host_target_went_offline) && (%ah_grace > 0)) .timer.ah_grace 1 %ah_grace ah_grace %host_name %host_uptime
+    ELSEIF (($1 == host_target_went_offline) && (%ah_grace > 0)) .timer.ah_grace 1 %ah_grace ah_grace %host_name %host_uptime %host_tier
     ELSE {
       autohost
       .timer.AUTOHOST 0 %ah_repeat autohost
@@ -392,6 +392,7 @@ alias ah_grace {
     IF ((%still.live) && (%still.live != $offline)) {
       SET %host.name $1
       SET %host.uptime $2
+      SET %host.tier $3
       MSG %ah_channel .host $1
     }
     ELSE autohost
