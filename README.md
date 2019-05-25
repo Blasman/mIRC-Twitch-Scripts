@@ -1,10 +1,6 @@
-<a href="https://twitch.streamlabs.com/blasman13/">
-  <p align="center">
-    <img src="http://i.imgur.com/5HN8EnD.png" alt="DONATE HERE">
-  </p>
-</a>
-
 # Updates  
+
+__**May 25, 2019**__: A breif update on the state of this GitHub for anyone who happens to stumble upon here. I have almost completely stopped maintaining any of the scripts, as there was no reason to continue development once the scripts could no longer work within the program they were intended to. There are some exceptions, the Advanced AutoHost script is a "stand alone" script and one that I continue to use and test myself, and I plan to keep that one updated. I may throw other random script tidbits that I happen to write in here as well still. Having said that, the vast majority of scripts here can *easily* be modified for use with your own custom bot. Please don't ask me how though, that's up to you to figure out.
 
 __**August 4, 2017**__: __If you choose to update or have already updated to AnkhBot Version 1.0.2.0, please keep in mind that any scripts from this GitHub that work with AnkhBot's databases will be rendered useless. AnkhHeart has chosen to encrypt the databases in AnkhBot in order to "prevent tampering." There is nothing that can be done about this, and unless you have made backups of your database files, there is no going back once you have updated. You have been warned. Please do not message me asking for help on how to get the scripts to work or asking why they aren't working. This is why.__
 
@@ -89,9 +85,6 @@ There are multiple ways to "update" your scripts on this GitHub. IMO, the ideal 
 
 **Step 6**: Close mIRC and restart it. If you did everything properly, then you should not have any issues.  
 
-## Contact Info  
-
-By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch message me regarding any help that you may require with anything on this GitHub (provided that it is not something that can easily be done yourself by following the instructions on this GitHub). Before messaging me for help, please make sure that you are using the most recent updates of the scripts on this GitHub, as I am constantly updating the scripts here, and many scripts require newly added segments of other scripts. For general mIRC help, consider joining the [mirchelp](http://www.twitch.tv/mirchelp) chat on Twitch.  
 
 ## Troubleshooting / FAQ  
 
@@ -112,9 +105,4 @@ By visiting my Twitch channel at http://www.twitch.tv/blasman13 , you may Twitch
 
 **Issue:** Whispers sent from your bot are not being received by users.  
 **Answer:** If this is happening after your bot has been sending out a lot of whispers successfully and it just happens to temporarily stop working, then it is likely Twitch's anti-spam measures that are preventing the whispers from being sent. See this post on instructions on how to whitelist your bot. [Are your whispers not going through for your bot?](https://discuss.dev.twitch.tv/t/are-your-whispers-not-going-through-for-your-bot/5183)  
-
-## Twitch Channels Currently Running These Scripts  
-
-Some of the Twitch channels currently using some of the scripts on this GitHub:  
-[Blasman13](http://twitch.tv/Blasman13) | [xxxDESPERADOxxx](http://twitch.tv/xxxDESPERADOxxx) | [thaithyme](http://twitch.tv/thaithyme) | [Evraee](http://twitch.tv/Evraee) | [nekonchoco](http://twitch.tv/nekonchoco) | [NakedAngel](http://twitch.tv/NakedAngel) | [SuitedForVictory](http://twitch.tv/SuitedForVictory) | [AeroGarfield29](http://twitch.tv/AeroGarfield29) | [abrekke83](http://twitch.tv/abrekke83) | [KatieKakes32](http://twitch.tv/KatieKakes32) | [SmokinDank5280](http://twitch.tv/SmokinDank5280) | [A_Colder_Vision](http://twitch.tv/A_Colder_Vision) | [Tygastripe](http://twitch.tv/Tygastripe) | [XinarTheNeko](http://twitch.tv/XinarTheNeko) | [RetroBecky](http://twitch.tv/RetroBecky) | [TheYasmein](http://twitch.tv/TheYasmein) | [TripodGG](http://twitch.tv/TripodGG) | [sketty1881](http://twitch.tv/sketty1881) | [HybridMagpie](http://twitch.tv/HybridMagpie) | [Rick92647](http://twitch.tv/Rick92647) | [EpicStreamMan](http://twitch.tv/EpicStreamMan) | [Cillibear](http://twitch.tv/Cillibear)  
 
