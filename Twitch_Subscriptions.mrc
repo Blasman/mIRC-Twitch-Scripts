@@ -1,5 +1,5 @@
 ; A Basic Script for Twitch Subscriber Notifications in mIRC
-; Version 1.0.0.0 (May 25, 2019)
+; Version 1.0.0.1 (June 14, 2019)
 ; by twitch.tv/Blasman13
 ; $MSGTAGS HELP: https://dev.twitch.tv/docs/irc/tags/#usernotice-twitch-tags
 ; You can find your Twitch User ID that is needed on the the third line (YOUR_TWITCH_USERID) of the actual script below here: https://bashtech.net/twitch/profile.php
@@ -14,7 +14,7 @@ RAW USERNOTICE:*: {
     VAR %msg-param-cumulative-months $msgtags(msg-param-cumulative-months).key
     VAR %msg-param-months $msgtags(msg-param-months).key
     VAR %msg-param-streak-months $msgtags(msg-param-streak-months).key
-    VAR %msg-param-sub-plan $IIF($msgtags(msg-param-sub-plan).key isnum, $calc($msgtags(msg-param-sub-plan).key/1000), $msgtags(msg-param-sub-plan).key)
+    VAR %msg-param-sub-plan $IIF($msgtags(msg-param-sub-plan).key isnum, $calc($msgtags(msg-param-sub-plan).key / 1000), $msgtags(msg-param-sub-plan).key)
     ; MASS SUB GIFTER ALERT: thank the person who gifted the subs and prevent messages for each individual sub
     IF (%msg-id == submysterygift) {
       VAR %msg-param-mass-gift-count $msgtags(msg-param-mass-gift-count).key
