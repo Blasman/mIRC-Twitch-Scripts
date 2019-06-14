@@ -1,6 +1,6 @@
 /*
 mIRC Twitch Clip Info Script
-Version 1.001 (June 13, 2019)
+Version 1.002 (June 14, 2019)
 Created by Blasman13 @ https://twitch.tv/Blasman13 & https://github.com/Blasman/mIRC-Twitch-Scripts
 This script will have your mIRC Twitch Bot automatically post a message in chat whenever a user posts a link to a Twitch clip
 This script relies on aliases and variables from BlasBot.mrc
@@ -42,7 +42,8 @@ ON $*:TEXT:/clips\.twitch\.tv\/(\w+)/iS:%mychan: {
       VAR %created_at $TwitchTime($json(get_twitch_clip $+ %tc, data, 0, created_at).value)
       IF ($calc($ctime - %created_at) < 3600) VAR %created_at Clipped $duration($calc($ctime - %created_at)) ago
       ELSEIF ($calc($ctime - %created_at) isnum 3600 - 86399) VAR %created_at Clipped $duration($calc($ctime - %created_at), 2) ago
-      ELSE VAR %created_at Clipped on $asctime(%created_at, mmm dd - h:nn TT)
+      ELSEIF ($calc($ctime - %created_at) isnum 86400 - 31536000) VAR %created_at Clipped on $asctime(%created_at, mmm dd - h:nn TT)
+      ELSE VAR %created_at Clipped on $asctime(%created_at, mmm dd - yyyy)
       MSG $chan 📽 Twitch Clip Info linked by $nick ▌ Streamer: %tc_streamer ▌ Title: $json(get_twitch_clip $+ %tc, data, 0, title).value ▌ Game: $twitch_lookup_game($json(get_twitch_clip $+ %tc, data, 0, game_id).value) ▌ Clipped By: $json(get_twitch_clip $+ %tc, data, 0, creator_name).value ▌ %created_at $IIF(%tc_view_count, ▌ View Count: $json(get_twitch_clip $+ %tc, data, 0, view_count).value, $null) $IIF(%tc_repost_link, ▌ Link: $json(get_twitch_clip $+ %tc, data, 0, url).value, $null)
     }
   }
