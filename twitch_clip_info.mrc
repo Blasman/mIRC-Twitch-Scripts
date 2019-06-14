@@ -1,9 +1,9 @@
 /*
 mIRC Twitch Clip Info Script
-Version 1.002 (June 14, 2019)
+Version 1.003 (June 14, 2019)
 Created by Blasman13 @ https://twitch.tv/Blasman13 & https://github.com/Blasman/mIRC-Twitch-Scripts
 This script will have your mIRC Twitch Bot automatically post a message in chat whenever a user posts a link to a Twitch clip
-This script relies on aliases and variables from BlasBot.mrc
+This script relies on aliases and variables from BlasBot.mrc as well as SReject's JSONFormIRC script
 The message that your bot posts contains the following info:
 - who just posted the link
 - who the streamer is in the clip
@@ -38,14 +38,7 @@ ON $*:TEXT:/clips\.twitch\.tv\/(\w+)/iS:%mychan: {
   IF (!$JSONError) {
     VAR %tc_streamer $json(get_twitch_clip $+ %tc, data, 0, broadcaster_name).value
     IF ((%tc_streamer_only) && (%tc_streamer != %streamer)) NOOP
-    ELSE {
-      VAR %created_at $TwitchTime($json(get_twitch_clip $+ %tc, data, 0, created_at).value)
-      IF ($calc($ctime - %created_at) < 3600) VAR %created_at Clipped $duration($calc($ctime - %created_at)) ago
-      ELSEIF ($calc($ctime - %created_at) isnum 3600 - 86399) VAR %created_at Clipped $duration($calc($ctime - %created_at), 2) ago
-      ELSEIF ($calc($ctime - %created_at) isnum 86400 - 31536000) VAR %created_at Clipped on $asctime(%created_at, mmm dd - h:nn TT)
-      ELSE VAR %created_at Clipped on $asctime(%created_at, mmm dd - yyyy)
-      MSG $chan 📽 Twitch Clip Info linked by $nick ▌ Streamer: %tc_streamer ▌ Title: $json(get_twitch_clip $+ %tc, data, 0, title).value ▌ Game: $twitch_lookup_game($json(get_twitch_clip $+ %tc, data, 0, game_id).value) ▌ Clipped By: $json(get_twitch_clip $+ %tc, data, 0, creator_name).value ▌ %created_at $IIF(%tc_view_count, ▌ View Count: $json(get_twitch_clip $+ %tc, data, 0, view_count).value, $null) $IIF(%tc_repost_link, ▌ Link: $json(get_twitch_clip $+ %tc, data, 0, url).value, $null)
-    }
+    ELSE MSG $chan 📽 Twitch Clip Info linked by $nick ▌ Streamer: %tc_streamer ▌ Title: $json(get_twitch_clip $+ %tc, data, 0, title).value ▌ Game: $twitch_lookup_game($json(get_twitch_clip $+ %tc, data, 0, game_id).value) ▌ Clipped By: $json(get_twitch_clip $+ %tc, data, 0, creator_name).value ▌ $clip_created_at($TwitchTime($json(get_twitch_clip $+ %tc, data, 0, created_at).value)) $IIF(%tc_view_count, ▌ View Count: $json(get_twitch_clip $+ %tc, data, 0, view_count).value, $null) $IIF(%tc_repost_link, ▌ Link: $json(get_twitch_clip $+ %tc, data, 0, url).value, $null)
   }
   JSONClose get_twitch_clip $+ %tc
 }
@@ -59,5 +52,15 @@ alias twitch_lookup_game {
   JSONHttpFetch twitch_lookup_game $+ %tc
   IF (!$JSONError) VAR %result $json(twitch_lookup_game $+ %tc, data, 0, name).value
   JSONClose twitch_lookup_game $+ %tc
+  RETURN %result
+}
+
+alias clip_created_at {
+  ; this alias will word the time/date that the clip was clipped on differently depending on how long ago it was clipped
+  VAR %result
+  IF ($calc($ctime - $1) < 3600) VAR %result Clipped $duration($calc($ctime - $1)) ago
+  ELSEIF ($calc($ctime - $1) isnum 3600 - 86399) VAR %result Clipped $duration($calc($ctime - $1), 2) ago
+  ELSEIF ($calc($ctime - $1) isnum 86400 - 2678400) VAR %result Clipped on $asctime($1, mmm dd - h:nn TT)
+  ELSE VAR %result Clipped on $asctime($1, mmm dd - yyyy)
   RETURN %result
 }
