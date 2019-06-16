@@ -1,5 +1,5 @@
 ; A Basic Script for Twitch Subscriber Notifications in mIRC
-; Version 1.0.0.1 (June 14, 2019)
+; Version 1.002 (June 15, 2019)
 ; by twitch.tv/Blasman13
 ; $MSGTAGS HELP: https://dev.twitch.tv/docs/irc/tags/#usernotice-twitch-tags
 ; You can find your Twitch User ID that is needed on the the third line (YOUR_TWITCH_USERID) of the actual script below here: https://bashtech.net/twitch/profile.php
@@ -39,7 +39,7 @@ RAW USERNOTICE:*: {
       ; IF the receiver of the Gifted Sub is the ONLY PERSON to be gifted a sub (ie it's NOT a Mass Sub Gift of two or more) then we WILL display a message in chat
       IF (!$($+(%,submysterygift.,%name),2)) {
         VAR %name_gifted_to $IIF($regex($msgtags(msg-param-recipient-display-name).key, /^[a-z\d_]+$/ig), $msgtags(msg-param-recipient-display-name).key, $msgtags(msg-param-recipient-user-name).key)
-        MSG $1 %name just GIFTED a tier %tier subscription to %gifted_to_display_name $+ ! $IIF(%msg-param-months > 1, It is their %msg-param-months month sub anniversary!, $null)
+        MSG $1 %name just GIFTED a tier %msg-param-sub-plan subscription to %name_gifted_to $+ ! $IIF(%msg-param-months > 1, It is their %msg-param-months month sub anniversary!, $null)
       }
       ; ELSE the receiver of the Gifted Sub is part of a Mass Sub Gift, therefor we display NOTHING in chat to prevent spam!
       ELSE {
