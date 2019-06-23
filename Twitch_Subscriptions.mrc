@@ -1,9 +1,13 @@
-; A Basic Script for Twitch Subscriber Notifications in mIRC
-; Version 1.002 (June 15, 2019)
-; by twitch.tv/Blasman13
-; $MSGTAGS HELP: https://dev.twitch.tv/docs/irc/tags/#usernotice-twitch-tags
-; You can find your Twitch User ID that is needed on the the third line (YOUR_TWITCH_USERID) of the actual script below here: https://bashtech.net/twitch/profile.php
-; Please make sure that you are requesting cabilities from Twitch for IRC: https://dev.twitch.tv/docs/irc/guide/#twitch-irc-capabilities
+/*
+A Basic Script for Twitch Subscriber Notifications in mIRC
+Version 1.003 (June 23, 2019)
+by https://twitch.tv/Blasman13 | https://github.com/Blasman/mIRC-Twitch-Scripts
+$MSGTAGS HELP: https://dev.twitch.tv/docs/irc/tags/#usernotice-twitch-tags
+You can find your Twitch User ID that is needed on the the third line (YOUR_TWITCH_USERID) of the actual script below here: https://bashtech.net/twitch/profile.php
+SCRIPT NOT WORKING? UNCOMMENT the ";ON *:CONNECT:" line below (remove the ; at the start) if you are not requesting capabilities from the Twitch server in another script that you are running (then reconnect)
+You may want to double check that tmi.twitch.tv is your server name as well. Without requesting capabilities from Twitch, the script cannot function at all
+*/
+;ON *:CONNECT: IF ($server == tmi.twitch.tv) CAP REQ :twitch.tv/commands twitch.tv/tags twitch.tv/membership
 
 RAW USERNOTICE:*: {
   ; LOOK FOR TRIGGER: your Twitch channel && are subscription related
