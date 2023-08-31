@@ -1,5 +1,7 @@
 # Updates  
 
+__**August 31, 2023**__: This repository is depreciated. If it wasn't already obvious...
+
 __**May 25, 2019**__: A breif update on the state of this GitHub for anyone who happens to stumble upon here. I have almost completely stopped maintaining any of the scripts, as there was no reason to continue development once the scripts could no longer work within the program they were intended to. There are some exceptions, the Advanced AutoHost script is a "stand alone" script and one that I continue to use and test myself, and I plan to keep that one updated. I may throw other random script tidbits that I happen to write in here as well still. Having said that, the vast majority of scripts here can *easily* be modified for use with your own custom bot. Please don't ask me how though, that's up to you to figure out.
 
 __**August 4, 2017**__: __If you choose to update or have already updated to AnkhBot Version 1.0.2.0, please keep in mind that any scripts from this GitHub that work with AnkhBot's databases will be rendered useless. AnkhHeart has chosen to encrypt the databases in AnkhBot in order to "prevent tampering." There is nothing that can be done about this, and unless you have made backups of your database files, there is no going back once you have updated. You have been warned. Please do not message me asking for help on how to get the scripts to work or asking why they aren't working. This is why.__
